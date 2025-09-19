@@ -1,0 +1,135 @@
+import * as React from "react"
+import { GalleryVerticalEnd, Minus, Plus } from "lucide-react"
+
+import { SearchForm } from "@/components/search-form"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarRail,
+} from "@/components/ui/sidebar"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
+
+const data = {
+  navMain: [
+    {
+      title: "Getting Started",
+      items: [
+        {
+          title: "Dashboard",
+          url: "/admin",
+        },
+        {
+          title: "Categories",
+          url: "/admin/categories",
+        },
+        {
+          title: "Tags",
+          url: "/admin/tags",
+        },
+        {
+          title: "Users",
+          url: "/admin/users",
+        }
+      ],
+    },
+    {
+      title: "Content",
+      items: [
+        {
+          title: "Post Templates",
+          url: "/admin/post-templates",
+        },
+        {
+          title: "Posts",
+          url: "/admin/posts/new",
+        },
+        {
+          title: "Media",
+          url: "/admin/media",
+        },
+      ],
+    },
+  ],
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const currentPath = usePathname()
+  return (
+    <Sidebar {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <a href="#">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <GalleryVerticalEnd className="size-4" />
+                </div>
+                <div className="flex flex-col gap-0.5 leading-none">
+                  <span className="font-medium">Haryana Job Alerts</span>
+                  <span className="">Powered by Softricity</span>
+                </div>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <SearchForm />
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            {data.navMain.map((item, index) => (
+                <Collapsible
+                  key={item.title}
+                  defaultOpen={item.items?.some((sub) => currentPath === sub.url)}
+                  className="group/collapsible"
+                >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                  <SidebarMenuButton>
+                    {item.title}{" "}
+                    <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
+                    <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
+                  </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  {item.items?.length ? (
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                    {item.items.map((sub) => (
+                      <SidebarMenuSubItem key={sub.title}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={currentPath === sub.url}
+                      >
+                        <Link href={sub.url}>{sub.title}</Link>
+                      </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                  ) : null}
+                </SidebarMenuItem>
+                </Collapsible>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+
+
