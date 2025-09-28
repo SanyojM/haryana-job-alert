@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { Poppins } from "next/font/google";
 import AdminLayout from "../components/admin/AdminLayout"; // adjust path if different
+import FloatingSocials from "@/components/shared/FloatingSocials";
 
 type ComponentWithLayout = AppProps['Component'] & {
   Layout?: React.ElementType;
@@ -37,6 +38,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <main className={poppins.className}>
       <Layout>
+        <FloatingSocials />
         <Component {...pageProps} />
       </Layout>
     </main>
