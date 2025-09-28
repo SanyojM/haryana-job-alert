@@ -117,8 +117,8 @@ export default function MockTestSection() {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {mockTests.slice(0, 2).map((test) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:mb-10">
+                    {mockTests.slice(0, 3).map((test) => (
                         <div key={test.id} className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col">
                             <div className="flex justify-between items-start mb-3">
                                 <img src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
@@ -153,10 +153,10 @@ export default function MockTestSection() {
                     ))}
                 </div>
                 <div className='mt-10 mb-10 md:hidden'>
-                <AdBanner text="Google Ads Section" className="h-32" />
+                    <AdBanner text="Google Ads Section" className="h-32" />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {mockTests.slice(2, 5).map((test) => (
+                    {mockTests.slice(3, 6).map((test) => (
                         <div key={test.id} className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col">
                             <div className="flex justify-between items-start mb-3">
                                 <img src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
@@ -191,42 +191,7 @@ export default function MockTestSection() {
                     ))}
                 </div>
                 <div className='mt-10 mb-10 md:hidden'>
-                <AdBanner text="Google Ads Section" className="h-32" />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {mockTests.slice(5, 6).map((test) => (
-                        <div key={test.id} className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col">
-                            <div className="flex justify-between items-start mb-3">
-                                <img src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
-                                <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
-                                    <User className="w-3 h-3" />
-                                    <span>{test.users}+ Users</span>
-                                </div>
-                            </div>
-
-                            <h3 className="font-bold text-gray-800 leading-tight mb-1.5">{test.title}</h3>
-                            <p className="text-sm text-gray-500 mb-2">{test.totalTests} Total Tests | {test.freeTests} Free Tests</p>
-                            <div className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-md self-start mb-4">
-                                {test.language}
-                            </div>
-
-                            <ul className="space-y-1.5 text-sm text-gray-600 mb-5">
-                                {test.features.map((feature, index) => (
-                                    <li key={index} className="flex items-start gap-2">
-                                        <span className="text-blue-500 mt-1">•</span>
-                                        <span>{feature}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <div className="mt-auto">
-                                <button className="w-full bg-gradient-to-r from-indigo-800 to-indigo-500  hover:bg-indigo-100 text-white text-center rounded-lg px-4 py-2.5 font-semibold text-sm inline-flex items-center justify-center gap-2 transition-colors">
-                                    <span>View test series</span>
-                                    <ArrowUpRight className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                    <AdBanner text="Google Ads Section" className="h-32" />
                 </div>
 
                 <div className="text-center mt-12">

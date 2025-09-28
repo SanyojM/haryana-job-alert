@@ -81,7 +81,7 @@ const ProfileCard = ({ name, title, description, profileImageUrl, logoUrl, insta
         </div>
       </div>
       
-      <div className="hidden md:absolute bottom-0 right-0 md:right-8 w-82 h-auto pointer-events-none">
+      <div className="hidden md:block absolute bottom-0 right-0 md:right-8 w-82 h-auto pointer-events-none">
          <Image 
             src={profileImageUrl} 
             alt={name} 
