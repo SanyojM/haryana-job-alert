@@ -12,7 +12,6 @@ type AppPropsWithLayout = AppProps & {
   Component: ComponentWithLayout;
 };
 
-// Configure Poppins
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -21,13 +20,10 @@ const poppins = Poppins({
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
 
-  // Check if current route is inside /admin/*
   const isAdminRoute = router.pathname.startsWith("/admin");
 
-  // Use the layout defined at the page level, if available
   const PageLayout = Component.Layout || (({ children }) => <>{children}</>);
 
-  // Use AdminLayout for admin routes, otherwise use page-level layout
   const Layout = isAdminRoute
     ? ({ children }: { children: React.ReactNode }) => (
         <AdminLayout>{children}</AdminLayout>
