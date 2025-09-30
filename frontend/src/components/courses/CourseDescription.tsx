@@ -1,0 +1,14 @@
+type CourseDescriptionProps = {
+    description: string;
+};
+
+export default function CourseDescription({ description }: CourseDescriptionProps) {
+    return (
+        <section className="bg-gray-100 mt-12">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Description</h2>
+            <div className="prose max-w-none text-gray-600">
+                <p>{description}</p>
+            </div>
+        </section>
+    );
+}

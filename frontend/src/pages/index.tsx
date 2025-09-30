@@ -1,9 +1,9 @@
-import HomePage from "./(main)/Home/Page";
-import MockTestPage from "./(main)/mock-test/[id]/Page";
+import CoursePage from "./(main)/courses/[id]/page";
 
 export default function Home() {
   return (
       // <HomePage />
-      <MockTestPage id={""} />
+      // <MockTestPage id={""} />
+        <CoursePage id={""} />
   );
 }

@@ -5,7 +5,7 @@ import HaryanaYojnaSection from "../sidebar/HaryanaYojnaSection";
 export default function Sidebar() {
     return (
         <>
-        <aside className="w-full hidden md:flex flex-col gap-6 px-4">
+        <aside className="w-full hidden lg:flex flex-col gap-6 px-4">
             <HaryanaYojnaSection />
             <AdBanner text="Google Ad Section" className="h-88" />
             <CourseSection />

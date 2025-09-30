@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Search, User, Menu, X } from 'lucide-react';
 
 const navLinks = [
@@ -16,6 +16,23 @@ const navLinks = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   return (
     <>
@@ -39,7 +56,7 @@ export default function Header() {
           </div>
         </div>
 
-        <nav className="container mx-auto px-4 mt-5">
+        <nav className="lg:container mx-auto px-4 mt-5">
           <div className="flex items-center justify-between h-20">
             <a href="#" className="flex-shrink-0">
               <img className="h-14 w-14" src="LOGO.png" alt="Haryana Job Alert Logo" />
@@ -69,7 +86,7 @@ export default function Header() {
               </div>
             </div>
 
-            <div className="lg:hidden">
+            <div className="lg:hidden" ref={menuRef}>
               <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 rounded-md text-gray-700 hover:bg-gray-200">
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -78,7 +95,7 @@ export default function Header() {
         </nav>
         
         {isMenuOpen && (
-          <div className="lg:hidden bg-white shadow-lg absolute top-full left-0 w-full">
+          <div className="lg:hidden bg-gray-100 shadow-lg absolute w-full z-999 origin-top-right">
             <div className="flex flex-col space-y-1 px-2 pt-2 pb-3">
               {navLinks.map((link) => (
                 <a
