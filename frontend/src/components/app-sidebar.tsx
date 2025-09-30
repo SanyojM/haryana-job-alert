@@ -63,6 +63,72 @@ const data = {
         },
       ],
     },
+    {
+      title: "Courses",
+      items: [
+        {
+          title: "All Courses",
+          url: "/admin/courses",
+        },
+        {
+          title: "Add New Course",
+          url: "/admin/courses/new",
+        },
+        {
+          title: "Update Course",
+          url: "/admin/courses/update",
+        },
+        {
+          title: "Categories",
+          url: "/admin/course-categories",
+        },
+        {
+          title: "Tags",
+          url: "/admin/course-tags",
+        },
+        {
+          title: "Reviews",
+          url: "/admin/reviews",
+        },
+      ],
+    },
+    {
+      title: "Mock Tests",
+      items: [
+        {
+          title: "All Mock Test Series",
+          url: "/admin/mock-test-series",
+        },
+        {
+          title: "Add New Series",
+          url: "/admin/mock-test-series/new",
+        },
+        {
+          title: "Update Series",
+          url: "/admin/mock-test-series/update",
+        },
+        {
+          title: "All Mock Tests",
+          url: "/admin/mock-tests",
+        },
+        {
+          title: "Add New Test",
+          url: "/admin/mock-tests/new",
+        },
+        {
+          title: "Update Test",
+          url: "/admin/mock-tests/update",
+        },
+        {
+          title: "Categories",
+          url: "/admin/mock-test-categories",
+        },
+        {
+          title: "Tags",
+          url: "/admin/mock-test-tags",
+        },
+      ],
+    },
   ],
 }
 
