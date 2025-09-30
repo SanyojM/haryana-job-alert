@@ -67,8 +67,8 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+    <section className="bg-gray-100 py-12 px-2">
+      <div>
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center mb-10">
           FAQ's
         </h2>

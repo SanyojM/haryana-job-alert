@@ -65,8 +65,8 @@ export default function Footer() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                 <span>All Rights Reserved, Since 2025 © Developed by</span>
                 <a href="#" className="inline-flex items-center gap-2 font-bold text-gray-800 hover:text-indigo-600">
-                   <img src="https://placehold.co/24x24/334155/ffffff?text=S" alt="Softricity Logo" className="w-6 h-6 rounded" />
-                   SOFTRICITY Pvt Ltd
+                   <img src="./ss.png" alt="Softricity Logo" className="w-6 h-6 rounded" />
+                   <span className='text-indigo-600 font-bold text-xl'>SOFTRICITY</span> Pvt Ltd
                 </a>
             </div>
         </div>
