@@ -1,5 +1,6 @@
 import { Star, Heart } from 'lucide-react';
 import AdBanner from './AdBanner';
+import Link from 'next/link';
 
 const courses = [
     {
@@ -64,7 +65,7 @@ export default function CourseSection() {
             <div>
                 <div className="text-center mb-20">
                     <img
-                        src="./courses.png"
+                        src="/courses.png"
                         alt="Mock Tests"
                         className="inline-block h-20 w-auto"
                     />
@@ -113,12 +114,12 @@ export default function CourseSection() {
                                 </div>
 
                                 <div className="mt-auto flex items-center gap-3">
-                                    <a
-                                        href={course.courseUrl}
+                                    <Link
+                                        href={`/courses/${course.id}`}
                                         className="flex-grow bg-gradient-to-r from-red-600 to-gray-800 text-white text-center rounded-lg px-4 py-3 font-semibold text-sm inline-flex items-center justify-center hover:opacity-90 transition-opacity"
                                     >
                                         View Course
-                                    </a>
+                                    </Link>
                                     <button className="p-3 rounded-lg bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-500 transition-colors">
                                         <Heart className="w-5 h-5" />
                                     </button>

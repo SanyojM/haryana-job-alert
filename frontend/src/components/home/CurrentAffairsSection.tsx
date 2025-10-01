@@ -53,7 +53,7 @@ export default function CurrentAffairsSection() {
             <div>
                 <div className="text-center mb-20">
                     <img
-                        src="./ca.png"
+                        src="/ca.png"
                         alt="Mock Tests"
                         className="inline-block h-20 w-auto"
                     />

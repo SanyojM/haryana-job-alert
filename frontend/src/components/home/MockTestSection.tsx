@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowUpRight, ChevronRight, SlidersHorizontal, User } from 'lucide-react';
 import AdBanner from './AdBanner';
+import Link from 'next/link';
 
 const categories = [
     { id: 'ssc', name: 'SSC Exam' },
@@ -14,7 +15,7 @@ const categories = [
 
 const mockTests = [
     {
-        id: 1,
+        id: "ssc-cgl-tier-1-and-2",
         category: 'ssc',
         logoUrl: 'https://placehold.co/40x40/e2e8f0/334155?text=SSC',
         title: 'SSC CGL Mock Test Series 2025 (Tier I & Tier II)',
@@ -92,7 +93,7 @@ export default function MockTestSection() {
             <div>
                 <div className="text-center mb-20">
                     <img
-                        src="./mt.png"
+                        src="/mt.png"
                         alt="Mock Tests"
                         className="inline-block h-20 w-auto"
                     />
@@ -144,10 +145,12 @@ export default function MockTestSection() {
                             </ul>
 
                             <div className="mt-auto">
+                                <Link href={`/mock-test/${test.id}`}>
                                 <button className="w-full bg-gradient-to-r from-indigo-800 to-indigo-500  hover:bg-indigo-100 text-white text-center rounded-lg px-4 py-2.5 font-semibold text-sm inline-flex items-center justify-center gap-2 transition-colors">
                                     <span>View test series</span>
                                     <ArrowUpRight className="w-4 h-4" />
                                 </button>
+                                </Link>
                             </div>
                         </div>
                     ))}

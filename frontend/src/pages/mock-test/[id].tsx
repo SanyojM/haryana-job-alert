@@ -8,17 +8,10 @@ import AboutTestSection from "@/components/mock-test/AboutTestSection";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import TestHeader from "@/components/mock-test/TestHeader";
+import { useRouter } from "next/router";
 
-// This is a type definition for the props this page will receive from Next.js
-// It will contain the dynamic 'id' from the URL.
-type MockTestPageProps = {
-    id: string;
-};
-
-// --- MOCK DATA FOR A SINGLE TEST ---
-// In a real application, you would use `params.id` to fetch this data from an API or database.
-const getTestData = (id: string) => {
-  // You can have logic here to return different data based on the id
+const getTestData = (id: string | string[] | undefined) => {
+  if (!id) return null; // Handle case where id is not ready
   console.log("Fetching data for test with id:", id);
 
   return {
@@ -58,9 +51,20 @@ const getTestData = (id: string) => {
   };
 };
 
-export default function MockTestPage({ id }: MockTestPageProps) {
-  // Fetch the data for the specific test using the id from the URL
+export default function MockTestPage() {
+  const router = useRouter();
+  const { id } = router.query; // Get the id from the URL query
+
+  // The id might not be available on the very first render, so we wait.
+  if (!router.isReady) {
+    return <div>Loading...</div>; // Or a proper skeleton loader
+  }
+  
   const testData = getTestData(id);
+
+  if (!testData) {
+    return <div>Test data not found.</div>;
+  }
 
   return (
     <div className="bg-gray-100">
