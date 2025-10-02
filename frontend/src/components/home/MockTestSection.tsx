@@ -15,7 +15,7 @@ const categories = [
 
 const mockTests = [
     {
-        id: "ssc-cgl-tier-1-and-2",
+        id: 1,
         category: 'ssc',
         logoUrl: 'https://placehold.co/40x40/e2e8f0/334155?text=SSC',
         title: 'SSC CGL Mock Test Series 2025 (Tier I & Tier II)',
