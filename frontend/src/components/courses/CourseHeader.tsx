@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Clock, Globe, Star, Users, Award } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Button } from '../ui/button';
 
 // Define the types for the props this component will accept
 type CourseHeaderProps = {
@@ -44,8 +45,8 @@ export default function CourseHeader({
   }, [ratingCount, studentCount]);
 
   return (
-    <section className="bg-[#16161D] text-white p-6 sm:p-8 relative min-h-[65vh] mb-[5rem]">
-      <div className="relative z-10 px-18 md:max-w-4xl">
+    <section className="bg-[#16161D] text-white p-6 sm:p-8 relative min-h-[65vh] sm:mb-[5rem]">
+      <div className="relative z-10 md:px-18 px-4 lg:max-w-4xl">
         {/* Breadcrumbs */}
         <nav aria-label="Breadcrumb" className="text-sm text-gray-300 mb-6">
             <ol className="flex items-center space-x-2">
@@ -77,7 +78,7 @@ export default function CourseHeader({
             )}
         </div>
 
-        <div className='flex gap-4 mb-4'>
+        <div className='flex gap-4 mb-4 fle-wrap flex-col sm:flex-row'>
             <div className='bg-green-200 text-green-800 px-4 py-2 min-w-[10rem] text-center font-medium rounded-md'>Bestseller</div>
             <div className='bg-purple-300 text-purple-800 px-4 py-2 min-w-[10rem] text-center font-medium rounded-md'>Free</div>
         </div>
@@ -85,13 +86,13 @@ export default function CourseHeader({
         {/* Meta Info */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-300 mb-8 border-b w-fit pb-4">
             <div className="flex items-center gap-1.5"><Clock size={16} /> Last update on {lastUpdated}</div>
-            <span>|</span>
+            <span className='hidden sm:block'>|</span>
             <div className="flex items-center gap-1.5"><Globe size={16} /> {language}</div>
         </div>
 
         {/* Ratings Block */}
       </div>
-        <div className="absolute -bottom-18 z-999 bg-white text-gray-800 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg ml-18">
+        <div className="md:absolute -bottom-20 z-999 bg-white text-gray-800 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg md:ml-6 lg:ml-18">
             <div className="flex-shrink-0 bg-gradient-to-tr from-red-900 to-red-600 p-4 rounded-md">
                 <Image src="/logo.png" alt="Logo" width={60} height={60} className="rounded-sm" />
             </div>
@@ -111,6 +112,10 @@ export default function CourseHeader({
                 <p className="text-xs text-gray-500 mt-1">Learners</p>
             </div>
         </div>
+
+          <Button className="sm:w-[50%] md:w-[30%] w-full bg-gradient-to-r from-indigo-600 to-indigo-300 xl:hidden mt-8 md:mt-0 md:ml-18">
+              Enroll Now
+          </Button>
     </section>
   );
 }

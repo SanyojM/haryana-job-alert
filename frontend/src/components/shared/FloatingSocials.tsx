@@ -2,7 +2,7 @@ import { Youtube, Instagram, Phone } from 'lucide-react';
 
 export default function FloatingSocials() {
   return (
-    <div className="fixed top-[30%] md:top-[45%] left-0 -translate-y-1/2 z-50">
+    <div className="hidden sm:fixed top-[30%] md:top-[45%] left-0 -translate-y-1/2 z-50">
       <div className="bg-white p-2 rounded-r-2xl shadow-lg border-t border-r border-b border-gray-200/80">
         <div className="flex flex-col items-center gap-3">
           <a

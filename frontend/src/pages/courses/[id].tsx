@@ -5,6 +5,7 @@ import CourseHeader from "@/components/courses/CourseHeader";
 import AdBanner from "@/components/home/AdBanner";
 import Header from "@/components/shared/Header";
 import Sidebar from "@/components/shared/Sidebar";
+import { Button } from "@/components/ui/button";
 
 type CoursePageProps = {
     id: string;
@@ -73,9 +74,8 @@ export default function CoursePage({ id }: CoursePageProps) {
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 items-start">
-
                     {/* Main Content Area */}
-                    <main className="lg:col-span-2 space-y-6 mr-8">
+                    <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0">
                         <CourseDescription description={courseData.mainDescription} />
                         <CourseContentAccordion content={{
                             totalLectures: courseData.content.totalLectures,
@@ -86,7 +86,7 @@ export default function CoursePage({ id }: CoursePageProps) {
                     </main>
 
                     {/* Sidebar / Enrollment Card Area */}
-                    <aside className="space-y-8 col-span-1">
+                    <aside className="space-y-8 col-span-1 hidden xl:block">
                         <CourseEnrollmentCard
                             thumbnailUrl={courseData.thumbnailUrl}
                             instructorName={courseData.instructorName}

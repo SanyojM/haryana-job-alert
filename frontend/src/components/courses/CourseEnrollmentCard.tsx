@@ -38,7 +38,7 @@ export default function CourseEnrollmentCard({
             </div>
         </div>
         <div className="p-6">
-            <button className="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-colors text-lg">
+            <button className="w-full bg-gradient-to-r from-indigo-600 to-indigo-300 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-colors text-lg">
                 Enroll Now
             </button>
             <div className="mt-6 space-y-3 text-gray-600">
