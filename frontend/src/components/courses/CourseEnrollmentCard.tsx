@@ -45,7 +45,7 @@ export default function CourseEnrollmentCard({
                 <h4 className="font-bold text-gray-800">The course give you:</h4>
                 <div className="flex items-center gap-3"><MonitorPlay size={18} className="text-indigo-500" /> Course Duration: {courseDuration}</div>
                 <div className="flex items-center gap-3"><FileText size={18} className="text-indigo-500" /> Articles attached: {articlesAttached}</div>
-                <div className="flex items-center gap-3"><Download size={18} className="text-indigo-500" /> Downloadable recources: {downloadableResources}</div>
+                <div className="flex items-center gap-3"><Download size={18} className="text-indigo-500" /> Downloadable resources: {downloadableResources}</div>
                 <div className="flex items-center gap-3"><CheckCircle size={18} className="text-indigo-500" /> {freeCourse ? 'Free Course' : 'Paid Course'}</div>
                 <div className="flex items-center gap-3"><FileText size={18} className="text-indigo-500" /> Mock tests: {mockTests}</div>
             </div>

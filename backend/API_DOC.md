@@ -13,11 +13,11 @@ Handles all operations related to tags.
 - **Route:** `POST /tags`
 - **Description:** Creates a new tag record in the database.
 - **Request Body:**
-  ```json
-  {
-    "name": "string"
-  }
-  ```
+    ```json
+    {
+        "name": "string"
+    }
+    ```
 - **Returns:** Newly created Tag object.
 
 ### Get all tags
@@ -39,11 +39,11 @@ Handles all operations related to tags.
 - **Route:** `PUT /tags/:id`
 - **Description:** Updates the details of a specific tag.
 - **Request Body:**
-  ```json
-  {
-    "name": "string"
-  }
-  ```
+    ```json
+    {
+        "name": "string"
+    }
+    ```
 - **Returns:** Updated Tag object.
 
 ### Delete a tag
@@ -64,19 +64,19 @@ Manages blog posts and articles.
 - **Route:** `POST /posts`
 - **Description:** Creates a new post.
 - **Request Body:**
-  ```json
-  {
-    "title": "string",
-    "slug": "string",
-    "category_id": "number",
-    "template_id": "number",
-    "content_json": {},
-    "content_html": "string",
-    "thumbnail_url": "string",
-    "external_url": "string",
-    "tags": ["number"]
-  }
-  ```
+    ```json
+    {
+        "title": "string",
+        "slug": "string",
+        "category_id": "number",
+        "template_id": "number",
+        "content_json": {},
+        "content_html": "string",
+        "thumbnail_url": "string",
+        "external_url": "string",
+        "tags": ["number"]
+    }
+    ```
 - **Returns:** Newly created Post object.
 
 ### Get all posts
@@ -98,19 +98,19 @@ Manages blog posts and articles.
 - **Route:** `PUT /posts/:id`
 - **Description:** Updates an existing post.
 - **Request Body:**
-  ```json
-  {
-    "title": "string",
-    "slug": "string",
-    "category_id": "number",
-    "template_id": "number",
-    "content_json": {},
-    "content_html": "string",
-    "thumbnail_url": "string",
-    "external_url": "string",
-    "tags": ["number"]
-  }
-  ```
+    ```json
+    {
+        "title": "string",
+        "slug": "string",
+        "category_id": "number",
+        "template_id": "number",
+        "content_json": {},
+        "content_html": "string",
+        "thumbnail_url": "string",
+        "external_url": "string",
+        "tags": ["number"]
+    }
+    ```
 - **Returns:** Updated Post object.
 
 ### Delete a post
@@ -131,13 +131,13 @@ Manages templates for creating posts.
 - **Route:** `POST /post-templates`
 - **Description:** Creates a new template for posts.
 - **Request Body:**
-  ```json
-  {
-    "name": "string",
-    "description": "string",
-    "structure": {}
-  }
-  ```
+    ```json
+    {
+        "name": "string",
+        "description": "string",
+        "structure": {}
+    }
+    ```
 - **Returns:** Newly created PostTemplate object.
 
 ### Get all post templates
@@ -159,13 +159,13 @@ Manages templates for creating posts.
 - **Route:** `PUT /post-templates/:id`
 - **Description:** Updates an existing post template.
 - **Request Body:**
-  ```json
-  {
-    "name": "string",
-    "description": "string",
-    "structure": {}
-  }
-  ```
+    ```json
+    {
+        "name": "string",
+        "description": "string",
+        "structure": {}
+    }
+    ```
 - **Returns:** Updated PostTemplate object.
 
 ### Delete a post template
@@ -186,16 +186,16 @@ Endpoints for managing mock tests.
 - **Route:** `POST /mock-tests`
 - **Description:** Creates a new mock test.
 - **Request Body:**
-  ```json
-  {
-    "title": "string",
-    "description": "string",
-    "duration_minutes": "number",
-    "total_marks": "number",
-    "is_free": "boolean",
-    "series_id": "number"
-  }
-  ```
+    ```json
+    {
+        "title": "string",
+        "description": "string",
+        "duration_minutes": "number",
+        "total_marks": "number",
+        "is_free": "boolean",
+        "series_id": "number"
+    }
+    ```
 - **Returns:** New MockTest object.
 
 ### Get all mock tests
@@ -217,16 +217,16 @@ Endpoints for managing mock tests.
 - **Route:** `PUT /mock-tests/:id`
 - **Description:** Updates an existing mock test.
 - **Request Body:**
-  ```json
-  {
-    "title": "string",
-    "description": "string",
-    "duration_minutes": "number",
-    "total_marks": "number",
-    "is_free": "boolean",
-    "series_id": "number"
-  }
-  ```
+    ```json
+    {
+        "title": "string",
+        "description": "string",
+        "duration_minutes": "number",
+        "total_marks": "number",
+        "is_free": "boolean",
+        "series_id": "number"
+    }
+    ```
 - **Returns:** Updated MockTest object.
 
 ### Delete a mock test
@@ -247,11 +247,11 @@ Manages tags specifically for mock tests.
 - **Route:** `POST /mock-tags`
 - **Description:** Creates a new tag for mock tests.
 - **Request Body:**
-  ```json
-  {
-    "name": "string"
-  }
-  ```
+    ```json
+    {
+        "name": "string"
+    }
+    ```
 - **Returns:** New MockTag object.
 
 ### Get all mock tags
@@ -273,11 +273,11 @@ Manages tags specifically for mock tests.
 - **Route:** `PUT /mock-tags/:id`
 - **Description:** Updates a mock tag.
 - **Request Body:**
-  ```json
-  {
-    "name": "string"
-  }
-  ```
+    ```json
+    {
+        "name": "string"
+    }
+    ```
 - **Returns:** Updated MockTag object.
 
 ### Delete a mock tag
@@ -298,15 +298,15 @@ Manages series or collections of mock tests.
 - **Route:** `POST /mock-series`
 - **Description:** Creates a new mock test series.
 - **Request Body:**
-  ```json
-  {
-    "title": "string",
-    "description": "string",
-    "price": "number",
-    "category_id": "number",
-    "tagIds": ["number"]
-  }
-  ```
+    ```json
+    {
+        "title": "string",
+        "description": "string",
+        "price": "number",
+        "category_id": "number",
+        "tagIds": ["number"]
+    }
+    ```
 - **Returns:** New MockSeries object.
 
 ### Get all mock series
@@ -328,15 +328,15 @@ Manages series or collections of mock tests.
 - **Route:** `PUT /mock-series/:id`
 - **Description:** Updates an existing mock series.
 - **Request Body:**
-  ```json
-  {
-    "title": "string",
-    "description": "string",
-    "price": "number",
-    "category_id": "number",
-    "tagIds": ["number"]
-  }
-  ```
+    ```json
+    {
+        "title": "string",
+        "description": "string",
+        "price": "number",
+        "category_id": "number",
+        "tagIds": ["number"]
+    }
+    ```
 - **Returns:** Updated MockSeries object.
 
 ### Delete a mock series
@@ -357,30 +357,33 @@ Handles questions within mock tests.
 - **Route:** `POST /mock-questions`
 - **Description:** Adds a new question to a mock test.
 - **Request Body:**
-  ```json
-  {
-    "test_id": "number",
-    "question_text": "string",
-    "question_type": "mcq | true_false | fill_blank",
-    "options": {},
-    "correct_answer": "string",
-    "marks": "number"
-  }
-  ```
+    ```json
+    {
+        "test_id": "number",
+        "question_text": "string",
+        "question_type": "mcq | true_false | fill_blank",
+        "options": {},
+        "correct_answer": "string",
+        "marks": "number"
+    }
+    ```
 - **Returns:** New MockQuestion object.
 
 ### Bulk upload questions via CSV
 
 - **Route:** `POST /mock-questions/upload/csv`
 - **Description:** Creates multiple mock questions from a CSV file upload.
-- **Request Body:** `multipart/form-data` containing the CSV file and a `test_id`.<br>
-Format of CSV:
-  ```
-  question_text,question_type,options,correct_answer,marks
-  "What is 2+2?","mcq","{\"A\":\"3\",\"B\":\"4\",\"C\":\"5\"}","B",1
-  "The sky is blue.","true_false","","true",1
-  ```
-- **Returns:** Confirmation message with count of created questions.
+- **Request Body:** `multipart/form-data` containing the CSV file and a `test_id`.
+<br>Format of CSV:
+
+```
+question_text,options,correct_answer,marks,question_type
+"What is the capital of Haryana?","{""a"":""Sonipat"",""b"":""Chandigarh"",""c"":""Gurugram""}","b",2,"mcq"
+"What is the largest city in Haryana?","{""a"":""Faridabad"",""b"":""Panipat"",""c"":""Ambala""}","a",2,"mcq"
+"Haryana was formed in 1966.","{""a"":""True"",""b"":""False""}","a",1,"true_false"
+```
+
+- **Returns:** Confirmation message with the count of created questions.
 
 ### Get all mock questions
 
@@ -401,16 +404,16 @@ Format of CSV:
 - **Route:** `PUT /mock-questions/:id`
 - **Description:** Updates a question's details.
 - **Request Body:**
-  ```json
-  {
-    "test_id": "number",
-    "question_text": "string",
-    "question_type": "mcq | true_false | fill_blank",
-    "options": {},
-    "correct_answer": "string",
-    "marks": "number"
-  }
-  ```
+    ```json
+    {
+        "test_id": "number",
+        "question_text": "string",
+        "question_type": "mcq | true_false | fill_blank",
+        "options": {},
+        "correct_answer": "string",
+        "marks": "number"
+    }
+    ```
 - **Returns:** Updated MockQuestion object.
 
 ### Delete a mock question
@@ -431,12 +434,12 @@ Manages categories for mock test series.
 - **Route:** `POST /mock-categories`
 - **Description:** Creates a new category for mock series.
 - **Request Body:**
-  ```json
-  {
-    "name": "string",
-    "description": "string"
-  }
-  ```
+    ```json
+    {
+        "name": "string",
+        "description": "string"
+    }
+    ```
 - **Returns:** New MockCategory object.
 
 ### Get all mock categories
@@ -458,12 +461,12 @@ Manages categories for mock test series.
 - **Route:** `PUT /mock-categories/:id`
 - **Description:** Updates an existing mock category.
 - **Request Body:**
-  ```json
-  {
-    "name": "string",
-    "description": "string"
-  }
-  ```
+    ```json
+    {
+        "name": "string",
+        "description": "string"
+    }
+    ```
 - **Returns:** Updated MockCategory object.
 
 ### Delete a mock category
@@ -484,12 +487,12 @@ General purpose categories, e.g., for blog posts.
 - **Route:** `POST /categories`
 - **Description:** Creates a new category.
 - **Request Body:**
-  ```json
-  {
-    "name": "string",
-    "description": "string"
-  }
-  ```
+    ```json
+    {
+        "name": "string",
+        "description": "string"
+    }
+    ```
 - **Returns:** New Category object.
 
 ### Get all categories
@@ -511,12 +514,12 @@ General purpose categories, e.g., for blog posts.
 - **Route:** `PUT /categories/:id`
 - **Description:** Updates an existing category.
 - **Request Body:**
-  ```json
-  {
-    "name": "string",
-    "description": "string"
-  }
-  ```
+    ```json
+    {
+        "name": "string",
+        "description": "string"
+    }
+    ```
 - **Returns:** Updated Category object.
 
 ### Delete a category
