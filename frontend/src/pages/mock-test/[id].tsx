@@ -18,7 +18,7 @@ const getTestData = (id: string | string[] | undefined) => {
     title: "SSC CGL Mock Test Series (Tier I & Tier II) 2025",
     language: "English, Hindi",
     logo: "",
-    level: "Beginer",
+    level: "Beginner",
     totalTests: 2182,
     freeTests: 27,
     fullTests: 15,
