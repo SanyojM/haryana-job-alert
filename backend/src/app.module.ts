@@ -8,7 +8,12 @@ import { CategoriesModule } from './categories/categories.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TagsModule } from './tags/tags.module';
-import { PostTemplatesModule } from './post-templates/post-templates.module'; // <-- Add this import
+import { PostTemplatesModule } from './post-templates/post-templates.module';
+import { MockCategoriesModule } from './mock-categories/mock-categories.module';
+import { MockTagsModule } from './mock-tags/mock-tags.module';
+import { MockSeriesModule } from './mock-series/mock-series.module';
+import { MockTestsModule } from './mock-tests/mock-tests.module';
+import { MockQuestionsModule } from './mock-questions/mock-questions.module';
 
 @Module({
   imports: [
@@ -19,7 +24,12 @@ import { PostTemplatesModule } from './post-templates/post-templates.module'; //
     PostsModule,
     CategoriesModule,
     TagsModule,
-    PostTemplatesModule, // <-- Add this line
+    PostTemplatesModule,
+    MockCategoriesModule,
+    MockTagsModule,
+    MockSeriesModule,
+    MockTestsModule,
+    MockQuestionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

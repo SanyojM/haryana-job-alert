@@ -29,7 +29,7 @@ describe('PostsController (e2e)', () => {
 
     prisma = app.get<PrismaService>(PrismaService);
 
-    // Clean up all tables in the correct order to respect foreign keys
+    // Full cleanup
     await prisma.post_tags.deleteMany({});
     await prisma.posts.deleteMany({});
     await prisma.users.deleteMany({});
@@ -37,10 +37,10 @@ describe('PostsController (e2e)', () => {
     await prisma.tags.deleteMany({});
     await prisma.post_templates.deleteMany({});
 
-    // Reset the users_id_seq sequence to ensure our first user has ID 1
+    // Reset the user sequence to guarantee the user has ID 1
     await prisma.$executeRawUnsafe(`ALTER SEQUENCE users_id_seq RESTART WITH 1;`);
 
-    // Create the user that our controller expects (it will have ID 1)
+    // Create user with guaranteed ID 1
     await prisma.users.create({
       data: {
         full_name: 'Test User',
