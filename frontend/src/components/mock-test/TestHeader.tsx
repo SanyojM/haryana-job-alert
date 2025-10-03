@@ -70,7 +70,7 @@ export default function TestHeader({
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative ml-18 lg:ml-0">
               <select
                 id="level-select"
                 value={selectedLevel}
@@ -112,7 +112,7 @@ export default function TestHeader({
             </div>
 
             {/* Action Button */}
-            <button className="min-w-xl sm:w-auto bg-gradient-to-r from-indigo-700 to-indigo-400 text-white font-bold py-3 px-12 rounded-lg hover:opacity-90 transition-opacity">
+            <button className="max-w-xl bg-gradient-to-r from-indigo-700 to-indigo-400 text-white font-bold py-3 md:px-48 px-12 rounded-lg hover:opacity-90 transition-opacity">
               Take the mock test
             </button>
           </div>
@@ -145,7 +145,7 @@ export default function TestHeader({
           </div>
         )}
         <div className="mt-6 hidden lg:flex justify-center">
-              <img src="./illust2.png" alt="Person studying for an exam" />
+              <img src="/illust2.png" alt="Person studying for an exam" />
             </div>
         </div>
       </div>
