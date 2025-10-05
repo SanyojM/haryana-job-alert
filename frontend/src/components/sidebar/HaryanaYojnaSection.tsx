@@ -36,7 +36,7 @@ export default function HaryanaYojnaSection() {
               : 'https://placehold.co/600x400/cccccc/333333?text=Video+Unavailable';
 
             return (
-              <div key={video.id} className="bg-gray-100 rounded-2xl overflow-hidden  ">
+              <div key={video.id} className="rounded-2xl overflow-hidden p-2 bg-white">
                 <a href={video.videoUrl} target="_blank" rel="noopener noreferrer">
                   <img
                     src={thumbnailUrl} 
@@ -80,15 +80,15 @@ export default function HaryanaYojnaSection() {
 
         <AdBanner text="Google Ad Section" className="h-88" />
 
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mt-10">
+        <div className="grid grid-cols-1 gap-8 mt-12">
           {yojnaVideos.map((video) => {
             const videoId = getYouTubeVideoId(video.videoUrl);
             const thumbnailUrl = videoId
               ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-              : 'https://placehold.co/600x400/cccccc/333333?text=Video+Unavailable'; 
+              : 'https://placehold.co/600x400/cccccc/333333?text=Video+Unavailable';
 
             return (
-              <div key={video.id} className="bg-gray-100 rounded-2xl overflow-hidden  ">
+              <div key={video.id} className="rounded-2xl overflow-hidden p-2 bg-white">
                 <a href={video.videoUrl} target="_blank" rel="noopener noreferrer">
                   <img
                     src={thumbnailUrl} 
@@ -100,7 +100,7 @@ export default function HaryanaYojnaSection() {
                   />
                 </a>
 
-                <div className="p-4 flex items-center justify-between gap-2">
+                <div className="py-4 px-1 flex items-center justify-between gap-2">
                   <a
                     href={video.videoUrl}
                     target="_blank"

@@ -52,7 +52,7 @@ export default function CourseEnrollmentCard({
         </div>
       </div>
     </div>
-    <div className='absolute bottom-30 right-0'>
+    <div className='absolute bottom-46 right-0'>
     <Image src="/avatar.png" alt={''} width={120} height={120}/>
     </div>
     </div>
