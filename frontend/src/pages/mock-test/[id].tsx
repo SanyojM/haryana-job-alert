@@ -9,6 +9,7 @@ import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import TestHeader from "@/components/mock-test/TestHeader";
 import { useRouter } from "next/router";
+import AdBanner from "@/components/home/AdBanner";
 
 const getTestData = (id: string | string[] | undefined) => {
   if (!id) return null; // Handle case where id is not ready
@@ -77,9 +78,8 @@ export default function MockTestPage() {
           <main className="lg:col-span-3 space-y-8">
             <TestLists />
             {/* Reusing some components from the homepage for extra content */}
+            <AdBanner text={"Google Ads"} className="h-48"/>
             <MockTestSection />
-            <CurrentAffairsSection />
-            <CourseSection />
             <AboutTestSection />
             {/* You would create MockTestInfo as a new component similar to AboutSection */}
 

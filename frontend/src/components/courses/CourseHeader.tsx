@@ -5,6 +5,7 @@ import { Clock, Globe, Star, Users, Award } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '../ui/button';
+import AdBanner from '../home/AdBanner';
 
 // Define the types for the props this component will accept
 type CourseHeaderProps = {
@@ -90,6 +91,7 @@ export default function CourseHeader({
             <div className="flex items-center gap-1.5"><Globe size={16} /> {language}</div>
         </div>
 
+            <AdBanner text={'Google Ads'} className='md:hidden mb-12 h-48' />
         {/* Ratings Block */}
       </div>
         <div className="md:absolute -bottom-20 z-999 bg-white text-gray-800 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg md:ml-6 lg:ml-18">
