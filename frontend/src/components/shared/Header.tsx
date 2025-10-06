@@ -47,7 +47,7 @@ export default function Header() {
       `}</style>
 
       <header className='bg-gray-100'>
-        <div className="bg-black text-white py-2 overflow-hidden whitespace-nowrap">
+        <div className="bg-black text-white py-1 overflow-hidden whitespace-nowrap text-sm">
           <div className="marquee-content flex">
             <p className="px-4">You can Now Give MOCK TESTS on Haryana Job Alert for FREE.</p>
             <p className="px-4">You can Now Give MOCK TESTS on Haryana Job Alert for FREE.</p>
@@ -69,7 +69,7 @@ export default function Header() {
                   <a
                     key={link.name}
                     href={link.href}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-xl text-md font-medium transition-colors ${
                       link.name === 'Home'
                         ? 'bg-black text-white'
                         : 'text-gray-600 hover:bg-gray-200'

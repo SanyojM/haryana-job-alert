@@ -49,7 +49,7 @@ export default function CourseSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
           {courses.map((course) => (
-            <div key={course.id} className="bg-gray-100 rounded-2xl overflow-hidden flex flex-col">
+            <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col">
               <div className="relative">
                 <a href={course.courseUrl}>
                   <img

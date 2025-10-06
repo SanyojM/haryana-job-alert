@@ -32,10 +32,10 @@ export default function HomePage() {
     <div className='bg-gray-100'>
       <Header />
       <TopLinksSection />
-      <main className="p-4 md:p-6">
+      <main className="p-4 container mx-auto">
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
-          <div className="lg:col-span-3 flex flex-col gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-6">
+          <div className="lg:col-span-4 flex flex-col gap-6">
             <AdBanner text="Google Ads Section" className="h-24" />
             <PostsSection />
             <JobSection />
@@ -50,7 +50,7 @@ export default function HomePage() {
             <FaqSection />
           </div>
 
-          <div className="lg:col-span-1 ">
+          <div className="lg:col-span-1">
             <Sidebar />
           </div>
         </div>
