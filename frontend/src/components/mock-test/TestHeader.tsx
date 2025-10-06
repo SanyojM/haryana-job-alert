@@ -3,6 +3,7 @@
 import { ChevronDown, Clock, Users, Globe, Mail, ArrowRight, ChevronRight, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import AdBanner from '../home/AdBanner';
 
 // Define the types for the props this component will accept
 type TestHeaderProps = {
@@ -42,9 +43,9 @@ export default function TestHeader({
       <div className="flex flex-col lg:flex-row gap-8 justify-between">
         
         {/* Left Side: Main Content */}
-        <div>
+        <div className='w-full'>
           {/* Breadcrumbs */}
-          <nav aria-label="Breadcrumb" className="text-sm text-gray-500 mb-12">
+          <nav aria-label="Breadcrumb" className="text-sm text-gray-500 mb-12 hidden md:block">
             <ol className="flex items-center space-x-2">
               <li><Link href="/" className="hover:text-indigo-600">Home</Link></li>
               <li><span className="text-gray-400"><ChevronRight /></span></li>
@@ -58,9 +59,9 @@ export default function TestHeader({
           </nav>
 
           {/* Title Section */}
-          <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
+          <div className="flex flex-wrap items-start justify-start gap-12 mb-8">
             <div className="flex items-start gap-4">
-              <img src="https://placehold.co/60x60/e2e8f0/334155?text=SSC" alt="Test Logo" className="w-14 h-14 rounded-full" />
+              <img src="https://placehold.co/60x60/e2e8f0/334155?text=SSC" alt="Test Logo" className="w-14 h-14 rounded-full hidden lg:block" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
                 <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
@@ -70,7 +71,7 @@ export default function TestHeader({
               </div>
             </div>
 
-            <div className="relative ml-18 lg:ml-0">
+            <div className="relative">
               <select
                 id="level-select"
                 value={selectedLevel}
@@ -85,7 +86,7 @@ export default function TestHeader({
             </div>
           </div>
 
-          <div className='ml-18'>
+          <div className='lg:ml-18'>
             {/* Info Tags */}
             <div className="w-fit flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-700 font-medium mb-6 border-b-1 pb-6 px-2 border-gray-400">
               <span className="flex items-center gap-1.5">{totalTests} Total Tests</span>
@@ -98,7 +99,7 @@ export default function TestHeader({
             </div>
 
             {/* Features List */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-gray-800 font-medium mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-gray-800 font-medium mb-12">
               {featureGroups.map((group, groupIndex) => (
                 <ul key={groupIndex} className="list-disc list-inside">
                   {group.map((feature, featureIndex) => (
@@ -112,10 +113,11 @@ export default function TestHeader({
             </div>
 
             {/* Action Button */}
-            <button className="max-w-xl bg-gradient-to-r from-indigo-700 to-indigo-400 text-white font-bold py-3 md:px-48 px-12 rounded-lg hover:opacity-90 transition-opacity">
+            <button className="md:max-w-xl w-full bg-gradient-to-r from-indigo-700 to-indigo-400 text-white font-bold py-3 md:px-48 px-12 rounded-lg hover:opacity-90 transition-opacity">
               Take the mock test
             </button>
           </div>
+            <AdBanner text={'Google Ads'} className='h-48 mt-12 w-full md:w-[90%]'/>
         </div>
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
         {/* This entire block will only render if isUserLoggedIn is false */}
@@ -144,6 +146,7 @@ export default function TestHeader({
             </div>
           </div>
         )}
+        <AdBanner text={'Google Ads'} className='h-48 md:hidden'/>
         <div className="mt-6 hidden lg:flex justify-center">
               <img src="/illust2.png" alt="Person studying for an exam" />
             </div>

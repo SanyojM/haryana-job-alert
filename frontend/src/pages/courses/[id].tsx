@@ -72,10 +72,10 @@ export default function CoursePage({ id }: CoursePageProps) {
                     ratingCount={courseData.ratingCount}
                     studentCount={courseData.studentCount} isBestseller={false} isFree={false} />
             </div>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 py-8">
+            <div className="container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 items-start">
                     {/* Main Content Area */}
-                    <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0">
+                    <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0 mt-12">
                         <CourseDescription description={courseData.mainDescription} />
                         <CourseContentAccordion content={{
                             totalLectures: courseData.content.totalLectures,
@@ -98,7 +98,7 @@ export default function CoursePage({ id }: CoursePageProps) {
                             description={courseData.description}
                         />
                         <div className="mr-4">
-                        <AdBanner text={"Google Ads Section"} className="h-88"/>
+                        <AdBanner text={"Google Ads Section"} className="h-88 mt-52"/>
                         </div>
                     </aside>
 
