@@ -1,6 +1,4 @@
 import Sidebar from "@/components/shared/Sidebar";
-import CurrentAffairsSection from "@/components/home/CurrentAffairsSection";
-import CourseSection from "@/components/home/CourseSection";
 import FaqSection from "@/components/home/FaqSection";
 import TestLists from "@/components/mock-test/TestLists";
 import MockTestSection from "@/components/home/MockTestSection";

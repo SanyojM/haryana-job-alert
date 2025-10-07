@@ -4,15 +4,11 @@ import CourseEnrollmentCard from "@/components/courses/CourseEnrollmentCard";
 import CourseHeader from "@/components/courses/CourseHeader";
 import AdBanner from "@/components/home/AdBanner";
 import Header from "@/components/shared/Header";
-import Sidebar from "@/components/shared/Sidebar";
-import { Button } from "@/components/ui/button";
 
 type CoursePageProps = {
     id: string;
 };
 
-// --- MOCK DATA FOR A SINGLE COURSE ---
-// In a real app, you would fetch this data from an API using params.id
 const getCourseData = (id: string) => {
     console.log("Fetching data for course:", id);
     return {

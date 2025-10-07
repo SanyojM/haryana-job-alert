@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUpRight, ChevronRight, SlidersHorizontal, User } from 'lucide-react';
+import { ArrowUpRight, SlidersHorizontal, User } from 'lucide-react';
 import AdBanner from './AdBanner';
 import Link from 'next/link';
 import Image from 'next/image';

@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, Clock, Users, Globe, Mail, ArrowRight, ChevronRight, Smartphone } from 'lucide-react';
+import { ChevronDown, Clock, Users, Globe, ChevronRight, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import AdBanner from '../home/AdBanner';
@@ -31,7 +31,7 @@ export default function TestHeader({
   isUserLoggedIn, // Destructure the new prop
 }: TestHeaderProps) {
   // Split features for the two-column layout
-  const midPoint = Math.ceil(features.length / 2);
+  // const midPoint = Math.ceil(features.length / 2);
   const chunk = (arr: string[], size: number) =>
     Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
       arr.slice(i * size, i * size + size)

@@ -21,7 +21,7 @@ export const api = {
     return response.json();
   },
 
-  post: async (endpoint: string, data: any, token?: string) => {
+  post: async (endpoint: string, data: unknown, token?: string) => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'POST',
       headers: getHeaders(token),
@@ -34,7 +34,7 @@ export const api = {
     return response.json();
   },
 
-  put: async (endpoint: string, data: any, token?: string) => {
+  put: async (endpoint: string, data: unknown, token?: string) => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'PUT',
       headers: getHeaders(token),

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import type { GetServerSideProps, NextPage } from 'next';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';

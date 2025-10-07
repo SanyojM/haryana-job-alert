@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { PlayCircle, FileText, Download, CheckCircle, MonitorPlay } from 'lucide-react';
+import { FileText, Download, CheckCircle, MonitorPlay } from 'lucide-react';
 
 type CourseEnrollmentCardProps = {
     thumbnailUrl: string;
