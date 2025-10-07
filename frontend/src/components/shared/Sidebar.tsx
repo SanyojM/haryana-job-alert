@@ -9,10 +9,10 @@ export default function Sidebar() {
             <HaryanaYojnaSection />
             <AdBanner text="Google Ad Section" className="h-88" />
             <CourseSection />
-            <AdBanner text="Google Ad Section" className="h-64" />
-            <AdBanner text="Google Ad Section" className="h-220" />
-            <AdBanner text="Google Ad Section" className="h-422" />
-            <AdBanner text="Google Ad Section" className="h-112" />
+            {/* <AdBanner text="Google Ad Section" className="h-64" /> */}
+            {/* <AdBanner text="Google Ad Section" className="h-220" /> */}
+            {/* <AdBanner text="Google Ad Section" className="h-422" /> */}
+            {/* <AdBanner text="Google Ad Section" className="h-112" /> */}
         </aside>
         </>
     );

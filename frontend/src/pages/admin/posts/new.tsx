@@ -5,10 +5,7 @@ import { CreatePostForm } from "@/components/admin/posts/CreatePostForm";
 export type PostTemplate = {
   id: string;
   name: string;
-  structure: {
-    placeholders?: any[];
-    blocks?: any[];
-  };
+  structure: string; // FIX: This is now a string to hold HTML
 };
 
 export type Category = {
@@ -56,8 +53,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const CreatePostPage: NextPage<CreatePostPageProps> = ({ templates, categories, tags }) => {
   return (
-    // The layout is now handled automatically by _app.tsx
-    <CreatePostForm templates={templates} categories={categories} tags={tags} />
+    <div className="container mx-auto p-4">
+        <h1 className="text-3xl font-bold tracking-tight mb-6">Create New Post</h1>
+        <CreatePostForm templates={templates} categories={categories} tags={tags} />
+    </div>
   );
 };
 

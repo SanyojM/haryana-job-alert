@@ -34,15 +34,15 @@ const data = {
         },
         {
           title: "Categories",
-          url: "/admin/categories",
+          url: "/admin/getting-started/categories",
         },
         {
           title: "Tags",
-          url: "/admin/tags",
+          url: "/admin/getting-started/tags",
         },
         {
           title: "Users",
-          url: "/admin/users",
+          url: "/admin/getting-started/users",
         }
       ],
     },
@@ -51,15 +51,15 @@ const data = {
       items: [
         {
           title: "Post Templates",
-          url: "/admin/post-templates",
+          url: "/admin/posts/post-templates",
         },
         {
-          title: "Posts",
+          title: "All Posts",
+          url: "/admin/posts",
+        },
+        {
+          title: "Add New Post",
           url: "/admin/posts/new",
-        },
-        {
-          title: "Media",
-          url: "/admin/media",
         },
       ],
     },

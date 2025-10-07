@@ -1,14 +1,17 @@
 import { ArrowUpRight, Newspaper, ShieldCheck, FilePlus, Heart, Trophy } from 'lucide-react';
+import Link from 'next/link'; // Import the Link component
+import { Post } from '@/pages/admin/posts'; // Import the Post type
 
-const posts = [
-  { id: 1, title: 'UP Police SI Form', count: 4543, color: 'from-blue-400 to-indigo-500', href: '#' },
-  { id: 2, title: 'BSF HC RO / RM Recruitment 2025', count: null, color: 'from-teal-400 to-cyan-500', href: '#' },
-  { id: 3, title: 'Bihar BSSC Office Recruitment 2025', count: null, color: 'from-gray-700 to-gray-800', href: '#' },
-  { id: 4, title: 'UP Police SI Form', count: 4543, color: 'from-emerald-500 to-green-600', href: '#' },
-  { id: 5, title: 'UP Police SI Form', count: 4543, color: 'from-red-500 to-rose-600', href: '#' },
-  { id: 6, title: 'UP Police SI Form', count: 4543, color: 'from-emerald-500 to-green-600', href: '#' },
-  { id: 7, title: 'UP Police SI Form', count: 4543, color: 'from-blue-400 to-indigo-500', href: '#' },
-  { id: 8, title: 'UP Police SI Form', count: 4543, color: 'from-red-500 to-rose-600', href: '#' },
+// An array of colors to cycle through for a dynamic but consistent look
+const colors = [
+  'from-blue-400 to-indigo-500',
+  'from-teal-400 to-cyan-500',
+  'from-emerald-500 to-green-600',
+  'from-red-500 to-rose-600',
+  'from-gray-700 to-gray-800',
+  'from-purple-400 to-violet-500',
+  'from-pink-400 to-rose-500',
+  'from-amber-400 to-orange-500',
 ];
 
 const features = [
@@ -19,27 +22,32 @@ const features = [
     { icon: Trophy, title: 'We Deliver Quality', subtitle: 'Quality Information' },
 ];
 
-
-export default function PostsSection() {
+// The component now accepts a 'posts' prop
+export default function PostsSection({ posts }: { posts: Post[] }) {
   return (
     <section className="bg-gray-100 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
-          {posts.map((post) => (
-            <a
+          {/* We now map over the 'posts' from the props */}
+          {posts.slice(0, 8).map((post, index) => ( // Show up to 8 posts
+            <Link
               key={post.id}
-              href={post.href}
-              className={`relative p-5 rounded-xl text-white overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 bg-gradient-to-br ${post.color}`}
-            >
-              <div className="relative z-10">
-                <h3 className="font-bold text-lg leading-tight">{post.title}</h3>
-                {post.count && <p className="text-sm opacity-90">({post.count} Post)</p>}
-              </div>
-              <div className="md:absolute top-3 right-3 w-7 h-7 bg-white/20 rounded-full flex items-center justify-center hidden">
-                <ArrowUpRight className="w-4 h-4 text-white" />
-              </div>
-            </a>
+              href={`/posts/${post.slug}`} // Use the dynamic slug for the link
+              passHref
+              legacyBehavior>
+              <a
+                className={`relative p-5 rounded-xl text-white overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 bg-gradient-to-br ${colors[index % colors.length]}`} // Cycle through colors
+              >
+                <div className="relative z-10">
+                  <h3 className="font-bold text-lg leading-tight">{post.title}</h3>
+                  {/* The 'count' property doesn't exist on our dynamic posts, so it's removed */}
+                </div>
+                <div className="absolute top-3 right-3 w-7 h-7 bg-white/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ArrowUpRight className="w-4 h-4 text-white" />
+                </div>
+              </a>
+            </Link>
           ))}
         </div>
 

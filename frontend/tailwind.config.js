@@ -7,7 +7,11 @@ module.exports = {
     "./node_modules/@heroui/theme/dist/components/(accordion|divider).js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Poppins", "sans-serif"],
+      },
+    },
   },
   darkMode: "class",
   plugins: [heroui()],

@@ -41,6 +41,11 @@ export class PostsController {
     return this.postsService.update(id, updatePostDto);
   }
 
+   @Get('slug/:slug')
+  findBySlug(@Param('slug') slug: string) {
+    return this.postsService.findBySlug(slug);
+  }
+
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.remove(id);

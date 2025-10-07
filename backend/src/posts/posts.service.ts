@@ -79,6 +79,22 @@ export class PostsService {
     });
   }
 
+  async findBySlug(slug: string) {
+    const post = await this.prisma.posts.findUnique({
+      where: { slug },
+      include: {
+        categories: true,
+        post_templates: true,
+        post_tags: { include: { tags: true } },
+      },
+    });
+
+    if (!post) {
+      throw new NotFoundException(`Post with slug "${slug}" not found`);
+    }
+    return post;
+  }
+
   async remove(id: number) {
     await this.findOne(id);
     return this.prisma.posts.delete({ where: { id } });

@@ -9,6 +9,8 @@ export class CreatePostTemplateDto {
   @IsOptional()
   description?: string;
 
-  @IsObject()
-  structure: Record<string, any>;
+  // CHANGE THIS from @IsObject() to @IsString()
+  @IsString()
+  @IsNotEmpty()
+  structure: string; // Type is now string
 }

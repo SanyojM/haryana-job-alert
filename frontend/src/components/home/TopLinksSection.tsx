@@ -1,18 +1,12 @@
 import { CheckCircle2, ArrowUpRight, ArrowRight } from 'lucide-react';
+import { Category } from '@/pages/admin/getting-started/categories'; // Import the Category type
+import Link from 'next/link'; // Import Link for navigation
 
-const links = [
-  { name: 'Online Form', href: '#' },
-  { name: 'Admit Card', href: '#' },
-  { name: 'Answer keys', href: '#' },
-  { name: 'Syllabus & Career News', href: '#' },
-  { name: 'Sarkari Yojna & Notices', href: '#' },
-  { name: 'Scholarships', href: '#' },
-  { name: 'Mock Tests', href: '#' },
-  { name: 'Currents Affairs', href: '#' },
-  { name: 'Study Material', href: '#' },
-];
+interface TopLinksSectionProps {
+  categories: Category[];
+}
 
-export default function TopLinksSection() {
+export default function TopLinksSection({ categories }: TopLinksSectionProps) {
   return (
     <section className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto text-center">
@@ -21,20 +15,22 @@ export default function TopLinksSection() {
         </h1>
 
         <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-6 gap-y-4">
-          {links.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center text-gray-700 font-medium"
+          {/* Map over the dynamic categories to create links */}
+          {categories.map((category) => (
+            <Link 
+              key={category.id} 
+              href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+              passHref
+              legacyBehavior
             >
-              <CheckCircle2 className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
-              <span className="underline decoration-gray-300 group-hover:decoration-gray-700 transition-all">
-                {link.name}
-              </span>
-              <ArrowUpRight className="w-4 h-4 text-gray-400 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </a>
+              <a className="group inline-flex items-center justify-center text-gray-700 font-medium">
+                <CheckCircle2 className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
+                <span className="underline decoration-gray-300 group-hover:decoration-gray-700 transition-all">
+                  {category.name}
+                </span>
+                <ArrowUpRight className="w-4 h-4 text-gray-400 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </a>
+            </Link>
           ))}
         </div>
 
