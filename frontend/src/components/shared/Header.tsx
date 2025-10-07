@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Search, User, Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const navLinks = [
   { name: 'Home', href: '#' },
@@ -58,15 +60,15 @@ export default function Header() {
 
         <nav className="lg:container mx-auto px-4 mt-5">
           <div className="flex items-center justify-between h-20">
-            <a href="/" className="flex-shrink-0">
-              <img className="h-14 w-14" src="/LOGO.png" alt="Haryana Job Alert Logo" />
-            </a>
+            <Link href="/" className="flex-shrink-0">
+              <Image className="h-14 w-14" src="/LOGO.png" alt="Haryana Job Alert Logo" />
+            </Link>
 
             <div className="hidden lg:flex items-center justify-center flex-1">
                 <div className='p-2 rounded-xl border'>
               <div className="bg-white rounded-xl shadow-lg px-4 py-2 flex items-center space-x-2">
                 {navLinks.map((link) => (
-                  <a
+                  <Link
                     key={link.name}
                     href={link.href}
                     className={`px-4 py-2 rounded-xl text-md font-medium transition-colors ${
@@ -76,7 +78,7 @@ export default function Header() {
                     }`}
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 ))}
                 <div className="border-l border-gray-200 ml-2 pl-4 flex items-center space-x-3">
                     <User className="w-5 h-5 text-gray-500 cursor-pointer hover:text-black" />
@@ -98,7 +100,7 @@ export default function Header() {
           <div className="lg:hidden bg-gray-100 shadow-lg absolute w-full z-999 origin-top-right">
             <div className="flex flex-col space-y-1 px-2 pt-2 pb-3">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
@@ -108,17 +110,17 @@ export default function Header() {
                   }`}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
                <div className="border-t border-gray-200 mt-2 pt-2 flex items-center space-x-4 px-3">
-                    <a href="#" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
+                    <Link href="#" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
                         <User className="w-5 h-5" />
                         <span>Profile</span>
-                    </a>
-                    <a href="#" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
+                    </Link>
+                    <Link href="#" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
                         <Search className="w-5 h-5" />
                         <span>Search</span>
-                    </a>
+                    </Link>
                 </div>
             </div>
           </div>

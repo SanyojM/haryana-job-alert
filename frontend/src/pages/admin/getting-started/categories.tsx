@@ -67,8 +67,12 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
       setCategories((prev) => [...prev, newCategory]);
       setNewName('');
       setNewDescription('');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to create category.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -94,8 +98,12 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
 
       setCategories(prev => prev.map(c => c.id === updatedCategory.id ? updatedCategory : c));
       setIsEditDialogOpen(false); // This will now correctly close the single dialog
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to update category.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -108,8 +116,12 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
     try {
       await api.delete(`/categories/${categoryId}`, authToken);
       setCategories(prev => prev.filter(c => c.id !== categoryId));
-    } catch (err: any) {
-      alert(`Failed to delete category: ${err.message}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(`Failed to delete category: ${err.message}`);
+      } else {
+        alert('Failed to delete category.');
+      }
     }
   };
 

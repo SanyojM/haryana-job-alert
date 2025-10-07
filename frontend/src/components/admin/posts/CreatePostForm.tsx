@@ -85,8 +85,12 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
         await api.post('/posts', postData, authToken);
       }
       router.push('/admin/posts');
-    } catch (err: any) {
-      setError(err.message || 'Failed to save post.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to save post.');
+      }
     } finally {
       setIsLoading(false);
     }

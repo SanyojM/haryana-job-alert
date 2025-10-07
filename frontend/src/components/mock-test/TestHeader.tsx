@@ -4,6 +4,7 @@ import { ChevronDown, Clock, Users, Globe, Mail, ArrowRight, ChevronRight, Smart
 import Link from 'next/link';
 import { useState } from 'react';
 import AdBanner from '../home/AdBanner';
+import Image from 'next/image';
 
 // Define the types for the props this component will accept
 type TestHeaderProps = {
@@ -61,7 +62,7 @@ export default function TestHeader({
           {/* Title Section */}
           <div className="flex flex-wrap items-start justify-start gap-12 mb-8">
             <div className="flex items-start gap-4">
-              <img src="https://placehold.co/60x60/e2e8f0/334155?text=SSC" alt="Test Logo" className="w-14 h-14 rounded-full hidden lg:block" />
+              <Image src="https://placehold.co/60x60/e2e8f0/334155?text=SSC" alt="Test Logo" className="w-14 h-14 rounded-full hidden lg:block" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
                 <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
@@ -148,7 +149,7 @@ export default function TestHeader({
         )}
         <AdBanner text={'Google Ads'} className='h-48 md:hidden'/>
         <div className="mt-6 hidden lg:flex justify-center">
-              <img src="/illust2.png" alt="Person studying for an exam" />
+              <Image src="/illust2.png" alt="Person studying for an exam" />
             </div>
         </div>
       </div>

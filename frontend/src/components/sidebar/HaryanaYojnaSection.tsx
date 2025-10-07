@@ -1,5 +1,6 @@
 import { ArrowUpRight, Bookmark, Send } from 'lucide-react';
 import AdBanner from '../home/AdBanner';
+import Image from 'next/image';
 
 function getYouTubeVideoId(url: string): string | null {
   const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
@@ -38,7 +39,7 @@ export default function HaryanaYojnaSection() {
             return (
               <div key={video.id} className="rounded-2xl overflow-hidden p-2 bg-white">
                 <a href={video.videoUrl} target="_blank" rel="noopener noreferrer">
-                  <img
+                  <Image
                     src={thumbnailUrl} 
                     alt={video.title}
                     className="w-full h-auto object-cover aspect-video rounded-2xl"
@@ -90,7 +91,7 @@ export default function HaryanaYojnaSection() {
             return (
               <div key={video.id} className="rounded-2xl overflow-hidden p-2 bg-white">
                 <a href={video.videoUrl} target="_blank" rel="noopener noreferrer">
-                  <img
+                  <Image
                     src={thumbnailUrl} 
                     alt={video.title}
                     className="w-full h-auto object-cover aspect-video rounded-2xl"

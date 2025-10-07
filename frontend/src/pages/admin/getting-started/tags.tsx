@@ -50,8 +50,12 @@ const TagsPage: NextPage<TagsPageProps> = ({ initialTags }) => {
       const newTag = await api.post('/tags', { name: newName }, authToken);
       setTags((prev) => [...prev, newTag]);
       setNewName('');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to create tag.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -69,8 +73,12 @@ const TagsPage: NextPage<TagsPageProps> = ({ initialTags }) => {
       const updatedTag = await api.put(`/tags/${editingTag.id}`, { name: editingTag.name }, authToken);
       setTags(prev => prev.map(t => t.id === updatedTag.id ? updatedTag : t));
       setIsEditDialogOpen(false);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to update tag.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -85,8 +93,12 @@ const TagsPage: NextPage<TagsPageProps> = ({ initialTags }) => {
     try {
       await api.delete(`/tags/${tagId}`, authToken);
       setTags(prev => prev.filter(t => t.id !== tagId));
-    } catch (err: any) {
-      alert(`Failed to delete tag: ${err.message}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(`Failed to delete tag: ${err.message}`);
+      } else {
+        alert('Failed to delete tag.');
+      }
     }
   };
 

@@ -23,8 +23,12 @@ export default function LoginPage() {
       const data = await api.post('/auth/login', { email, password });
       await login(data.access_token);
       router.push('/admin'); // Redirect to admin dashboard on success
-    } catch (err: any) {
-      setError('Invalid email or password.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Invalid email or password.');
+      }
     } finally {
       setIsLoading(false);
     }

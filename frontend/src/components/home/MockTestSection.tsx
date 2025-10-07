@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ArrowUpRight, ChevronRight, SlidersHorizontal, User } from 'lucide-react';
 import AdBanner from './AdBanner';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const categories = [
     { id: 'ssc', name: 'SSC Exam' },
@@ -92,7 +93,7 @@ export default function MockTestSection() {
         <section className="bg-gray-100 py-12">
             <div>
                 <div className="text-center mb-20">
-                    <img
+                    <Image
                         src="/mt.png"
                         alt="Mock Tests"
                         className="inline-block h-20 w-auto"
@@ -122,7 +123,7 @@ export default function MockTestSection() {
                     {mockTests.slice(0, 3).map((test) => (
                         <div key={test.id} className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col">
                             <div className="flex justify-between items-start mb-3">
-                                <img src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
+                                <Image src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
                                 <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
                                     <User className="w-3 h-3" />
                                     <span>{test.users}+ Users</span>
@@ -162,7 +163,7 @@ export default function MockTestSection() {
                     {mockTests.slice(3, 6).map((test) => (
                         <div key={test.id} className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col">
                             <div className="flex justify-between items-start mb-3">
-                                <img src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
+                                <Image src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
                                 <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
                                     <User className="w-3 h-3" />
                                     <span>{test.users}+ Users</span>

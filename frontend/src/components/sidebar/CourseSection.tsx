@@ -1,4 +1,5 @@
 import { Star, Heart } from 'lucide-react';
+import Image from 'next/image';
 
 const courses = [
   {
@@ -52,7 +53,7 @@ export default function CourseSection() {
             <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col">
               <div className="relative">
                 <a href={course.courseUrl}>
-                  <img
+                  <Image
                     src={course.thumbnailUrl}
                     alt={course.title}
                     className="w-full h-auto object-cover aspect-video rounded-2xl"
@@ -73,7 +74,7 @@ export default function CourseSection() {
                 <p className="text-sm text-gray-500 mb-3">{course.description}</p>
                 
                 <div className="flex items-center gap-2 mb-4">
-                    <img src={course.instructor.avatarUrl} alt={course.instructor.name} className="w-7 h-7 rounded-full" />
+                    <Image src={course.instructor.avatarUrl} alt={course.instructor.name} className="w-7 h-7 rounded-full" />
                     <span className="text-sm text-gray-700">By {course.instructor.name}</span>
                 </div>
 

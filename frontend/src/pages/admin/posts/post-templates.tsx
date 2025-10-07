@@ -61,8 +61,12 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
       setNewName('');
       setNewDescription('');
       setNewStructure('');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to create post template.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -82,8 +86,12 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
         }, authToken);
         setTemplates(prev => prev.map(t => t.id === updatedTemplate.id ? updatedTemplate : t));
         setIsEditDialogOpen(false);
-    } catch (err: any) {
-        setError(err.message);
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            setError(err.message);
+        } else {
+            setError('Failed to update post template.');
+        }
     } finally {
         setIsLoading(false);
     }
@@ -95,8 +103,12 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
     try {
         await api.delete(`/post-templates/${templateId}`, authToken);
         setTemplates(prev => prev.filter(t => t.id !== templateId));
-    } catch (err: any) {
-        alert(`Failed to delete template: ${err.message}`);
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            alert(`Failed to delete template: ${err.message}`);
+        } else {
+            alert('Failed to delete template.');
+        }
     }
   };
 

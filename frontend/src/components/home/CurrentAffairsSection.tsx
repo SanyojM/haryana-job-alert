@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowUpRight, SlidersHorizontal } from 'lucide-react';
 import AdBanner from './AdBanner';
+import Image from 'next/image';
 
 const categories = ['Today', 'Popular', 'Week', 'Month'];
 
@@ -52,7 +53,7 @@ export default function CurrentAffairsSection() {
         <section className="bg-gray-100 py-12">
             <div>
                 <div className="text-center mb-20">
-                    <img
+                    <Image
                         src="/ca.png"
                         alt="Mock Tests"
                         className="inline-block h-20 w-auto"
@@ -78,7 +79,7 @@ export default function CurrentAffairsSection() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {articles.slice(0, 3).map((article) => (
                         <div key={article.id} className="bg-gray-100 rounded-2xl overflow-hidden flex flex-col">
-                            <img
+                            <Image
                                 src={article.imageUrl}
                                 alt={article.title}
                                 className="w-full h-48 object-cover rounded-2xl"
@@ -101,7 +102,7 @@ export default function CurrentAffairsSection() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {articles.slice(3, 6).map((article) => (
                         <div key={article.id} className="bg-gray-100 rounded-2xl overflow-hidden flex flex-col">
-                            <img
+                            <Image
                                 src={article.imageUrl}
                                 alt={article.title}
                                 className="w-full h-48 object-cover rounded-2xl"

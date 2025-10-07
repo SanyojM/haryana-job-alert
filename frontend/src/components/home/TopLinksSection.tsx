@@ -1,6 +1,7 @@
 import { CheckCircle2, ArrowUpRight, ArrowRight } from 'lucide-react';
 import { Category } from '@/pages/admin/getting-started/categories'; // Import the Category type
 import Link from 'next/link'; // Import Link for navigation
+import Image from 'next/image';
 
 interface TopLinksSectionProps {
   categories: Category[];
@@ -52,7 +53,7 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
           
           <button className="w-full sm:w-auto bg-white rounded-xl shadow-md px-6 py-3 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg transition-shadow">
             <span>Contact Us</span>
-            <img 
+            <Image
               src="https://placehold.co/40x40/60a5fa/ffffff?text=🧑&font=noto" 
               alt="Contact avatar"
               className="w-8 h-8 rounded-full ml-4"
