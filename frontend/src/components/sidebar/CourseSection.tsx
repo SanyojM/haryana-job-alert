@@ -57,6 +57,9 @@ export default function CourseSection() {
                     src={course.thumbnailUrl}
                     alt={course.title}
                     className="w-full h-auto object-cover aspect-video rounded-2xl"
+                    width={600}
+                    height={400}
+                    unoptimized
                   />
                 </a>
               </div>
@@ -74,7 +77,7 @@ export default function CourseSection() {
                 <p className="text-sm text-gray-500 mb-3">{course.description}</p>
                 
                 <div className="flex items-center gap-2 mb-4">
-                    <Image src={course.instructor.avatarUrl} alt={course.instructor.name} className="w-7 h-7 rounded-full" />
+                    <Image src={course.instructor.avatarUrl} alt={course.instructor.name} className="w-7 h-7 rounded-full" width={40} height={40} unoptimized />
                     <span className="text-sm text-gray-700">By {course.instructor.name}</span>
                 </div>
 

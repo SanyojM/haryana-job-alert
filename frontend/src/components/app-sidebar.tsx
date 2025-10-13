@@ -64,6 +64,27 @@ const data = {
       ],
     },
     {
+      title: "Mock Tests",
+      items: [
+        {
+          title: "Categories",
+          url: "/admin/mock-tests/mock-categories",
+        },
+        {
+          title: "Tags",
+          url: "/admin/mock-tests/mock-tags",
+        },
+        {
+          title: "Test Series",
+          url: "/admin/mock-tests/mock-test-series",
+        },
+        {
+          title: "Mock Tests",
+          url: "/admin/mock-tests",
+        },
+      ],
+    },
+    {
       title: "Courses",
       items: [
         {
@@ -89,43 +110,6 @@ const data = {
         {
           title: "Reviews",
           url: "/admin/reviews",
-        },
-      ],
-    },
-    {
-      title: "Mock Tests",
-      items: [
-        {
-          title: "All Mock Test Series",
-          url: "/admin/mock-test-series",
-        },
-        {
-          title: "Add New Series",
-          url: "/admin/mock-test-series/new",
-        },
-        {
-          title: "Update Series",
-          url: "/admin/mock-test-series/update",
-        },
-        {
-          title: "All Mock Tests",
-          url: "/admin/mock-tests",
-        },
-        {
-          title: "Add New Test",
-          url: "/admin/mock-tests/new",
-        },
-        {
-          title: "Update Test",
-          url: "/admin/mock-tests/update",
-        },
-        {
-          title: "Categories",
-          url: "/admin/mock-test-categories",
-        },
-        {
-          title: "Tags",
-          url: "/admin/mock-test-tags",
         },
       ],
     },

@@ -51,7 +51,8 @@ export class MockSeriesService {
       include: {
         mock_categories: true,
         mock_series_tags: { include: { tag: true } },
-        mock_tests: true,
+        // Fetch tests through the join table
+        mock_series_tests: { include: { test: true } }, 
       },
     });
 
@@ -59,6 +60,27 @@ export class MockSeriesService {
       throw new NotFoundException(`Mock Series with ID ${id} not found`);
     }
     return series;
+  }
+
+  async addTestToSeries(seriesId: number, testId: number) {
+    return this.prisma.mock_series_tests.create({
+      data: {
+        series_id: seriesId,
+        test_id: testId,
+      },
+    });
+  }
+
+  // NEW: Method to remove a test from a series (without deleting the test)
+  async removeTestFromSeries(seriesId: number, testId: number) {
+    return this.prisma.mock_series_tests.delete({
+      where: {
+        series_id_test_id: {
+          series_id: seriesId,
+          test_id: testId,
+        },
+      },
+    });
   }
 
   async update(id: number, updateMockSeriesDto: UpdateMockSeriesDto) {
@@ -93,5 +115,17 @@ export class MockSeriesService {
   async remove(id: number) {
     await this.findOne(id);
     return this.prisma.mock_series.delete({ where: { id } });
+  }
+
+  async checkEnrollment(seriesId: number, userId: number) {
+    const payment = await this.prisma.payments.findFirst({
+      where: {
+        user_id: userId,
+        mock_series_id: seriesId,
+        status: 'success', // Check for a successful payment
+      },
+    });
+
+    return { enrolled: !!payment }; // Returns { enrolled: true } if a payment exists, otherwise false
   }
 }

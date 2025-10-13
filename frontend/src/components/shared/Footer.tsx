@@ -23,7 +23,7 @@ export default function Footer() {
           
           <div className="md:col-span-8">
             <div className="md:flex items-center gap-4 mb-6 text-center md:text-start">
-                <Image src="/LOGO.png" alt="Logo" className="w-16 h-16 rounded-full hidden md:block" />
+                <Image src="/LOGO.png" alt="Logo" height={64} width={64} className="w-16 h-16 rounded-full hidden md:block" />
                 <h2 className="text-4xl font-extrabold text-gray-900">Get in touch</h2>
                 <div className="flex items-center gap-3 md:ml-4 justify-center md:justify-start mt-4 md:mt-0">
                     <a href="#" className="text-red-600 hover:opacity-80"><Youtube size={32} /></a>
@@ -34,7 +34,7 @@ export default function Footer() {
 
             <div className="flex flex-col items-center gap-8">
                 <div className="flex-shrink-0">
-                    <Image src="/illust.png" alt="Contact illustration" className="w-48 h-auto" />
+                    <Image src="/illust.png" alt="Contact illustration" className="w-48 h-auto" width={192} height={192} />
                 </div>
                 <div className="text-lg space-y-2 font-medium">
                     <p><strong>Mobile No:</strong> +91 1234567890</p>
@@ -66,7 +66,7 @@ export default function Footer() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                 <span>All Rights Reserved, Since 2025 © Developed by</span>
                 <a href="#" className="inline-flex items-center gap-2 font-bold text-gray-800 hover:text-indigo-600">
-                   <Image src="/ss.png" alt="Softricity Logo" className="w-6 h-6 rounded" />
+                   <Image src="/ss.png" alt="Softricity Logo" className="w-6 h-6 rounded" width={24} height={24} />
                    <span className='text-indigo-600 font-bold text-xl'>SOFTRICITY</span> Pvt Ltd
                 </a>
             </div>

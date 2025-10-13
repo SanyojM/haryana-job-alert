@@ -57,6 +57,9 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
               src="https://placehold.co/40x40/60a5fa/ffffff?text=🧑&font=noto" 
               alt="Contact avatar"
               className="w-8 h-8 rounded-full ml-4"
+              width={32}
+              height={32}
+              unoptimized
             />
           </button>
         </div>

@@ -57,6 +57,8 @@ export default function CurrentAffairsSection() {
                         src="/ca.png"
                         alt="Mock Tests"
                         className="inline-block h-20 w-auto"
+                        width={300}
+                        height={80}
                     />
                 </div>
 
@@ -83,6 +85,9 @@ export default function CurrentAffairsSection() {
                                 src={article.imageUrl}
                                 alt={article.title}
                                 className="w-full h-48 object-cover rounded-2xl"
+                                width={600}
+                                height={400}
+                                unoptimized
                             />
                             <div className="p-5 flex flex-col flex-grow">
                                 <h3 className="font-bold text-lg text-gray-800 leading-tight flex-grow mb-4">
@@ -106,6 +111,9 @@ export default function CurrentAffairsSection() {
                                 src={article.imageUrl}
                                 alt={article.title}
                                 className="w-full h-48 object-cover rounded-2xl"
+                                width={600}
+                                height={400}
+                                unoptimized
                             />
                             <div className="p-5 flex flex-col flex-grow">
                                 <h3 className="font-bold text-lg text-gray-800 leading-tight flex-grow mb-4">

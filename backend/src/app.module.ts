@@ -14,6 +14,7 @@ import { MockTagsModule } from './mock-tags/mock-tags.module';
 import { MockSeriesModule } from './mock-series/mock-series.module';
 import { MockTestsModule } from './mock-tests/mock-tests.module';
 import { MockQuestionsModule } from './mock-questions/mock-questions.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MockQuestionsModule } from './mock-questions/mock-questions.module';
     MockSeriesModule,
     MockTestsModule,
     MockQuestionsModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

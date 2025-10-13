@@ -156,14 +156,14 @@ model mock_series {
   created_at      DateTime?        @default(now()) @db.Timestamp(6)
   price           Decimal?         @db.Decimal
   mock_categories mock_categories? @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  mock_tests      mock_tests[]
   payments        payments[]
-  mock_series_tags mock_series_tags[] // <-- ADD THIS LINE
+  mock_series_tags mock_series_tags[]
+  mock_series_tests mock_series_tests[]
+  
 }
 
 model mock_tests {
   id               BigInt           @id @default(autoincrement())
-  series_id        BigInt?
   title            String
   description      String?
   duration_minutes Int
@@ -172,7 +172,16 @@ model mock_tests {
   is_free          Boolean?
   mock_attempts    mock_attempts[]
   mock_questions   mock_questions[]
-  mock_series      mock_series?     @relation(fields: [series_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  mock_series_tests mock_series_tests[]
+}
+
+model mock_series_tests {
+  series_id BigInt
+  test_id   BigInt
+  series    mock_series @relation(fields: [series_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  test      mock_tests  @relation(fields: [test_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([series_id, test_id])
 }
 
 model payments {
@@ -182,12 +191,14 @@ model payments {
   amount         Decimal         @db.Decimal(10, 2)
   payment_method String
   status         payment_status? @default(pending)
-  transaction_id String?
+  transaction_id String?         @unique
   created_at     DateTime?       @default(now()) @db.Timestamp(6)
   mock_series_id BigInt?
   courses        courses?        @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   mock_series    mock_series?    @relation(fields: [mock_series_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users          users?          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, mock_series_id])
 }
 
 model post_tags {

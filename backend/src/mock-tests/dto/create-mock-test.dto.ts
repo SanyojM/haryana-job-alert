@@ -18,7 +18,4 @@ export class CreateMockTestDto {
   @IsBoolean()
   @IsOptional()
   is_free?: boolean;
-
-  @IsInt()
-  series_id: number;
 }

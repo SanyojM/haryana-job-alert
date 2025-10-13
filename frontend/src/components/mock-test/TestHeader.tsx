@@ -2,13 +2,21 @@
 
 import { ChevronDown, Clock, Users, Globe, ChevronRight, Smartphone } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdBanner from '../home/AdBanner';
 import Image from 'next/image';
+import { Button } from '@/components/ui/button'; // Import Button
+import { Input } from '@/components/ui/input'; // Import Input
+import { useRouter } from 'next/router'; // Import the router
+import { useAuth } from '@/context/AuthContext';
+import { api } from '@/lib/api';
+
 
 // Define the types for the props this component will accept
 type TestHeaderProps = {
+   seriesId: string;
   title: string;
+  price: number | null;
   level: string;
   lastUpdated: string;
   totalTests: number;
@@ -16,11 +24,12 @@ type TestHeaderProps = {
   users: number;
   language: string;
   features: string[];
-  isUserLoggedIn: boolean; // Prop to control the sign-up form visibility
 };
 
 export default function TestHeader({
+  seriesId,
   title,
+  price,
   level,
   lastUpdated,
   totalTests,
@@ -28,7 +37,6 @@ export default function TestHeader({
   users,
   language,
   features,
-  isUserLoggedIn, // Destructure the new prop
 }: TestHeaderProps) {
   // Split features for the two-column layout
   // const midPoint = Math.ceil(features.length / 2);
@@ -38,6 +46,86 @@ export default function TestHeader({
     );
   const featureGroups = chunk(features, 2);
   const [selectedLevel, setSelectedLevel] = useState(level);
+
+  // --- NEW LOGIC ---
+  const { user, token } = useAuth();
+  const isLoggedIn = !!user;
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      const authToken = token || undefined;
+      if (isLoggedIn) {
+        try {
+          const response = await api.get(`/mock-series/${seriesId}/check-enrollment`, authToken);
+          setIsEnrolled(response.enrolled);
+        } catch (error) {
+          console.error('Error checking enrollment:', error);
+        }
+      }
+    };
+
+    checkEnrollment();
+  }, [isLoggedIn, seriesId, token]);
+
+  const handlePurchase = async () => {
+    const authToken = token || undefined;
+    if (!isLoggedIn) {
+      router.push(`/auth/login?redirect=${router.asPath}`);
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const order = await api.post('/payments/create-order', { mock_series_id: Number(seriesId) }, authToken);
+      
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Your Razorpay Key ID
+        amount: order.amount,
+        currency: "INR",
+        name: "Haryana Job Alert",
+        description: `Purchase: ${order.series_title}`,
+        order_id: order.order_id,
+        handler: function (response: any) {
+          alert("Payment successful! You now have access to this series.");
+          router.reload();
+        },
+        prefill: {
+            name: user?.full_name,
+            email: user?.email,
+        },
+        theme: {
+            color: "#3399cc"
+        }
+      };
+      
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+
+    } catch (err) {
+        alert("Payment failed. Please try again.");
+        console.error(err);
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  const handleSignUp = (e: React.FormEvent) => {
+    e.preventDefault();
+    const redirectUrl = encodeURIComponent(router.asPath);
+    const emailQuery = email ? `&email=${encodeURIComponent(email)}` : '';
+    router.push(`/auth/signup?redirect=${redirectUrl}${emailQuery}`);
+  };
+
+  const handleStartTestFlow = () => {
+    if (isLoggedIn) {
+      alert('You are logged in! Click "Start Test" on an individual test below to begin.');
+    } else {
+      router.push(`/auth/login?redirect=${router.asPath}`);
+    }
+  };
 
   return (
     <section className="bg-gray-100 p-6 mb-10">
@@ -62,7 +150,7 @@ export default function TestHeader({
           {/* Title Section */}
           <div className="flex flex-wrap items-start justify-start gap-12 mb-8">
             <div className="flex items-start gap-4">
-              <Image src="https://placehold.co/60x60/e2e8f0/334155?text=SSC" alt="Test Logo" className="w-14 h-14 rounded-full hidden lg:block" />
+              <Image src="https://placehold.co/60x60/e2e8f0/334155?text=SSC" width={60} height={60} alt="Test Logo" className="w-14 h-14 rounded-full hidden lg:block" unoptimized />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
                 <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
@@ -113,35 +201,54 @@ export default function TestHeader({
               ))}
             </div>
 
-            {/* Action Button */}
-            <button className="md:max-w-xl w-full bg-gradient-to-r from-indigo-700 to-indigo-400 text-white font-bold py-3 md:px-48 px-12 rounded-lg hover:opacity-90 transition-opacity">
-              Take the mock test
-            </button>
+            {price && price > 0 ? (
+          isEnrolled ? (
+            <div className="md:max-w-xl text-center w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold py-3 px-12 rounded-lg">
+              You are enrolled in this series
+            </div>
+          ) : (
+            <Button
+              onClick={handlePurchase}
+              disabled={isLoading}
+              className="md:max-w-xl w-full bg-gradient-to-r from-green-600 to-green-800 text-white font-bold py-3 px-12 rounded-lg hover:opacity-90 transition-opacity text-lg"
+            >
+              {isLoading ? 'Processing...' : `Buy Now for ₹${price}`}
+            </Button>
+          )
+        ) : (
+                <div className="md:max-w-xl text-center w-full bg-gradient-to-r from-gray-600 to-gray-800 text-white font-bold py-3 px-12 rounded-lg">
+                    This Series is Free
+                </div>
+            )}
           </div>
-            <AdBanner text={'Google Ads'} className='h-48 mt-12 w-full md:w-[90%]'/>
+          <AdBanner text={'Google Ads'} className='h-48 mt-12 w-full md:w-[90%]'/>
         </div>
+
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
-        {/* This entire block will only render if isUserLoggedIn is false */}
         <div className=' flex flex-col gap-4 w-full lg:w-96'>
-        {!isUserLoggedIn && (
+        {!isLoggedIn && ( // Use the dynamic isLoggedIn state
           <div className="flex-shrink-0 w-full">
             <div className="bg-gray-100 rounded-lg border border-gray-400 p-6 text-center">
               <h3 className="text-lg font-bold text-gray-800 mb-1">Sign Up To Test Your Exam</h3>
               <p className="text-gray-800 font-bold mb-4">Knowledge Now!</p>
               
-              <form className="space-y-3 border border-gray-400 p-6 rounded-lg">
+              <form className="space-y-3 border border-gray-400 p-6 rounded-lg" onSubmit={handleSignUp}>
                 <div className="relative border-b border-gray-300 mb-4">
                   <Smartphone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <input type="email" placeholder="Enter your Email" className="w-full border-none pl-10 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+                  <Input 
+                    type="email" 
+                    placeholder="Enter your Email" 
+                    className="w-full border-none pl-10 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
-                <button type="submit" className="w-full bg-gradient-to-r from-green-950 to-green-600 text-white font-semibold py-2.5 rounded-md hover:opacity-90 transition-opacity">
+                <Button type="submit" className="w-full bg-gradient-to-r from-green-950 to-green-600 text-white font-semibold py-2.5 rounded-md hover:opacity-90 transition-opacity">
                   Sign up now
-                </button>
+                </Button>
               </form>
               <p className="text-xs text-gray-500 mt-3 flex items-center justify-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="text-emerald-500" viewBox="0 0 16 16">
-                  <path d="M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1 .395.807l-7 9a.5.5 0 0 1-.875-.433L6.31 9H2.5a.5.5 0 0 1-.395-.807l7-9z"/>
-                </svg>
+                {/* ... svg icon ... */}
                 {users} users have enrolled till now
               </p>
             </div>
@@ -149,8 +256,8 @@ export default function TestHeader({
         )}
         <AdBanner text={'Google Ads'} className='h-48 md:hidden'/>
         <div className="mt-6 hidden lg:flex justify-center">
-              <Image src="/illust2.png" alt="Person studying for an exam" />
-            </div>
+             <Image src="/illust2.png" alt="Person studying for an exam" width={600} height={400} />
+           </div>
         </div>
       </div>
     </section>

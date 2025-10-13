@@ -97,6 +97,8 @@ export default function MockTestSection() {
                         src="/mt.png"
                         alt="Mock Tests"
                         className="inline-block h-20 w-auto"
+                        width={300}
+                        height={80}
                     />
                 </div>
 
@@ -123,7 +125,7 @@ export default function MockTestSection() {
                     {mockTests.slice(0, 3).map((test) => (
                         <div key={test.id} className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col">
                             <div className="flex justify-between items-start mb-3">
-                                <Image src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
+                                <Image src={test.logoUrl} width={40} height={40} alt="" className="w-10 h-10 rounded-md" unoptimized />
                                 <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
                                     <User className="w-3 h-3" />
                                     <span>{test.users}+ Users</span>
@@ -163,7 +165,7 @@ export default function MockTestSection() {
                     {mockTests.slice(3, 6).map((test) => (
                         <div key={test.id} className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col">
                             <div className="flex justify-between items-start mb-3">
-                                <Image src={test.logoUrl} alt="" className="w-10 h-10 rounded-md" />
+                                <Image src={test.logoUrl} width={40} height={40} alt="" className="w-10 h-10 rounded-md" unoptimized />
                                 <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
                                     <User className="w-3 h-3" />
                                     <span>{test.users}+ Users</span>

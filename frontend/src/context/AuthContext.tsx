@@ -7,6 +7,14 @@ interface User {
   email: string;
   full_name: string;
   role: 'admin' | 'student';
+  mock_attempts: {
+    id: string;
+    score: number | null;
+    completed_at: string;
+    mock_tests: {
+      title: string;
+    } | null;
+  }[];
 }
 
 interface AuthContextType {

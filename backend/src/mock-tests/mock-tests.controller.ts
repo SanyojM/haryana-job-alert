@@ -11,6 +11,10 @@ import {
 import { MockTestsService } from './mock-tests.service';
 import { CreateMockTestDto } from './dto/create-mock-test.dto';
 import { UpdateMockTestDto } from './dto/update-mock-test.dto';
+import { UseGuards, Req } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { SubmitTestDto } from './dto/submit-test.dto';
+import type { Request } from 'express';
 
 @Controller('mock-tests')
 export class MockTestsController {
@@ -42,5 +46,16 @@ export class MockTestsController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.mockTestsService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/submit')
+  submitTest(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() submitTestDto: SubmitTestDto,
+    @Req() req: Request,
+  ) {
+    const user = req.user as any; // The user object is attached by the JwtAuthGuard
+    return this.mockTestsService.submitTest(id, user.id, submitTestDto.answers);
   }
 }

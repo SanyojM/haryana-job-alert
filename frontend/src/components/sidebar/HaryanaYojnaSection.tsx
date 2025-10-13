@@ -42,10 +42,13 @@ export default function HaryanaYojnaSection() {
                   <Image
                     src={thumbnailUrl} 
                     alt={video.title}
+                    width={600}
+                    height={400}
                     className="w-full h-auto object-cover aspect-video rounded-2xl"
                     onError={(e) => {
                       e.currentTarget.src = 'https://placehold.co/600x400/cccccc/333333?text=Thumbnail+Error';
                     }}
+                    unoptimized
                   />
                 </a>
 
@@ -94,10 +97,13 @@ export default function HaryanaYojnaSection() {
                   <Image
                     src={thumbnailUrl} 
                     alt={video.title}
+                    width={600}
+                    height={400}
                     className="w-full h-auto object-cover aspect-video rounded-2xl"
                     onError={(e) => {
                       e.currentTarget.src = 'https://placehold.co/600x400/cccccc/333333?text=Thumbnail+Error';
                     }}
+                    unoptimized
                   />
                 </a>
 

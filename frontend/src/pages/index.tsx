@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const HomePage: NextPage<HomePageProps> = ({ posts, categories }) => {
 
-  const answerKeyPosts = posts.filter(p => p.categories?.name === 'Answer Keys').slice(0, 6);
+  const answerKeyPosts = posts.filter(p => p.categories?.name === 'Answer Key').slice(0, 6);
   const admitCardPosts = posts.filter(p => p.categories?.name === 'Admit Cards').slice(0, 5);
   const admissionPosts = posts.filter(p => p.categories?.name === 'Admissions').slice(0, 5);
 
