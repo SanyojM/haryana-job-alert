@@ -42,6 +42,8 @@ export class DeploymentService {
     try {
       console.log('Executing deployment in:', backendDir);
       await safeExec('git pull');
+      await safeExec('npm install');
+      await safeExec('npx prisma generate');
       await safeExec('npm run build');
 
       // ✅ Return response before restarting
