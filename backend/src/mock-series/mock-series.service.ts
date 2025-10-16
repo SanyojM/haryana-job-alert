@@ -133,19 +133,27 @@ export class MockSeriesService {
 
   async update(id: number, updateMockSeriesDto: UpdateMockSeriesDto) {
     const { tagIds, title, ...seriesData } = updateMockSeriesDto;
-    const data: any = { ...seriesData };
-
-    if (title) {
-        data.slug = slugify(title)
-    }
 
     return this.prisma.$transaction(async (tx) => {
+      // Fetch the current series with its category to ensure we have the slug
+      const currentSeries = await tx.mock_series.findUnique({
+          where: { id },
+          include: { mock_categories: true }
+      });
+
+      if (!currentSeries) {
+          throw new NotFoundException(`Mock Series with ID ${id} not found`);
+      }
+
       const updatedSeries = await tx.mock_series.update({
         where: { id },
-        data,
+        data: {
+          ...seriesData,
+          ...(title && { title: title, slug: slugify(title) }),
+        },
         include: {
-            mock_categories: true
-        }
+            mock_categories: true,
+        },
       });
 
       if (tagIds) {
@@ -167,9 +175,9 @@ export class MockSeriesService {
 
           for (const seriesTest of seriesTests) {
               if (!updatedSeries.mock_categories) {
-                throw new NotFoundException(`Mock Category for Series ID ${id} not found`);
+                throw new NotFoundException(`Mock Category for updated Series ID ${id} not found`);
               }
-              const newSlug = `${slugify(updatedSeries.mock_categories.name)}/${updatedSeries.slug}/${seriesTest.test.slug}`;
+              const newSlug = `${updatedSeries.mock_categories.slug}/${updatedSeries.slug}/${seriesTest.test.slug}`;
               await tx.mock_series_tests.update({
                   where: {
                       series_id_test_id: {

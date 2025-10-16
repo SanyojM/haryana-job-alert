@@ -9,7 +9,7 @@ export class MockTestsService {
   constructor(private prisma: PrismaService) {}
 
   create(createMockTestDto: CreateMockTestDto) {
-    const { title, ...rest } = createMockTestDto;
+    const { title } = createMockTestDto;
     const slug = slugify(title);
     return this.prisma.mock_tests.create({
       data: {
@@ -21,7 +21,6 @@ export class MockTestsService {
 
   findAll() {
     return this.prisma.mock_tests.findMany({
-      // Include the series a test is part of
       include: { mock_series_tests: { include: { series: true } } },
     });
   }
@@ -41,15 +40,36 @@ export class MockTestsService {
     return test;
   }
 
+  async findBySlug(slug: string) {
+    const seriesTest = await this.prisma.mock_series_tests.findUnique({
+        where: { slug },
+        include: {
+            test: {
+                include: {
+                    mock_questions: true
+                }
+            },
+            series: {
+                include: {
+                    mock_categories: true
+                }
+            }
+        }
+    });
+
+    if (!seriesTest) {
+        throw new NotFoundException(`Test with slug "${slug}" not found`);
+    }
+    return seriesTest;
+  }
+
   async update(id: number, updateMockTestDto: UpdateMockTestDto) {
     await this.findOne(id);
-    const { title, ...rest } = updateMockTestDto;
     const data: any = { ...updateMockTestDto };
-    if (title) {
-      data.slug = slugify(title);
+    if (updateMockTestDto.title) {
+      data.slug = slugify(updateMockTestDto.title);
     }
 
-    // When a test title changes, we need to update the slugs in mock_series_tests as well.
     const updatedTest = await this.prisma.mock_tests.update({
       where: { id },
       data,
@@ -67,8 +87,8 @@ export class MockTestsService {
     });
 
     for (const seriesTest of seriesTests) {
-        const categoryName = seriesTest.series.mock_categories?.name ?? 'category';
-        const newSlug = `${slugify(categoryName)}/${seriesTest.series.slug}/${updatedTest.slug}`;
+        const categorySlug = seriesTest.series.mock_categories?.slug ?? 'unknown-category';
+        const newSlug = `${categorySlug}/${seriesTest.series.slug}/${updatedTest.slug}`;
         await this.prisma.mock_series_tests.update({
             where: {
                 series_id_test_id: {
@@ -107,39 +127,14 @@ export class MockTestsService {
       }
     }
 
-    const newAttempt = await this.prisma.mock_attempts.create({
+    return this.prisma.mock_attempts.create({
       data: {
         test_id: testId,
         user_id: userId,
-        answers: answers as any, // Storing answers as JSON
+        answers: answers as any,
         score,
         completed_at: new Date(),
       },
     });
-
-    return newAttempt;
-  }
-
-  async findBySlug(slug: string) {
-      const seriesTest = await this.prisma.mock_series_tests.findUnique({
-          where: { slug },
-          include: {
-              test: {
-                  include: {
-                      mock_questions: true
-                  }
-              },
-              series: {
-                  include: {
-                      mock_categories: true
-                  }
-              }
-          }
-      });
-
-      if (!seriesTest) {
-          throw new NotFoundException(`Test with slug "${slug}" not found`);
-      }
-      return seriesTest;
   }
 }

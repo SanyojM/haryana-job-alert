@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMockCategoryDto } from './dto/create-mock-category.dto';
 import { UpdateMockCategoryDto } from './dto/update-mock-category.dto';
-import { slugify } from 'src/utils/slugify';
+import { slugify } from '../utils/slugify';
 
 @Injectable()
 export class MockCategoriesService {
@@ -10,7 +10,7 @@ export class MockCategoriesService {
 
   create(createMockCategoryDto: CreateMockCategoryDto) {
     const { name, description } = createMockCategoryDto;
-    const slug = slugify(name); // Generate slug from the name
+    const slug = slugify(name);
 
     return this.prisma.mock_categories.create({
       data: {
@@ -38,7 +38,6 @@ export class MockCategoriesService {
     
     const data: any = { ...updateMockCategoryDto };
 
-    // If the name is being updated, regenerate the slug as well
     if (updateMockCategoryDto.name) {
       data.slug = slugify(updateMockCategoryDto.name);
     }
