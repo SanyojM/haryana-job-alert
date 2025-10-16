@@ -155,7 +155,6 @@ export class DeploymentController {
             padding: 20px;
             background: #f8f9fa;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
         }
 
         .output.active {
