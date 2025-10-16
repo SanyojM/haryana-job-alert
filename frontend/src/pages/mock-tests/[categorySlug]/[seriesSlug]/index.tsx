@@ -7,7 +7,9 @@ import TestHeader from "@/components/mock-test/TestHeader";
 import TestLists from "@/components/mock-test/TestLists";
 import FaqSection from "@/components/home/FaqSection";
 import AdBanner from "@/components/home/AdBanner";
-import { useState, useEffect } from "react"; // Import useState and useEffect
+import { useState, useEffect } from "react";
+import Link from "next/link";
+
 
 export type MockTest = {
   id: string;
@@ -16,15 +18,24 @@ export type MockTest = {
   duration_minutes: number;
   total_marks: number;
   is_free: boolean;
+  slug: string;
 };
 
 export type MockSeriesDetails = {
   id: string;
   title: string;
+  slug: string;
   description: string | null;
   price: number | null;
-  created_at: string; // Ensure this field is in the type
-  mock_series_tests: { test: MockTest }[];
+  created_at: string;
+  mock_series_tests: {
+      test: MockTest;
+      full_slug: string;
+  }[];
+  mock_categories: {
+    name: string;
+    slug: string;
+  };
 };
 
 interface MockTestPageProps {
@@ -32,24 +43,25 @@ interface MockTestPageProps {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params!;
+  const { categorySlug, seriesSlug } = context.params!;
   try {
-    const series = await api.get(`/mock-series/${id}`);
+    const series = await api.get(`/mock-series/slug/${categorySlug}/${seriesSlug}`);
     return { props: { series } };
   } catch (error) {
-    console.error(`Failed to fetch mock series with id ${id}:`, error);
+    console.error(`Failed to fetch mock series with slug /${categorySlug}/${seriesSlug}:`, error);
     return { notFound: true };
   }
 };
 
-const MockTestPage: NextPage<MockTestPageProps> = ({ series }) => {
-  const testsInSeries = series.mock_series_tests.map(join => join.test);
-  
-  // FIX: State to hold the client-side rendered date
+const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series }) => {
+  const testsInSeries = series.mock_series_tests.map(join => ({
+    ...join.test,
+    full_slug: join.full_slug
+  }));
+
   const [formattedDate, setFormattedDate] = useState('');
 
   useEffect(() => {
-    // This code runs only in the browser, after the initial render
     setFormattedDate(new Date(series.created_at).toLocaleDateString());
   }, [series.created_at]);
 
@@ -62,17 +74,20 @@ const MockTestPage: NextPage<MockTestPageProps> = ({ series }) => {
           seriesId={series.id}
           title={series.title}
           price={series.price}
-          lastUpdated={formattedDate} // Use the state variable
+          lastUpdated={formattedDate}
           totalTests={testsInSeries.length}
           freeTests={testsInSeries.filter(t => t.is_free).length}
-          users={0}
+          users={0} 
           level="Beginner"
           language="English, Hindi"
           features={[]}
         />
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-6">
           <main className="lg:col-span-4 space-y-8">
-            <TestLists tests={testsInSeries} />
+            {/* --- MODIFICATION START --- */}
+            {/* Pass the series ID as a prop */}
+            <TestLists tests={testsInSeries} seriesId={series.id} />
+            {/* --- MODIFICATION END --- */}
             <AdBanner text={"Google Ads"} className="h-48"/>
             <FaqSection />
           </main>
@@ -86,4 +101,4 @@ const MockTestPage: NextPage<MockTestPageProps> = ({ series }) => {
   );
 };
 
-export default MockTestPage;
+export default MockTestSeriesPage;

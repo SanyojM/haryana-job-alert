@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://haryana-job-alerts-backend.softricity.in';
+const API_BASE_URL = 'http://localhost:3000';
 
 const getHeaders = (token?: string) => {
   const headers: HeadersInit = {

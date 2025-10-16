@@ -2,13 +2,23 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMockCategoryDto } from './dto/create-mock-category.dto';
 import { UpdateMockCategoryDto } from './dto/update-mock-category.dto';
+import { slugify } from 'src/utils/slugify';
 
 @Injectable()
 export class MockCategoriesService {
   constructor(private prisma: PrismaService) {}
 
   create(createMockCategoryDto: CreateMockCategoryDto) {
-    return this.prisma.mock_categories.create({ data: createMockCategoryDto });
+    const { name, description } = createMockCategoryDto;
+    const slug = slugify(name); // Generate slug from the name
+
+    return this.prisma.mock_categories.create({
+      data: {
+        name,
+        description,
+        slug,
+      },
+    });
   }
 
   findAll() {
@@ -25,9 +35,17 @@ export class MockCategoriesService {
 
   async update(id: number, updateMockCategoryDto: UpdateMockCategoryDto) {
     await this.findOne(id);
+    
+    const data: any = { ...updateMockCategoryDto };
+
+    // If the name is being updated, regenerate the slug as well
+    if (updateMockCategoryDto.name) {
+      data.slug = slugify(updateMockCategoryDto.name);
+    }
+
     return this.prisma.mock_categories.update({
       where: { id },
-      data: updateMockCategoryDto,
+      data,
     });
   }
 

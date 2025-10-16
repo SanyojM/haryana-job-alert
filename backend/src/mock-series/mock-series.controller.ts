@@ -19,6 +19,14 @@ import type { Request } from 'express';
 export class MockSeriesController {
   constructor(private readonly mockSeriesService: MockSeriesService) {}
 
+  @Get('slug/:categorySlug/:seriesSlug')
+  findBySlugs(
+    @Param('categorySlug') categorySlug: string,
+    @Param('seriesSlug') seriesSlug: string,
+  ) {
+    return this.mockSeriesService.findBySlugs(categorySlug, seriesSlug);
+  }
+
   @Post()
   create(@Body() createMockSeriesDto: CreateMockSeriesDto) {
     return this.mockSeriesService.create(createMockSeriesDto);

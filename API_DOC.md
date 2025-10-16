@@ -1,538 +1,723 @@
 # API Documentation
 
-This document provides a detailed overview of all available API endpoints.
+This document provides a complete reference for all the APIs available in the backend application.
 
 ---
 
-## Tags API
+## 🏠 App API
 
-Handles all operations related to tags.
+Handles the root endpoint of the application.
 
-### Create a new tag
+### Get Hello
 
-- **Route:** `POST /tags`
-- **Description:** Creates a new tag record in the database.
-- **Request Body:**
-    ```json
-    {
-        "name": "string"
-    }
-    ```
-- **Returns:** Newly created Tag object.
-
-### Get all tags
-
-- **Route:** `GET /tags`
-- **Description:** Retrieves a list of all existing tags.
-- **Request Body:** None
-- **Returns:** Array of Tag objects.
-
-### Get a single tag
-
-- **Route:** `GET /tags/:id`
-- **Description:** Retrieves a specific tag by its unique ID.
-- **Request Body:** None
-- **Returns:** Corresponding Tag object.
-
-### Update a tag
-
-- **Route:** `PUT /tags/:id`
-- **Description:** Updates the details of a specific tag.
-- **Request Body:**
-    ```json
-    {
-        "name": "string"
-    }
-    ```
-- **Returns:** Updated Tag object.
-
-### Delete a tag
-
-- **Route:** `DELETE /tags/:id`
-- **Description:** Removes a tag from the database.
-- **Request Body:** None
-- **Returns:** Deleted Tag object.
+-   **Route:** `GET /`
+-   **Description:** A simple health check or welcome endpoint.
+-   **Request Body:** None
+-   **Returns:** A "Hello World!" string.
 
 ---
 
-## Posts API
+## 🔐 Auth API
 
-Manages blog posts and articles.
+Handles user authentication, including signup, login, and profile management.
+
+### User Signup
+
+-   **Route:** `POST /auth/signup`
+-   **Description:** Registers a new user with the `student` role by default.
+-   **Request Body:**
+    ```json
+    {
+      "full_name": "string",
+      "email": "string (valid email)",
+      "password": "string (min 8 characters)"
+    }
+    ```
+-   **Returns:** The newly created User object (without the password hash).
+
+### User Login
+
+-   **Route:** `POST /auth/login`
+-   **Description:** Authenticates a user and returns a JSON Web Token (JWT).
+-   **Request Body:**
+    ```json
+    {
+      "email": "string (valid email)",
+      "password": "string"
+    }
+    ```
+-   **Returns:** An object containing the `access_token`.
+    ```json
+    {
+      "access_token": "string"
+    }
+    ```
+
+### Get User Profile
+
+-   **Route:** `GET /auth/profile`
+-   **Authentication:** **JWT Required**. The `access_token` must be provided in the `Authorization` header as a Bearer token.
+-   **Description:** Retrieves the profile of the currently authenticated user, including their mock test attempts.
+-   **Request Body:** None
+-   **Returns:** The authenticated User object (without the password hash).
+
+---
+
+## 📝 Posts API
+
+Handles all operations related to blog posts.
 
 ### Create a new post
 
-- **Route:** `POST /posts`
-- **Description:** Creates a new post.
-- **Request Body:**
+-   **Route:** `POST /posts`
+-   **Description:** Creates a new post. Note: This route currently uses a hardcoded user ID. It should be updated to use the ID from an authenticated user.
+-   **Request Body:**
     ```json
     {
-        "title": "string",
-        "slug": "string",
-        "category_id": "number",
-        "template_id": "number",
-        "content_json": {},
-        "content_html": "string",
-        "thumbnail_url": "string",
-        "external_url": "string",
-        "tags": ["number"]
+      "title": "string",
+      "slug": "string (unique)",
+      "category_id": "number",
+      "template_id": "number",
+      "content_json": {},
+      "content_html": "string (optional)",
+      "thumbnail_url": "string (optional)",
+      "external_url": "string (optional)",
+      "tags": [
+        "number"
+      ]
     }
     ```
-- **Returns:** Newly created Post object.
+-   **Returns:** The newly created Post object.
 
 ### Get all posts
 
-- **Route:** `GET /posts`
-- **Description:** Fetches all posts.
-- **Request Body:** None
-- **Returns:** Array of Post objects.
+-   **Route:** `GET /posts`
+-   **Description:** Retrieves a list of all posts, ordered by creation date.
+-   **Request Body:** None
+-   **Returns:** An array of Post objects.
 
-### Get a single post
+### Get a single post by ID
 
-- **Route:** `GET /posts/:id`
-- **Description:** Retrieves a post by its ID.
-- **Request Body:** None
-- **Returns:** Single Post object.
+-   **Route:** `GET /posts/:id`
+-   **Description:** Retrieves a specific post using its numerical ID.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the post.
+-   **Request Body:** None
+-   **Returns:** A single Post object.
+
+### Get a single post by Slug
+
+-   **Route:** `GET /posts/slug/:slug`
+-   **Description:** Retrieves a specific post using its unique string slug.
+-   **URL Parameters:**
+    -   `slug` (string): The slug of the post.
+-   **Request Body:** None
+-   **Returns:** A single Post object.
 
 ### Update a post
 
-- **Route:** `PUT /posts/:id`
-- **Description:** Updates an existing post.
-- **Request Body:**
-    ```json
-    {
-        "title": "string",
-        "slug": "string",
-        "category_id": "number",
-        "template_id": "number",
-        "content_json": {},
-        "content_html": "string",
-        "thumbnail_url": "string",
-        "external_url": "string",
-        "tags": ["number"]
-    }
-    ```
-- **Returns:** Updated Post object.
+-   **Route:** `PUT /posts/:id`
+-   **Description:** Updates an existing post's details.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the post to update.
+-   **Request Body:** Same structure as the create request, but all fields are optional.
+-   **Returns:** The updated Post object.
 
 ### Delete a post
 
-- **Route:** `DELETE /posts/:id`
-- **Description:** Deletes a post.
-- **Request Body:** None
-- **Returns:** Deleted Post object.
+-   **Route:** `DELETE /posts/:id`
+-   **Description:** Deletes a post from the database.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the post to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Post object.
 
 ---
 
-## Post Templates API
+## 📂 Categories API (for Posts)
 
-Manages templates for creating posts.
-
-### Create a new post template
-
-- **Route:** `POST /post-templates`
-- **Description:** Creates a new template for posts.
-- **Request Body:**
-    ```json
-    {
-        "name": "string",
-        "description": "string",
-        "structure": {}
-    }
-    ```
-- **Returns:** Newly created PostTemplate object.
-
-### Get all post templates
-
-- **Route:** `GET /post-templates`
-- **Description:** Retrieves all available post templates.
-- **Request Body:** None
-- **Returns:** Array of PostTemplate objects.
-
-### Get a single post template
-
-- **Route:** `GET /post-templates/:id`
-- **Description:** Fetches a single template by its ID.
-- **Request Body:** None
-- **Returns:** PostTemplate object.
-
-### Update a post template
-
-- **Route:** `PUT /post-templates/:id`
-- **Description:** Updates an existing post template.
-- **Request Body:**
-    ```json
-    {
-        "name": "string",
-        "description": "string",
-        "structure": {}
-    }
-    ```
-- **Returns:** Updated PostTemplate object.
-
-### Delete a post template
-
-- **Route:** `DELETE /post-templates/:id`
-- **Description:** Deletes a post template.
-- **Request Body:** None
-- **Returns:** Deleted PostTemplate object.
-
----
-
-## Mock Tests API
-
-Endpoints for managing mock tests.
-
-### Create a mock test
-
-- **Route:** `POST /mock-tests`
-- **Description:** Creates a new mock test.
-- **Request Body:**
-    ```json
-    {
-        "title": "string",
-        "description": "string",
-        "duration_minutes": "number",
-        "total_marks": "number",
-        "is_free": "boolean",
-        "series_id": "number"
-    }
-    ```
-- **Returns:** New MockTest object.
-
-### Get all mock tests
-
-- **Route:** `GET /mock-tests`
-- **Description:** Fetches all mock tests.
-- **Request Body:** None
-- **Returns:** Array of MockTest objects.
-
-### Get a single mock test
-
-- **Route:** `GET /mock-tests/:id`
-- **Description:** Retrieves a specific mock test by ID.
-- **Request Body:** None
-- **Returns:** Single MockTest object.
-
-### Update a mock test
-
-- **Route:** `PUT /mock-tests/:id`
-- **Description:** Updates an existing mock test.
-- **Request Body:**
-    ```json
-    {
-        "title": "string",
-        "description": "string",
-        "duration_minutes": "number",
-        "total_marks": "number",
-        "is_free": "boolean",
-        "series_id": "number"
-    }
-    ```
-- **Returns:** Updated MockTest object.
-
-### Delete a mock test
-
-- **Route:** `DELETE /mock-tests/:id`
-- **Description:** Deletes a mock test.
-- **Request Body:** None
-- **Returns:** Deleted MockTest object.
-
----
-
-## Mock Tags API
-
-Manages tags specifically for mock tests.
-
-### Create a new mock tag
-
-- **Route:** `POST /mock-tags`
-- **Description:** Creates a new tag for mock tests.
-- **Request Body:**
-    ```json
-    {
-        "name": "string"
-    }
-    ```
-- **Returns:** New MockTag object.
-
-### Get all mock tags
-
-- **Route:** `GET /mock-tags`
-- **Description:** Retrieves all mock tags.
-- **Request Body:** None
-- **Returns:** Array of MockTag objects.
-
-### Get a single mock tag
-
-- **Route:** `GET /mock-tags/:id`
-- **Description:** Fetches a mock tag by its ID.
-- **Request Body:** None
-- **Returns:** Single MockTag object.
-
-### Update a mock tag
-
-- **Route:** `PUT /mock-tags/:id`
-- **Description:** Updates a mock tag.
-- **Request Body:**
-    ```json
-    {
-        "name": "string"
-    }
-    ```
-- **Returns:** Updated MockTag object.
-
-### Delete a mock tag
-
-- **Route:** `DELETE /mock-tags/:id`
-- **Description:** Deletes a mock tag.
-- **Request Body:** None
-- **Returns:** Deleted MockTag object.
-
----
-
-## Mock Series API
-
-Manages series or collections of mock tests.
-
-### Create a new mock series
-
-- **Route:** `POST /mock-series`
-- **Description:** Creates a new mock test series.
-- **Request Body:**
-    ```json
-    {
-        "title": "string",
-        "description": "string",
-        "price": "number",
-        "category_id": "number",
-        "tagIds": ["number"]
-    }
-    ```
-- **Returns:** New MockSeries object.
-
-### Get all mock series
-
-- **Route:** `GET /mock-series`
-- **Description:** Retrieves all mock test series.
-- **Request Body:** None
-- **Returns:** Array of MockSeries objects.
-
-### Get a single mock series
-
-- **Route:** `GET /mock-series/:id`
-- **Description:** Fetches a mock series by its ID.
-- **Request Body:** None
-- **Returns:** Single MockSeries object.
-
-### Update a mock series
-
-- **Route:** `PUT /mock-series/:id`
-- **Description:** Updates an existing mock series.
-- **Request Body:**
-    ```json
-    {
-        "title": "string",
-        "description": "string",
-        "price": "number",
-        "category_id": "number",
-        "tagIds": ["number"]
-    }
-    ```
-- **Returns:** Updated MockSeries object.
-
-### Delete a mock series
-
-- **Route:** `DELETE /mock-series/:id`
-- **Description:** Deletes a mock series.
-- **Request Body:** None
-- **Returns:** Deleted MockSeries object.
-
----
-
-## Mock Questions API
-
-Handles questions within mock tests.
-
-### Create a new mock question
-
-- **Route:** `POST /mock-questions`
-- **Description:** Adds a new question to a mock test.
-- **Request Body:**
-    ```json
-    {
-        "test_id": "number",
-        "question_text": "string",
-        "question_type": "mcq | true_false | fill_blank",
-        "options": {},
-        "correct_answer": "string",
-        "marks": "number"
-    }
-    ```
-- **Returns:** New MockQuestion object.
-
-### Bulk upload questions via CSV
-
-- **Route:** `POST /mock-questions/upload/csv`
-- **Description:** Creates multiple mock questions from a CSV file upload.
-- **Request Body:** `multipart/form-data` containing the CSV file and a `test_id`.
-<br>Format of CSV:
-
-```
-question_text,options,correct_answer,marks,question_type
-"What is the capital of Haryana?","{""a"":""Sonipat"",""b"":""Chandigarh"",""c"":""Gurugram""}","b",2,"mcq"
-"What is the largest city in Haryana?","{""a"":""Faridabad"",""b"":""Panipat"",""c"":""Ambala""}","a",2,"mcq"
-"Haryana was formed in 1966.","{""a"":""True"",""b"":""False""}","a",1,"true_false"
-```
-
-- **Returns:** Confirmation message with the count of created questions.
-
-### Get all mock questions
-
-- **Route:** `GET /mock-questions`
-- **Description:** Fetches all mock questions from all tests.
-- **Request Body:** None
-- **Returns:** Array of MockQuestion objects.
-
-### Get a single mock question
-
-- **Route:** `GET /mock-questions/:id`
-- **Description:** Retrieves a question by its ID.
-- **Request Body:** None
-- **Returns:** Single MockQuestion object.
-
-### Update a mock question
-
-- **Route:** `PUT /mock-questions/:id`
-- **Description:** Updates a question's details.
-- **Request Body:**
-    ```json
-    {
-        "test_id": "number",
-        "question_text": "string",
-        "question_type": "mcq | true_false | fill_blank",
-        "options": {},
-        "correct_answer": "string",
-        "marks": "number"
-    }
-    ```
-- **Returns:** Updated MockQuestion object.
-
-### Delete a mock question
-
-- **Route:** `DELETE /mock-questions/:id`
-- **Description:** Deletes a question.
-- **Request Body:** None
-- **Returns:** Deleted MockQuestion object.
-
----
-
-## Mock Categories API
-
-Manages categories for mock test series.
-
-### Create a new mock category
-
-- **Route:** `POST /mock-categories`
-- **Description:** Creates a new category for mock series.
-- **Request Body:**
-    ```json
-    {
-        "name": "string",
-        "description": "string"
-    }
-    ```
-- **Returns:** New MockCategory object.
-
-### Get all mock categories
-
-- **Route:** `GET /mock-categories`
-- **Description:** Retrieves all mock categories.
-- **Request Body:** None
-- **Returns:** Array of MockCategory objects.
-
-### Get a single mock category
-
-- **Route:** `GET /mock-categories/:id`
-- **Description:** Fetches a mock category by ID.
-- **Request Body:** None
-- **Returns:** Single MockCategory object.
-
-### Update a mock category
-
-- **Route:** `PUT /mock-categories/:id`
-- **Description:** Updates an existing mock category.
-- **Request Body:**
-    ```json
-    {
-        "name": "string",
-        "description": "string"
-    }
-    ```
-- **Returns:** Updated MockCategory object.
-
-### Delete a mock category
-
-- **Route:** `DELETE /mock-categories/:id`
-- **Description:** Deletes a mock category.
-- **Request Body:** None
-- **Returns:** Deleted MockCategory object.
-
----
-
-## Categories API
-
-General purpose categories, e.g., for blog posts.
+Handles categories associated with blog posts.
 
 ### Create a new category
 
-- **Route:** `POST /categories`
-- **Description:** Creates a new category.
-- **Request Body:**
+-   **Route:** `POST /categories`
+-   **Description:** Creates a new post category.
+-   **Request Body:**
     ```json
     {
-        "name": "string",
-        "description": "string"
+      "name": "string",
+      "description": "string (optional)"
     }
     ```
-- **Returns:** New Category object.
+-   **Returns:** The newly created Category object.
 
 ### Get all categories
 
-- **Route:** `GET /categories`
-- **Description:** Retrieves all categories.
-- **Request Body:** None
-- **Returns:** Array of Category objects.
+-   **Route:** `GET /categories`
+-   **Description:** Retrieves a list of all post categories.
+-   **Request Body:** None
+-   **Returns:** An array of Category objects.
 
-### Get a single category
+### Get a single category by ID
 
-- **Route:** `GET /categories/:id`
-- **Description:** Fetches a category by its ID.
-- **Request Body:** None
-- **Returns:** Single Category object.
+-   **Route:** `GET /categories/:id`
+-   **Description:** Retrieves a specific category by its ID.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the category.
+-   **Request Body:** None
+-   **Returns:** A single Category object.
 
 ### Update a category
 
-- **Route:** `PUT /categories/:id`
-- **Description:** Updates an existing category.
-- **Request Body:**
+-   **Route:** `PUT /categories/:id`
+-   **Description:** Updates an existing category.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the category to update.
+-   **Request Body:**
     ```json
     {
-        "name": "string",
-        "description": "string"
+      "name": "string (optional)",
+      "description": "string (optional)"
     }
     ```
-- **Returns:** Updated Category object.
+-   **Returns:** The updated Category object.
 
 ### Delete a category
 
-- **Route:** `DELETE /categories/:id`
-- **Description:** Deletes a category.
-- **Request Body:** None
-- **Returns:** Deleted Category object.
+-   **Route:** `DELETE /categories/:id`
+-   **Description:** Deletes a category.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the category to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Category object.
 
 ---
 
-## Auth & Courses API
+## 🏷️ Tags API (for Posts)
 
-- **Routes:** `/auth`, `/courses`
-- **Description:** These controllers are currently placeholders and do not contain any functional endpoints. They can be extended to include features like user authentication and course management in the future.
+Handles tags associated with blog posts.
 
+### Create a new tag
+
+-   **Route:** `POST /tags`
+-   **Description:** Creates a new post tag.
+-   **Request Body:**
+    ```json
+    {
+      "name": "string"
+    }
+    ```
+-   **Returns:** The newly created Tag object.
+
+### Get all tags
+
+-   **Route:** `GET /tags`
+-   **Description:** Retrieves a list of all post tags.
+-   **Request Body:** None
+-   **Returns:** An array of Tag objects.
+
+### Get a single tag by ID
+
+-   **Route:** `GET /tags/:id`
+-   **Description:** Retrieves a specific tag by its ID.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the tag.
+-   **Request Body:** None
+-   **Returns:** A single Tag object.
+
+### Update a tag
+
+-   **Route:** `PUT /tags/:id`
+-   **Description:** Updates an existing tag.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the tag to update.
+-   **Request Body:**
+    ```json
+    {
+      "name": "string (optional)"
+    }
+    ```
+-   **Returns:** The updated Tag object.
+
+### Delete a tag
+
+-   **Route:** `DELETE /tags/:id`
+-   **Description:** Deletes a tag.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the tag to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Tag object.
+
+---
+
+## 📄 Post Templates API
+
+Handles templates for structuring post content.
+
+### Create a new post template
+
+-   **Route:** `POST /post-templates`
+-   **Description:** Creates a new post template.
+-   **Request Body:**
+    ```json
+    {
+      "name": "string",
+      "description": "string (optional)",
+      "structure": "string"
+    }
+    ```
+-   **Returns:** The newly created Post Template object.
+
+### Get all post templates
+
+-   **Route:** `GET /post-templates`
+-   **Description:** Retrieves a list of all post templates.
+-   **Request Body:** None
+-   **Returns:** An array of Post Template objects.
+
+### Get a single post template by ID
+
+-   **Route:** `GET /post-templates/:id`
+-   **Description:** Retrieves a specific post template by its ID.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the template.
+-   **Request Body:** None
+-   **Returns:** A single Post Template object.
+
+### Update a post template
+
+-   **Route:** `PUT /post-templates/:id`
+-   **Description:** Updates an existing post template.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the template to update.
+-   **Request Body:** Same as create, but all fields are optional.
+-   **Returns:** The updated Post Template object.
+
+### Delete a post template
+
+-   **Route:** `DELETE /post-templates/:id`
+-   **Description:** Deletes a post template.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the template to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Post Template object.
+
+---
+
+## 🧪 Mock Tests & Series API
+
+Handles mock tests, the series they belong to, and related entities.
+
+### Get all mock test series
+
+-   **Route:** `GET /mock-series`
+-   **Description:** Retrieves a list of all mock test series.
+-   **Request Body:** None
+-   **Returns:** An array of Mock Series objects.
+
+### Get a single mock series by Slugs
+
+-   **Route:** `GET /mock-series/slug/:categorySlug/:seriesSlug`
+-   **Description:** Retrieves a specific mock series using the category's slug and the series's own slug.
+-   **URL Parameters:**
+    -   `categorySlug` (string): The slug of the category.
+    -   `seriesSlug` (string): The slug of the series.
+-   **Request Body:** None
+-   **Returns:** A single Mock Series object, including its associated tests.
+
+### Create a new mock test series
+
+-   **Route:** `POST /mock-series`
+-   **Description:** Creates a new series to group mock tests.
+-   **Request Body:**
+    ```json
+    {
+      "title": "string",
+      "description": "string (optional)",
+      "price": "number",
+      "category_id": "number",
+      "tagIds": ["number"]
+    }
+    ```
+-   **Returns:** The newly created Mock Series object.
+
+### Get a single mock series by ID
+
+-   **Route:** `GET /mock-series/:id`
+-   **Description:** Retrieves a specific mock series and its associated tests.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the series.
+-   **Request Body:** None
+-   **Returns:** A single Mock Series object.
+
+### Update a mock series
+
+-   **Route:** `PUT /mock-series/:id`
+-   **Description:** Updates an existing mock series.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the series to update.
+-   **Request Body:** Same as create, but all fields are optional.
+-   **Returns:** The updated Mock Series object.
+
+### Delete a mock series
+
+-   **Route:** `DELETE /mock-series/:id`
+-   **Description:** Deletes a mock series.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the series to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Mock Series object.
+
+### Add a test to a series
+
+-   **Route:** `POST /mock-series/:seriesId/tests/:testId`
+-   **Description:** Associates an existing mock test with a mock series and generates the full slug.
+-   **URL Parameters:**
+    -   `seriesId` (number): The ID of the series.
+    -   `testId` (number): The ID of the test.
+-   **Request Body:** None
+-   **Returns:** A `mock_series_tests` join table record.
+
+### Remove a test from a series
+
+-   **Route:** `DELETE /mock-series/:seriesId/tests/:testId`
+-   **Description:** Removes the association between a test and a series.
+-   **URL Parameters:**
+    -   `seriesId` (number): The ID of the series.
+    -   `testId` (number): The ID of the test.
+-   **Request Body:** None
+-   **Returns:** The deleted `mock_series_tests` join table record.
+
+### Check enrollment status for a series
+
+-   **Route:** `GET /mock-series/:id/check-enrollment`
+-   **Authentication:** **JWT Required**.
+-   **Description:** Checks if the authenticated user has successfully paid for and is enrolled in a mock series.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the series.
+-   **Request Body:** None
+-   **Returns:** An object indicating enrollment status.
+    ```json
+    {
+      "enrolled": "boolean"
+    }
+    ```
+
+---
+
+## 📜 Mock Tests API
+
+### Get all mock tests
+
+-   **Route:** `GET /mock-tests`
+-   **Description:** Retrieves a list of all available mock tests.
+-   **Request Body:** None
+-   **Returns:** An array of Mock Test objects.
+
+### Create a new mock test
+
+-   **Route:** `POST /mock-tests`
+-   **Description:** Creates a new standalone mock test.
+-   **Request Body:**
+    ```json
+    {
+      "title": "string",
+      "description": "string (optional)",
+      "duration_minutes": "number",
+      "total_marks": "number",
+      "is_free": "boolean (optional)"
+    }
+    ```
+-   **Returns:** The newly created Mock Test object.
+
+### Get a single mock test by ID
+
+-   **Route:** `GET /mock-tests/:id`
+-   **Description:** Retrieves a specific mock test and its questions by its ID.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the test.
+-   **Request Body:** None
+-   **Returns:** A single Mock Test object.
+
+### Get a single mock test by full slug
+
+-   **Route:** `GET /mock-tests/:categorySlug/:seriesSlug/:testSlug`
+-   **Description:** Retrieves a specific mock test using its full, generated slug.
+-   **URL Parameters:**
+    -   `categorySlug` (string): The slug of the category.
+    -   `seriesSlug` (string): The slug of the series.
+    -   `testSlug` (string): The slug of the test.
+-   **Request Body:** None
+-   **Returns:** The `mock_series_tests` object containing the full test details.
+
+### Update a mock test
+
+-   **Route:** `PUT /mock-tests/:id`
+-   **Description:** Updates an existing mock test.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the test to update.
+-   **Request Body:** Same as create, but all fields are optional.
+-   **Returns:** The updated Mock Test object.
+
+### Delete a mock test
+
+-   **Route:** `DELETE /mock-tests/:id`
+-   **Description:** Deletes a mock test.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the test to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Mock Test object.
+
+### Submit answers for a mock test
+
+-   **Route:** `POST /mock-tests/:id/submit`
+-   **Authentication:** **JWT Required**.
+-   **Description:** Submits a user's answers for a mock test, calculates the score, and records the attempt.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the test being submitted.
+-   **Request Body:**
+    ```json
+    {
+      "answers": {
+        "questionId_1": "user_answer_1",
+        "questionId_2": "user_answer_2"
+      }
+    }
+    ```
+-   **Returns:** The created Mock Attempt object with the final score.
+
+---
+
+## ❓ Mock Questions API
+
+### Create a new mock question
+
+-   **Route:** `POST /mock-questions`
+-   **Description:** Adds a new question to a mock test.
+-   **Request Body:**
+    ```json
+    {
+      "test_id": "number",
+      "question_text": "string",
+      "question_type": "string ('mcq', 'true_false', 'fill_blank') (optional)",
+      "options": {},
+      "correct_answer": "string",
+      "marks": "number (optional)"
+    }
+    ```
+-   **Returns:** The newly created Mock Question object.
+
+### Bulk upload questions via CSV
+
+-   **Route:** `POST /mock-questions/upload/csv`
+-   **Description:** Uploads a CSV file to create multiple questions for a specific test in one go.
+-   **Request Body:** `multipart/form-data` with two fields:
+    -   `file`: The CSV file.
+    -   `test_id`: The ID of the mock test.
+-   **Returns:** A confirmation message with the count of created questions.
+
+### Get all mock questions
+
+-   **Route:** `GET /mock-questions`
+-   **Description:** Retrieves a list of all mock questions.
+-   **Request Body:** None
+-   **Returns:** An array of Mock Question objects.
+
+### Get a single mock question by ID
+
+-   **Route:** `GET /mock-questions/:id`
+-   **Description:** Retrieves a specific mock question.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the question.
+-   **Request Body:** None
+-   **Returns:** A single Mock Question object.
+
+### Update a mock question
+
+-   **Route:** `PUT /mock-questions/:id`
+-   **Description:** Updates an existing mock question.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the question to update.
+-   **Request Body:** Same as create, but all fields are optional.
+-   **Returns:** The updated Mock Question object.
+
+### Delete a mock question
+
+-   **Route:** `DELETE /mock-questions/:id`
+-   **Description:** Deletes a mock question.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the question to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Mock Question object.
+
+---
+
+## 📂 Mock Categories API (for Series)
+
+### Create a new mock category
+
+-   **Route:** `POST /mock-categories`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Creates a new category for mock test series.
+-   **Request Body:**
+    ```json
+    {
+      "name": "string",
+      "description": "string (optional)"
+    }
+    ```
+-   **Returns:** The newly created Mock Category object.
+
+### Get all mock categories
+
+-   **Route:** `GET /mock-categories`
+-   **Description:** Retrieves a list of all mock series categories.
+-   **Request Body:** None
+-   **Returns:** An array of Mock Category objects.
+
+### Get a single mock category by ID
+
+-   **Route:** `GET /mock-categories/:id`
+-   **Description:** Retrieves a specific mock category.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the category.
+-   **Request Body:** None
+-   **Returns:** A single Mock Category object.
+
+### Update a mock category
+
+-   **Route:** `PUT /mock-categories/:id`
+-   **Description:** Updates an existing mock category.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the category to update.
+-   **Request Body:** Same as create, but all fields are optional.
+-   **Returns:** The updated Mock Category object.
+
+### Delete a mock category
+
+-   **Route:** `DELETE /mock-categories/:id`
+-   **Description:** Deletes a mock category.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the category to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Mock Category object.
+
+---
+
+## 🏷️ Mock Tags API (for Series)
+
+### Create a new mock tag
+
+-   **Route:** `POST /mock-tags`
+-   **Description:** Creates a new tag for mock test series.
+-   **Request Body:**
+    ```json
+    {
+      "name": "string"
+    }
+    ```
+-   **Returns:** The newly created Mock Tag object.
+
+### Get all mock tags
+
+-   **Route:** `GET /mock-tags`
+-   **Description:** Retrieves a list of all mock series tags.
+-   **Request Body:** None
+-   **Returns:** An array of Mock Tag objects.
+
+### Get a single mock tag by ID
+
+-   **Route:** `GET /mock-tags/:id`
+-   **Description:** Retrieves a specific mock tag.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the tag.
+-   **Request Body:** None
+-   **Returns:** A single Mock Tag object.
+
+### Update a mock tag
+
+-   **Route:** `PUT /mock-tags/:id`
+-   **Description:** Updates an existing mock tag.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the tag to update.
+-   **Request Body:** Same as create, but `name` is optional.
+-   **Returns:** The updated Mock Tag object.
+
+### Delete a mock tag
+
+-   **Route:** `DELETE /mock-tags/:id`
+-   **Description:** Deletes a mock tag.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the tag to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted Mock Tag object.
+
+---
+
+## 💰 Payments API
+
+Handles payment processing via Razorpay.
+
+### Create a payment order
+
+-   **Route:** `POST /payments/create-order`
+-   **Authentication:** **JWT Required**.
+-   **Description:** Creates a Razorpay order for purchasing a mock series.
+-   **Request Body:**
+    ```json
+    {
+      "mock_series_id": "number"
+    }
+    ```
+-   **Returns:** An object with order details for the frontend client.
+    ```json
+    {
+        "order_id": "string",
+        "amount": "number",
+        "currency": "string",
+        "series_title": "string"
+    }
+    ```
+
+### Handle Razorpay Webhook
+
+-   **Route:** `POST /payments/webhook/razorpay`
+-   **Description:** An endpoint for Razorpay to send payment confirmation webhooks. It verifies the signature and updates the payment status in the database.
+-   **Headers:**
+    -   `x-razorpay-signature`: The signature provided by Razorpay for verification.
+-   **Request Body:** The raw JSON payload sent by Razorpay.
+-   **Returns:** A confirmation status.
+
+---
+
+## 🚀 Deployment API
+
+Provides a secure, web-based interface to deploy application updates.
+
+### Get the deployment page
+
+-   **Route:** `GET /deployment`
+-   **Description:** Returns an HTML page with a form to trigger a deployment.
+-   **Request Body:** None
+-   **Returns:** An HTML document.
+
+### Trigger deployment
+
+-   **Route:** `POST /deployment/deploy`
+-   **Description:** Executes the deployment script (`git pull`, `npm run build`, `pm2 restart`) if the correct secret key is provided.
+-   **Request Body:**
+    ```json
+    {
+      "secretKey": "string"
+    }
+    ```
+-   **Returns:** An object with the success status and the output from each command.
+
+---
+
+## 🎓 Courses API
+
+This module is currently a placeholder.
+
+-   **Route:** `/courses`
+-   **Description:** No routes are currently defined for this module.

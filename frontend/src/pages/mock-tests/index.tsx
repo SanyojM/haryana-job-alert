@@ -6,14 +6,15 @@ import Footer from "@/components/shared/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-// Define the type for a mock series based on your API response
 export type MockSeries = {
   id: string;
   title: string;
+  slug: string; // Added slug
   description: string | null;
   price: number | null;
   mock_categories: {
     name: string;
+    slug: string; // Added slug
   } | null;
   mock_series_tags: {
     tag: {
@@ -29,6 +30,10 @@ interface MockTestsHomePageProps {
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const series = await api.get('/mock-series');
+
+    // Add this line to debug
+    console.log('API Response for /mock-series:', JSON.stringify(series, null, 2));
+
     return { props: { series } };
   } catch (error) {
     console.error("Failed to fetch mock series:", error);
@@ -44,7 +49,12 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
         <h1 className="text-3xl md:text-4xl font-bold mb-6">All Mock Test Series</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {series.map((s) => (
-            <Link key={s.id} href={`/mock-tests/${s.id}`} legacyBehavior>
+            <Link
+              key={s.id}
+              // Updated href to use the new slug structure
+              href={`/mock-tests/${s.mock_categories?.slug || 'uncategorized'}/${s.slug}`}
+              legacyBehavior
+            >
               <a className="block">
                 <Card className="hover:shadow-lg transition-shadow h-full">
                   <CardHeader>

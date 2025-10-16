@@ -20,6 +20,16 @@ import type { Request } from 'express';
 export class MockTestsController {
   constructor(private readonly mockTestsService: MockTestsService) {}
 
+  @Get(':categorySlug/:seriesSlug/:testSlug')
+  findBySlug(
+    @Param('categorySlug') categorySlug: string,
+    @Param('seriesSlug') seriesSlug: string,
+    @Param('testSlug') testSlug: string,
+    ) {
+        const slug = `${categorySlug}/${seriesSlug}/${testSlug}`;
+        return this.mockTestsService.findBySlug(slug);
+  }
+
   @Post()
   create(@Body() createMockTestDto: CreateMockTestDto) {
     return this.mockTestsService.create(createMockTestDto);

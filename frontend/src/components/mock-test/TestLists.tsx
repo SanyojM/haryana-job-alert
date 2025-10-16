@@ -2,12 +2,22 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, HelpCircle, BarChart2 } from 'lucide-react';
-import { MockTest } from '@/pages/mock-tests/[id]';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
 import { api } from '@/lib/api';
 
-const TestListItem = ({ test, onStart, isLoading }: { test: MockTest, onStart: (test: MockTest) => void, isLoading: boolean }) => {
+// MODIFICATION: Renamed to reflect we are using the test's own slug
+type MockTestWithSlug = {
+  id: string;
+  title: string;
+  slug: string; // We will use this slug
+  description: string | null;
+  duration_minutes: number;
+  total_marks: number;
+  is_free: boolean;
+};
+
+const TestListItem = ({ test, onStart, isLoading }: { test: MockTestWithSlug, onStart: (test: MockTestWithSlug) => void, isLoading: boolean }) => {
   return (
     <Card className="flex flex-col sm:flex-row items-center justify-between p-4 relative">
       <div>
@@ -33,40 +43,38 @@ const TestListItem = ({ test, onStart, isLoading }: { test: MockTest, onStart: (
   );
 };
 
-export default function TestLists({ tests }: { tests: MockTest[] }) {
-  const { user, token, isLoading: isAuthLoading } = useAuth(); // Get user, token, and loading state
+export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug[], seriesId: string }) {
+  const { user, token, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
-  const { id: seriesId } = router.query;
   const [activeTab, setActiveTab] = useState('All Tests');
   const [loadingTestId, setLoadingTestId] = useState<string | null>(null);
 
-  const handleStartTest = async (test: MockTest) => {
-
+  const handleStartTest = async (test: MockTestWithSlug) => {
     const authToken = token || undefined;
-    // 1. If the test itself is marked as free, it's a demo. Let anyone start immediately.
+    
+    // --- MODIFICATION START ---
+    // Construct the URL using the current path and the test's specific slug
+    const testUrl = `${router.asPath}/${test.slug}`;
+    // --- MODIFICATION END ---
+
     if (test.is_free) {
-      router.push(`/test/${test.id}`);
+      router.push(testUrl);
       return;
     }
 
-    // 2. If the test is not free, check if the user is logged in.
     if (!user) {
       router.push(`/auth/login?redirect=${router.asPath}`);
       return;
     }
 
-    // 3. User is logged in and the test is not free. Check if they have purchased the series.
     setLoadingTestId(test.id);
     try {
       const { enrolled } = await api.get(`/mock-series/${seriesId}/check-enrollment`, authToken);
       
       if (enrolled) {
-        // User has paid, proceed to test.
-        router.push(`/test/${test.id}`);
+        router.push(testUrl);
       } else {
-        // User has not paid, show a message.
         alert("You have not purchased this test series. Please buy a package to continue.");
-        
       }
     } catch (error) {
       alert("Could not verify your enrollment status. Please try again.");
@@ -83,7 +91,7 @@ export default function TestLists({ tests }: { tests: MockTest[] }) {
   const freeTests = tests.filter(test => test.is_free);
   const paidTests = tests.filter(test => !test.is_free);
 
-  const renderTestList = (testList: MockTest[]) => {
+  const renderTestList = (testList: MockTestWithSlug[]) => {
     if (testList.length === 0) {
       return <p className="text-center text-gray-500 py-8">No tests available in this section.</p>;
     }

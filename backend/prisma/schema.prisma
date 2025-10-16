@@ -124,6 +124,7 @@ model mock_categories {
   id          BigInt        @id @default(autoincrement())
   name        String        @unique
   description String?
+  slug        String?       @unique
   mock_series mock_series[]
 }
 
@@ -159,6 +160,7 @@ model mock_series {
   category_id     BigInt?
   title           String
   description     String?
+  slug            String?          @unique
   created_at      DateTime?        @default(now()) @db.Timestamp(6)
   price           Decimal?         @db.Decimal
   mock_categories mock_categories? @relation(fields: [category_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
@@ -170,6 +172,7 @@ model mock_series {
 model mock_tests {
   id               BigInt           @id @default(autoincrement())
   title            String
+  slug             String?          @unique
   description      String?
   duration_minutes Int
   total_marks      Int
@@ -183,6 +186,7 @@ model mock_tests {
 model mock_series_tests {
   series_id BigInt
   test_id   BigInt
+  slug      String?     @unique
   series    mock_series @relation(fields: [series_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   test      mock_tests  @relation(fields: [test_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 
