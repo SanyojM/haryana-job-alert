@@ -30,8 +30,9 @@ model comments {
   user_id    BigInt?
   content    String
   created_at DateTime? @default(now()) @db.Timestamp(6)
-  posts      posts?    @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users      users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  posts      posts?    @relation(fields: [post_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 }
 
 model course_plans {
@@ -42,11 +43,11 @@ model course_plans {
   price         Decimal?      @default(0) @db.Decimal(10, 2)
   duration_days Int?
   created_at    DateTime?     @default(now()) @db.Timestamp(6)
-  courses       courses?      @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  courses       courses?      @relation(fields: [course_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   enrollments   enrollments[]
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model course_reviews {
   id         BigInt    @id @default(autoincrement())
   course_id  BigInt?
@@ -54,8 +55,9 @@ model course_reviews {
   rating     Int?
   review     String?
   created_at DateTime? @default(now()) @db.Timestamp(6)
-  courses    courses?  @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users      users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  courses    courses?  @relation(fields: [course_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 }
 
 model course_videos {
@@ -66,7 +68,8 @@ model course_videos {
   position   Int
   is_demo    Boolean?  @default(false)
   created_at DateTime? @default(now()) @db.Timestamp(6)
-  courses    courses?  @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  courses    courses?  @relation(fields: [course_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 }
 
 model courses {
@@ -91,9 +94,10 @@ model enrollments {
   status       enrollment_status? @default(active)
   started_at   DateTime?          @default(now()) @db.Timestamp(6)
   expires_at   DateTime?          @db.Timestamp(6)
-  courses      courses?           @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  courses      courses?           @relation(fields: [course_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   course_plans course_plans?      @relation(fields: [plan_id], references: [id], onUpdate: NoAction)
-  users        users?             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users        users?             @relation(fields: [user_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 }
 
 model google_ads {
@@ -111,8 +115,9 @@ model mock_attempts {
   score        Int?
   started_at   DateTime?   @default(now()) @db.Timestamp(6)
   completed_at DateTime?   @db.Timestamp(6)
-  mock_tests   mock_tests? @relation(fields: [test_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users        users?      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  mock_tests   mock_tests? @relation(fields: [test_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  users        users?      @relation(fields: [user_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 }
 
 model mock_categories {
@@ -131,8 +136,8 @@ model mock_tags {
 model mock_series_tags {
   series_id BigInt
   tag_id    BigInt
-  series    mock_series @relation(fields: [series_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  tag       mock_tags   @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  series    mock_series @relation(fields: [series_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  tag       mock_tags   @relation(fields: [tag_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 
   @@id([series_id, tag_id])
 }
@@ -145,7 +150,8 @@ model mock_questions {
   options        Json?
   correct_answer String
   marks          Int?           @default(1)
-  mock_tests     mock_tests?    @relation(fields: [test_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  mock_tests     mock_tests?    @relation(fields: [test_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 }
 
 model mock_series {
@@ -155,11 +161,10 @@ model mock_series {
   description     String?
   created_at      DateTime?        @default(now()) @db.Timestamp(6)
   price           Decimal?         @db.Decimal
-  mock_categories mock_categories? @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  mock_categories mock_categories? @relation(fields: [category_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   payments        payments[]
   mock_series_tags mock_series_tags[]
   mock_series_tests mock_series_tests[]
-  
 }
 
 model mock_tests {
@@ -178,8 +183,8 @@ model mock_tests {
 model mock_series_tests {
   series_id BigInt
   test_id   BigInt
-  series    mock_series @relation(fields: [series_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  test      mock_tests  @relation(fields: [test_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  series    mock_series @relation(fields: [series_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  test      mock_tests  @relation(fields: [test_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 
   @@id([series_id, test_id])
 }
@@ -194,9 +199,10 @@ model payments {
   transaction_id String?         @unique
   created_at     DateTime?       @default(now()) @db.Timestamp(6)
   mock_series_id BigInt?
-  courses        courses?        @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  mock_series    mock_series?    @relation(fields: [mock_series_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users          users?          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  courses        courses?        @relation(fields: [course_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  mock_series    mock_series?    @relation(fields: [mock_series_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  users          users?          @relation(fields: [user_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 
   @@index([user_id, mock_series_id])
 }
@@ -204,8 +210,8 @@ model payments {
 model post_tags {
   post_id BigInt
   tag_id  BigInt
-  posts   posts  @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  tags    tags   @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  posts   posts  @relation(fields: [post_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  tags    tags   @relation(fields: [tag_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 
   @@id([post_id, tag_id])
 }
@@ -236,9 +242,9 @@ model posts {
   content_html   String?
   comments       comments[]
   post_tags      post_tags[]
-  categories     categories?     @relation(fields: [category_id], references: [id], onUpdate: NoAction)
-  users          users?          @relation(fields: [created_by], references: [id], onUpdate: NoAction)
-  post_templates post_templates? @relation(fields: [template_id], references: [id], onUpdate: NoAction)
+  categories     categories?     @relation(fields: [category_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  users          users?          @relation(fields: [created_by], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  post_templates post_templates? @relation(fields: [template_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 }
 
 model study_materials {
