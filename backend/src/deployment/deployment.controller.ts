@@ -377,16 +377,23 @@ export class DeploymentController {
 
   @Post('deploy')
   async deploy(@Body('secretKey') secretKey: string) {
-    if (!secretKey) {
-      throw new UnauthorizedException('Secret key is required');
-    }
+    try {
+      if (!secretKey) {
+        throw new UnauthorizedException('Secret key is required');
+      }
 
-    const isValid = this.deploymentService.validateSecretKey(secretKey);
-    if (!isValid) {
-      throw new UnauthorizedException('Invalid secret key');
-    }
+      const isValid = this.deploymentService.validateSecretKey(secretKey);
+      if (!isValid) {
+        throw new UnauthorizedException('Invalid secret key');
+      }
 
-    const result = await this.deploymentService.runDeploymentCommands();
-    return result;
+      console.log('Starting deployment commands...');
+      const result = await this.deploymentService.runDeploymentCommands();
+      console.log('Deployment completed:', result);
+      return result;
+    } catch (error) {
+      console.error('Deployment error:', error);
+      throw error;
+    }
   }
 }
