@@ -22,55 +22,51 @@ export class DeploymentService {
     success: boolean;
     outputs: { command: string; output: string; error?: string }[];
   }> {
-    const commands = [
-      'git pull',
-      'npm run build',
-      'pm2 restart haryana-job-alert-backend',
-    ];
-
-    // Get the backend directory path
-    // In production (on VPS), this should resolve to /root/Clients/haryana-job-alert/backend
-    // The dist folder is inside backend, so we go up from dist/deployment to backend root
     const backendDir = path.resolve(__dirname, '../..');
-
     const outputs: { command: string; output: string; error?: string }[] = [];
 
-    console.log('Running deployment commands in directory:', backendDir);
-
-    for (const command of commands) {
+    const safeExec = async (command: string) => {
       try {
-        console.log(`Executing command: ${command}`);
         const { stdout, stderr } = await execAsync(command, {
           cwd: backendDir,
-          timeout: 300000, // 5 minutes timeout
-          shell: '/bin/bash', // Explicitly use bash
+          timeout: 300000,
+          shell: '/bin/bash',
         });
-
-        console.log(`Command completed: ${command}`);
-        outputs.push({
-          command,
-          output: stdout || 'Command executed successfully',
-          error: stderr || undefined,
-        });
-      } catch (error) {
-        console.error(`Command failed: ${command}`, error);
-        outputs.push({
-          command,
-          output: error.stdout || '',
-          error: error.stderr || error.message,
-        });
-        
-        // If any command fails, return early
-        return {
-          success: false,
-          outputs,
-        };
+        outputs.push({ command, output: stdout || 'Command executed successfully', error: stderr || undefined });
+      } catch (error: any) {
+        outputs.push({ command, output: error.stdout || '', error: error.stderr || error.message });
+        throw new Error(`${command} failed`);
       }
-    }
-
-    return {
-      success: true,
-      outputs,
     };
+
+    try {
+      console.log('Executing deployment in:', backendDir);
+      await safeExec('git pull');
+      await safeExec('npm run build');
+
+      // ✅ Return response before restarting
+      setTimeout(async () => {
+        try {
+          console.log('Restarting PM2 process in background...');
+          await execAsync('pm2 restart haryana-job-alert-backend', {
+            cwd: backendDir,
+            shell: '/bin/bash',
+          });
+          console.log('PM2 restart completed');
+        } catch (err) {
+          console.error('PM2 restart failed:', err);
+        }
+      }, 2000); // wait a bit so response is flushed
+
+      return {
+        success: true,
+        outputs,
+      };
+    } catch (err) {
+      return {
+        success: false,
+        outputs,
+      };
+    }
   }
 }
