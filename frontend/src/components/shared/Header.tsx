@@ -64,7 +64,7 @@ export default function Header() {
         <nav className="lg:container mx-auto px-4 mt-5">
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex-shrink-0">
-              <img className="h-14 w-14 rounded-full" src="/LOGO.png" alt="Haryana Job Alert Logo"  />
+              <img className="h-14 w-14 rounded-full" src="/logo.png" alt="Haryana Job Alert Logo"  />
             </Link>
 
             <div className="hidden lg:flex items-center justify-center flex-1">

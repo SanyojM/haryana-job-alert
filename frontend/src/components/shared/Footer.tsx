@@ -23,7 +23,7 @@ export default function Footer() {
           
           <div className="md:col-span-8">
             <div className="md:flex items-center gap-4 mb-6 text-center md:text-start">
-                <img src="/LOGO.png" alt="Logo" height={64} width={64} className="w-16 h-16 rounded-full hidden md:block" />
+                <img src="/logo.png" alt="Logo" height={64} width={64} className="w-16 h-16 rounded-full hidden md:block" />
                 <h2 className="text-4xl font-extrabold text-gray-900">Get in touch</h2>
                 <div className="flex items-center gap-3 md:ml-4 justify-center md:justify-start mt-4 md:mt-0">
                     <a href="#" className="text-red-600 hover:opacity-80"><Youtube size={32} /></a>
