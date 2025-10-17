@@ -11,8 +11,8 @@ const navLinks = [
   { name: 'Latest Jobs', href: '/category/latest-jobs' },
   { name: 'Admit Cards', href: '/category/admit-cards' },
   { name: 'Result', href: '#' },
-  { name: 'Yojna', href: '/category/yojna' },
-  { name: 'Offline form', href: '#' },
+  { name: 'Offline Forms', href: '/offline-forms' },
+  { name: 'Online Forms', href: '/online-forms' },
   { name: 'Answer Keys', href: '/category/answer-keys' },
   { name: 'Mock Test', href: '/mock-tests' },
 ];
@@ -27,14 +27,6 @@ export default function Header() {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
-    };
-
-    if (isMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMenuOpen]);
 
@@ -111,7 +103,7 @@ export default function Header() {
                   key={link.name}
                   href={link.href}
                   className={`block px-3 py-2 rounded-md text-base font-medium ${
-                    link.name === 'Home'
+                    link.href === currentPath
                       ? 'bg-black text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
