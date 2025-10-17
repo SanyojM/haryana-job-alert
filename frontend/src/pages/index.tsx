@@ -52,10 +52,10 @@ const HomePage: NextPage<HomePageProps> = ({ posts, categories }) => {
       <Header />
       {/* Pass the dynamic categories data to the component */}
       <TopLinksSection categories={categories} />
-      <main className="p-4 container mx-auto">
+      <main className="p-4 container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
             <div className="lg:col-span-3 flex flex-col gap-6">
-            <AdBanner text="Google Ads Section" className="h-24" />
+            {/* <AdBanner text="Google Ads Section" className="h-24" /> */}
             <PostsSection posts={posts.slice(0, 8)} />
             <AdBanner text="Google Ads Section" className="h-88" />
             <MidCards 

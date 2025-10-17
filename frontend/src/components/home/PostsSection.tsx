@@ -4,14 +4,14 @@ import { Post } from '@/pages/admin/posts'; // Import the Post type
 
 // An array of colors to cycle through for a dynamic but consistent look
 const colors = [
-  'from-blue-400 to-indigo-500',
-  'from-teal-400 to-cyan-500',
-  'from-emerald-500 to-green-600',
-  'from-red-500 to-rose-600',
-  'from-gray-700 to-gray-800',
-  'from-purple-400 to-violet-500',
-  'from-pink-400 to-rose-500',
-  'from-amber-400 to-orange-500',
+  'from-[#5055CA] to-[#8B90F8]',
+  'from-[#4B90A9] to-[#7E9CC7]',
+  'from-[#222627] to-[#414245]',
+  'from-[#0C342B] to-[#1D6F50]',
+  'from-[#EB2139] to-[#9B2821]',
+  'from-[#0C342B] to-[#1D6F50]',
+  'from-[#4B90A9] to-[#7E9CC7]',
+  'from-[#EB2139] to-[#9B2821]',
 ];
 
 const features = [
@@ -37,10 +37,10 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
               passHref
               legacyBehavior>
               <a
-                className={`relative p-5 rounded-xl text-white overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 bg-gradient-to-br ${colors[index % colors.length]}`} // Cycle through colors
+                className={`relative p-5 rounded-xl text-white overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 bg-gradient-to-r ${colors[index % colors.length]}`} // Cycle through colors
               >
                 <div className="relative z-10">
-                  <h3 className="font-bold text-lg leading-tight">{post.title}</h3>
+                  <h3 className="font-medium text-sm leading-tight">{post.title}</h3>
                   {/* The 'count' property doesn't exist on our dynamic posts, so it's removed */}
                 </div>
                 <div className="absolute top-3 right-3 w-7 h-7 bg-white/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -51,15 +51,15 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
           ))}
         </div>
 
-        <div className="bg-gray-800 rounded-full px-4 py-2 shadow-xl hidden md:block">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1">
+        <div className="bg-gray-800 rounded-full px-2 py-2 shadow-xl hidden md:block">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
                 {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2 text-white px-2">
+                    <div key={index} className="flex items-center gap-1 text-white">
                         <div className="flex-shrink-0">
-                            <feature.icon className="w-8 h-8 text-indigo-400" />
+                            <feature.icon className="w-6 h-6 text-indigo-400" />
                         </div>
                         <div>
-                            <p className="font-semibold text-xs leading-tight">{feature.title}</p>
+                            <p className="text-xs leading-tight">{feature.title}</p>
                             <p className="text-xs text-gray-400">{feature.subtitle}</p>
                         </div>
                     </div>

@@ -172,7 +172,7 @@ export default function MockTestSection() {
         ) : (
           <>
             {/* Mock Test Cards - First 3 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:mb-10">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:mb-10">
               {filteredSeries.slice(0, Math.min(3, visibleCount)).map((series) => (
                 <MockSeriesCard key={series.id} series={series} getLogoText={getLogoText} getTestCount={getTestCount} formatLanguages={formatLanguages} formatPrice={formatPrice} />
               ))}
@@ -187,7 +187,7 @@ export default function MockTestSection() {
 
             {/* Mock Test Cards - Next 3 */}
             {visibleCount > 3 && filteredSeries.length > 3 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredSeries.slice(3, Math.min(6, visibleCount)).map((series) => (
                   <MockSeriesCard key={series.id} series={series} getLogoText={getLogoText} getTestCount={getTestCount} formatLanguages={formatLanguages} formatPrice={formatPrice} />
                 ))}
@@ -200,7 +200,7 @@ export default function MockTestSection() {
                 <div className="mt-10 mb-10 md:hidden">
                   <AdBanner text="Google Ads Section" className="h-32" />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                   {filteredSeries.slice(6, visibleCount).map((series) => (
                     <MockSeriesCard key={series.id} series={series} getLogoText={getLogoText} getTestCount={getTestCount} formatLanguages={formatLanguages} formatPrice={formatPrice} />
                   ))}
@@ -266,7 +266,7 @@ function MockSeriesCard({
         <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
           <span className="text-slate-700 font-bold text-lg">{logoText}</span>
         </div>
-        <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
+        <div className="hidden md:flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
           <User className="w-3 h-3" />
           <span>1000+ Users</span>
         </div>
@@ -275,7 +275,7 @@ function MockSeriesCard({
       <h3 className="font-bold text-gray-800 leading-tight mb-1.5 line-clamp-2">
         {series.title}
       </h3>
-      <p className="text-sm text-gray-500 mb-2">
+      <p className="text-xs nd:text-sm text-gray-500 mb-2">
         {testCount} Total Tests | {testCount > 0 ? '5' : '0'} Free Tests
       </p>
       <div className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-md self-start mb-4">
@@ -289,7 +289,7 @@ function MockSeriesCard({
             .map((line) => line.trim())
             .filter(Boolean)
             .map((line, idx) => (
-                <li key={idx} className="flex items-center gap-2">
+                <li key={idx} className="flex items-center gap-2 text-xs md:text-sm">
                     <span className="text-blue-500 mt-1">•</span>
                     <span className="line-clamp-3">{line}</span>
                 </li>

@@ -66,12 +66,17 @@ export default function CoursePage({ id }: CoursePageProps) {
                     language={courseData.language}
                     rating={courseData.rating}
                     ratingCount={courseData.ratingCount}
-                    studentCount={courseData.studentCount} isBestseller={false} isFree={false} />
+                    studentCount={courseData.studentCount} isBestseller={false} isFree={false} 
+                    thumbnailUrl={courseData.thumbnailUrl}
+                    courseDuration={courseData.courseDuration}
+                    articlesAttached={courseData.articlesAttached}
+                    downloadableResources={courseData.downloadableResources}
+                    freeCourse={courseData.freeCourse}
+                    mockTests={courseData.mockTests}
+                    />
             </div>
-            <div className="container mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 items-start">
-                    {/* Main Content Area */}
-                    <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0 mt-12">
+            <div className="mx-auto px-4 py-8 max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-8 mt-24">
+                    <main className="col-span-1 lg:col-span-2 mt-8">
                         <CourseDescription description={courseData.mainDescription} />
                         <CourseContentAccordion content={{
                             totalLectures: courseData.content.totalLectures,
@@ -80,26 +85,11 @@ export default function CoursePage({ id }: CoursePageProps) {
                             sections: courseData.content.sections,
                         }} />
                     </main>
-
-                    {/* Sidebar / Enrollment Card Area */}
-                    <aside className="space-y-8 col-span-1 hidden xl:block">
-                        <CourseEnrollmentCard
-                            thumbnailUrl={courseData.thumbnailUrl}
-                            instructorName={courseData.instructorName}
-                            courseDuration={courseData.courseDuration}
-                            articlesAttached={courseData.articlesAttached}
-                            downloadableResources={courseData.downloadableResources}
-                            freeCourse={courseData.freeCourse}
-                            mockTests={courseData.mockTests}
-                            description={courseData.description}
-                        />
-                        <div className="mr-4">
-                        <AdBanner text={"Google Ads Section"} className="h-88 mt-52"/>
-                        </div>
+                    <aside className="hidden xl:block mt-36">
+                        <AdBanner text={"Google Ads Section"} className="h-88 w-full"/>
                     </aside>
 
                 </div>
             </div>
-        </div>
     );
 }

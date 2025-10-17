@@ -74,9 +74,9 @@ export default function CourseSection() {
                     />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                     {courses.map((course) => (
-                        <div key={course.id} className="bg-gray-100 rounded-2xl overflow-hidden flex flex-col">
+                        <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col">
                             <div className="relative">
                                 <a href={course.courseUrl}>
                                     <Image
@@ -91,8 +91,8 @@ export default function CourseSection() {
                             </div>
 
                             <div className="py-5 px-1 flex flex-col flex-grow justify-between">
-                                <div className="flex justify-between items-start mb-2">
-                                    <h3 className="text-xl font-bold text-gray-800 leading-tight">
+                                <div className="flex justify-between items-start mb-2 flex-col sm:flex-row">
+                                    <h3 className="md:text-xl text-sm font-bold text-gray-800 leading-tight">
                                         <a href={course.courseUrl}>{course.title}</a>
                                     </h3>
                                     <div className="flex items-center gap-1 text-sm text-gray-600 flex-shrink-0 ml-2">
@@ -100,14 +100,14 @@ export default function CourseSection() {
                                         <span>{course.rating} ({course.reviews})</span>
                                     </div>
                                 </div>
-                                <p className="text-sm text-gray-500 mb-3">{course.description}</p>
+                                <p className="md:text-sm text-xs text-gray-500 mb-3">{course.description}</p>
 
                                 <div className="flex items-center gap-2 mb-4">
                                     <Image src={course.instructor.avatarUrl} width={40} height={40} alt={course.instructor.name} className="w-7 h-7 rounded-full" unoptimized />
                                     <span className="text-sm text-gray-700">By {course.instructor.name}</span>
                                 </div>
 
-                                <div className="flex items-center gap-3 mb-5">
+                                <div className="flex md:items-center gap-3 mb-5 flex-col sm:flex-row">
                                     <span className="text-2xl font-bold text-gray-800">
                                         {course.price.current === 0 ? 'FREE' : `₹${course.price.current}`}
                                     </span>
@@ -122,7 +122,7 @@ export default function CourseSection() {
                                 <div className="mt-auto flex items-center gap-3">
                                     <Link
                                         href={`/courses/${course.id}`}
-                                        className="flex-grow bg-gradient-to-r from-red-600 to-gray-800 text-white text-center rounded-lg px-4 py-3 font-semibold text-sm inline-flex items-center justify-center hover:opacity-90 transition-opacity"
+                                        className="flex-grow bg-gradient-to-r from-red-600 to-gray-800 text-white text-center rounded-lg px-4 py-3 font-semibold text-xs md:text-sm inline-flex items-center justify-center hover:opacity-90 transition-opacity"
                                     >
                                         View Course
                                     </Link>
