@@ -26,6 +26,27 @@ export class CategoriesController {
     return this.categoriesService.findAll();
   }
 
+  // IMPORTANT: Specific routes MUST come before generic :id routes
+  // Otherwise :id will match "slug" as an id parameter
+
+  @Get('name/:name')
+  findByName(@Param('name') name: string) {
+    return this.categoriesService.findByName(name);
+  }
+
+  // NEW: Get category by slug
+  @Get('slug/:slug')
+  findBySlug(@Param('slug') slug: string) {
+    return this.categoriesService.findBySlug(slug);
+  }
+
+  // NEW: Get category with all its posts by slug
+  @Get('slug/:slug/posts')
+  findBySlugWithPosts(@Param('slug') slug: string) {
+    return this.categoriesService.findBySlugWithPosts(slug);
+  }
+
+  // Generic :id route comes AFTER specific routes
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.findOne(id);

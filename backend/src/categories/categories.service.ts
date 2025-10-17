@@ -23,8 +23,70 @@ export class CategoriesService {
     return category;
   }
 
+  async findByName(name: string) {
+    const category = await this.prisma.categories.findFirst({ where: { name } });
+    if (!category) {
+      throw new NotFoundException(`Category with name '${name}' not found`);
+    }
+    return category;
+  }
+
+  // NEW: Find category by slug (converts slug to name format)
+  async findBySlug(slug: string) {
+    // Convert slug to potential name formats
+    // e.g., "haryana-jobs" -> "Haryana Jobs" or "haryana-jobs" -> "Haryana jobs"
+    const nameFromSlug = slug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+
+    // Try exact match first
+    let category = await this.prisma.categories.findFirst({
+      where: { name: nameFromSlug }
+    });
+
+    // If not found, try case-insensitive search
+    if (!category) {
+      category = await this.prisma.categories.findFirst({
+        where: {
+          name: {
+            equals: nameFromSlug,
+            mode: 'insensitive'
+          }
+        }
+      });
+    }
+
+    if (!category) {
+      throw new NotFoundException(`Category with slug '${slug}' not found`);
+    }
+
+    return category;
+  }
+
+  // NEW: Get category with its posts
+  async findBySlugWithPosts(slug: string) {
+    const category = await this.findBySlug(slug);
+    
+    const posts = await this.prisma.posts.findMany({
+      where: { category_id: category.id },
+      include: {
+        categories: true,
+        post_templates: true,
+        post_tags: { include: { tags: true } },
+      },
+      orderBy: { created_at: 'desc' },
+    });
+
+    return {
+      category,
+      posts,
+      totalPosts: posts.length
+    };
+  }
+
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    await this.findOne(id); // Check if the category exists first
+    await this.findOne(id);
     return this.prisma.categories.update({
       where: { id },
       data: updateCategoryDto,
@@ -32,7 +94,7 @@ export class CategoriesService {
   }
 
   async remove(id: number) {
-    await this.findOne(id); // Check if the category exists first
+    await this.findOne(id);
     return this.prisma.categories.delete({ where: { id } });
   }
 }

@@ -54,7 +54,7 @@ const ProfileCard = ({ name, title, description, profileImageUrl, logoUrl, insta
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-4">
               <a href="#" className="w-12 h-12 flex-shrink-0 rounded-full bg-white shadow-md flex items-center justify-center">
-                  <Image src={logoUrl} alt="Logo" width={40} height={40} className="rounded-full" />
+                  <img src={logoUrl} alt="Logo" width={40} height={40} className="rounded-full" />
               </a>
               <a href="#" className="w-12 h-12 flex-shrink-0 rounded-full bg-gray-900 shadow-md flex items-center justify-center hover:bg-gray-700 transition-colors">
                   <ArrowRight size={24} />

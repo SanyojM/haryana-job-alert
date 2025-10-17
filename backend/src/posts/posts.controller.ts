@@ -46,6 +46,11 @@ export class PostsController {
     return this.postsService.findBySlug(slug);
   }
 
+  @Get('category/:id')
+  findByCategory(@Param('id', ParseIntPipe) id: number) {
+    return this.postsService.findByCategory(id);
+  }
+
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.remove(id);

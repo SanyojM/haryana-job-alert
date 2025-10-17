@@ -95,6 +95,20 @@ export class PostsService {
     return post;
   }
 
+  async findByCategory(categoryId: number) {
+    const posts = await this.prisma.posts.findMany({
+      where: { category_id: categoryId },
+      include: {
+        categories: true,
+        post_templates: true,
+        post_tags: { include: { tags: true } },
+      },
+      orderBy: { created_at: 'desc' },
+    });
+
+    return posts;
+  }
+
   async remove(id: number) {
     await this.findOne(id);
     return this.prisma.posts.delete({ where: { id } });

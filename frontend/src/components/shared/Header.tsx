@@ -4,21 +4,23 @@ import { useEffect, useRef, useState } from 'react';
 import { Search, User, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const navLinks = [
-  { name: 'Home', href: '#' },
-  { name: 'Latest Jobs', href: '#' },
-  { name: 'Admit Card', href: '#' },
+  { name: 'Home', href: '/' },
+  { name: 'Latest Jobs', href: '/category/latest-jobs' },
+  { name: 'Admit Cards', href: '/category/admit-cards' },
   { name: 'Result', href: '#' },
-  { name: 'Yojna', href: '#' },
+  { name: 'Yojna', href: '/category/yojna' },
   { name: 'Offline form', href: '#' },
-  { name: 'Answer Key', href: '#' },
-  { name: 'Mock Test', href: '#' },
+  { name: 'Answer Keys', href: '/category/answer-keys' },
+  { name: 'Mock Test', href: '/mock-tests' },
 ];
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const currentPath = usePathname();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -55,13 +57,14 @@ export default function Header() {
             <p className="px-4">You can Now Give MOCK TESTS on Haryana Job Alert for FREE.</p>
             <p className="px-4">You can Now Give MOCK TESTS on Haryana Job Alert for FREE.</p>
             <p className="px-4">You can Now Give MOCK TESTS on Haryana Job Alert for FREE.</p>
+            <p className="px-4">You can Now Give MOCK TESTS on Haryana Job Alert for FREE.</p>
           </div>
         </div>
 
         <nav className="lg:container mx-auto px-4 mt-5">
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex-shrink-0">
-              <Image className="h-14 w-14" src="/LOGO.png" alt="Haryana Job Alert Logo" width={56} height={56} />
+              <img className="h-14 w-14 rounded-full" src="/LOGO.png" alt="Haryana Job Alert Logo"  />
             </Link>
 
             <div className="hidden lg:flex items-center justify-center flex-1">
@@ -72,7 +75,7 @@ export default function Header() {
                     key={link.name}
                     href={link.href}
                     className={`px-4 py-2 rounded-xl text-md font-medium transition-colors ${
-                      link.name === 'Home'
+                      link.href === currentPath
                         ? 'bg-black text-white'
                         : 'text-gray-600 hover:bg-gray-200'
                     }`}
@@ -81,8 +84,12 @@ export default function Header() {
                   </Link>
                 ))}
                 <div className="border-l border-gray-200 ml-2 pl-4 flex items-center space-x-3">
-                    <User className="w-5 h-5 text-gray-500 cursor-pointer hover:text-black" />
-                    <Search className="w-5 h-5 text-gray-500 cursor-pointer hover:text-black" />
+                    <Link href="/dashboard" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
+                        <User className="w-5 h-5" />
+                    </Link>
+                    <Link href="#" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
+                        <Search className="w-5 h-5" />
+                    </Link>
                 </div>
               </div>
               </div>
@@ -113,9 +120,9 @@ export default function Header() {
                 </Link>
               ))}
                <div className="border-t border-gray-200 mt-2 pt-2 flex items-center space-x-4 px-3">
-                    <Link href="#" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
+                    <Link href="/dashboard" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
                         <User className="w-5 h-5" />
-                        <span>Profile</span>
+                        {/* <span>Profile</span> */}
                     </Link>
                     <Link href="#" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
                         <Search className="w-5 h-5" />
