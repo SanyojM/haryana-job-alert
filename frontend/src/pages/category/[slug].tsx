@@ -1,3 +1,4 @@
+'use client';
 import { GetServerSideProps, NextPage } from "next";
 import Head from 'next/head';
 import Link from "next/link";
@@ -15,13 +16,34 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Users, ArrowRight } from "lucide-react";
+import { ArrowRight, CalendarDays } from "lucide-react";
+import AdBanner from "@/components/home/AdBanner";
+import Image from "next/image";
+import { useState } from "react";
+
+
+
+type CategoryCategory = {
+  id: string;
+  name: string;
+};
+
+const categories: CategoryCategory[] = [
+  { id: 'all-jobs', name: 'All Jobs' },
+  { id: 'latest', name: 'Latest' },
+  { id: 'govt-jobs', name: 'Govt Jobs' },
+  { id: 'private-jobs', name: 'Private Jobs' },
+  { id: 'teaching', name: 'Teaching' },
+  { id: 'railway', name: 'Railway' },
+];
 
 interface Category {
   id: number;
   name: string;
   description: string | null;
   created_at: string;
+  logoUrl: string;
+  organization: string;
 }
 
 interface CategoryPageProps {
@@ -53,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts }) => {
   const categorySlug = category.name.toLowerCase().replace(/\s+/g, '-');
-
+  const [activeCategory, setActiveCategory] = useState('all-jobs');
   // Color schemes for cards (cycling through them)
 const cardColors = [
     { bg: 'bg-gradient-to-r from-slate-600 to-slate-400', hover: 'hover:from-slate-700 hover:to-slate-500' },
@@ -65,7 +87,7 @@ const cardColors = [
 ];
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 w-full min-h-screen">
       <Head>
         <title>{`${category.name} | Haryana Job Alert`}</title>
         <meta 
@@ -73,12 +95,11 @@ const cardColors = [
           content={category.description || `Browse all posts in ${category.name} category`} 
         />
       </Head>
-      
+
       <Header />
-      
-      <main className="container mx-auto px-4 py-8">
-        {/* Breadcrumb Navigation */}
-        <Breadcrumb className="mb-6">
+      <main className="max-w-7xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-3">
+          <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink
@@ -98,23 +119,44 @@ const cardColors = [
         </Breadcrumb>
 
         {/* Category Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">
-            {category.name}
-          </h1>
-          {category.description && (
-            <p className="text-gray-600 text-lg mb-2">
-              {category.description}
-            </p>
-          )}
-          <p className="text-sm text-gray-500">
-            {totalPosts} {totalPosts === 1 ? 'post' : 'posts'} found
-          </p>
+        <div className="border-b border-slate-200 pb-4 mb-4">
+        <div className="flex flex-col md:flex-row items-center gap-6 pb-4">
+          <Image
+            src={category.logoUrl}
+            alt={`${category.organization} logo`}
+            width={80}
+            height={80}
+            className="rounded-full border p-1 object-contain flex-shrink-0"
+          />
+          <div className="flex-grow">
+            <h1 className="text-3xl font-extrabold text-gray-800">
+              {category.name}
+            </h1>
+            <p className="text-lg text-gray-600 mt-1">{category.organization}</p>
+          </div>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-          {/* Posts List */}
-          <div className="lg:col-span-3">
+        {/* Category Description */}
+        {category.description && (
+          <p className="text-gray-700 mb-6 text-xs">{category.description}</p>
+        )}
+        </div>
+        {/* <CategoryHeader title={""} organization={""} logoUrl={""} lastDate={""} totalVacancies={0} location={""} /> */}
+        <div className="flex items-center flex-wrap gap-3">
+            {categories.map((category) => (
+                <button
+                    key={category.id}
+                    onClick={() => setActiveCategory(category.id)}
+                    className={`px-5 py-2 rounded-full font-semibold text-sm transition-colors ${activeCategory === category.id
+                        ? 'bg-blue-600 text-white' // Using a different color for better contrast
+                        : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100'
+                        }`}
+                >
+                    {category.name}
+                </button>
+            ))}
+        </div>
+        {/* <CategoryList /> */}
+        <div className="lg:col-span-3 mt-12">
             {posts.length === 0 ? (
               <Card>
                 <CardContent className="py-12 text-center">
@@ -180,14 +222,14 @@ const cardColors = [
               </div>
             )}
           </div>
-
-          {/* Sidebar */}
-          <aside>
-            <Sidebar />
-          </aside>
+        </div>
+        <div className="lg:col-span-1">
+          <AdBanner text="Google Ads Section" className="h-88" />
+          <div className="mt-12">
+          <Sidebar />
+          </div>
         </div>
       </main>
-      
       <Footer />
     </div>
   );

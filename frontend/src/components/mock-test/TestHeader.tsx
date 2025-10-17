@@ -15,6 +15,7 @@ import { api } from '@/lib/api';
 // Define the types for the props this component will accept
 type TestHeaderProps = {
    seriesId: string;
+   seriesName: string;
   title: string;
   price: number | null;
   level: string;
@@ -28,6 +29,7 @@ type TestHeaderProps = {
 
 export default function TestHeader({
   seriesId,
+  seriesName,
   title,
   price,
   level,
@@ -141,7 +143,7 @@ export default function TestHeader({
               <li><Link href="/mock-tests" className="hover:text-indigo-600">Mock Tests</Link></li>
               <li><span className="text-gray-400"><ChevronRight /></span></li>
               {/* <li aria-current="page"><span className="font-medium text-gray-700">SSC Exam</span></li> */}
-              <li><Link href="/mock-tests/exams/{id}" className="hover:text-indigo-600 font-medium text-gray-700">SSC Exam</Link></li>
+              <li><Link href="/mock-tests/exams/{id}/{id}" className="hover:text-indigo-600 font-medium text-gray-700">{seriesName}</Link></li>
               <li><span className="text-gray-400"><ChevronRight /></span></li>
               <li><Link href="/mock-tests/{id}" className="hover:text-indigo-600">{title}</Link></li>
             </ol>
@@ -158,20 +160,6 @@ export default function TestHeader({
                   <span>Last update on {lastUpdated}</span>
                 </div>
               </div>
-            </div>
-
-            <div className="relative">
-              <select
-                id="level-select"
-                value={selectedLevel}
-                onChange={(e) => setSelectedLevel(e.target.value as 'Beginner' | 'Moderate' | 'Expert')}
-                className="appearance-none border border-gray-300 rounded-lg pl-3 pr-8 py-1.5 text-sm font-medium bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="Beginner">Level: Beginner</option>
-                <option value="Moderate">Level: Moderate</option>
-                <option value="Expert">Level: Expert</option>
-              </select>
-              <ChevronDown size={16} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
             </div>
           </div>
 

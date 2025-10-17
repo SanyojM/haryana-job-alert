@@ -78,9 +78,9 @@ export default function CurrentAffairsSection() {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
                     {articles.slice(0, 3).map((article) => (
-                        <div key={article.id} className="bg-gray-100 rounded-2xl overflow-hidden flex flex-col">
+                        <div key={article.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col mb-8">
                             <Image
                                 src={article.imageUrl}
                                 alt={article.title}
@@ -89,11 +89,11 @@ export default function CurrentAffairsSection() {
                                 height={400}
                                 unoptimized
                             />
-                            <div className="p-5 flex flex-col flex-grow">
-                                <h3 className="font-bold text-lg text-gray-800 leading-tight flex-grow mb-4">
+                            <div className="py-5 px-2 flex flex-col flex-grow">
+                                <h3 className="md:font-bold font-medium md:text-lg text-gray-800 leading-tight flex-grow mb-4 text-sm">
                                     {article.title}
                                 </h3>
-                                <button className="w-full bg-gradient-to-r from-emerald-900 to-green-500 text-white text-center rounded-lg px-4 py-2.5 font-semibold text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                                <button className="w-full bg-gradient-to-r from-emerald-900 to-[#237856] text-white text-center rounded-lg px-4 py-2.5 font-semibold text-xs md:text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
                                     <span>Learn More</span>
                                     <ArrowUpRight className="w-4 h-4" />
                                 </button>
@@ -104,9 +104,9 @@ export default function CurrentAffairsSection() {
                 <div className='mt-10 mb-10 md:hidden'>
                     <AdBanner text="Google Ads Section" className="h-32" />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
                     {articles.slice(3, 6).map((article) => (
-                        <div key={article.id} className="bg-gray-100 rounded-2xl overflow-hidden flex flex-col">
+                        <div key={article.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col">
                             <Image
                                 src={article.imageUrl}
                                 alt={article.title}
@@ -115,11 +115,11 @@ export default function CurrentAffairsSection() {
                                 height={400}
                                 unoptimized
                             />
-                            <div className="p-5 flex flex-col flex-grow">
-                                <h3 className="font-bold text-lg text-gray-800 leading-tight flex-grow mb-4">
+                            <div className="py-5 px-2 flex flex-col flex-grow">
+                                <h3 className="md:font-bold font-medium md:text-lg text-sm text-gray-800 leading-tight flex-grow mb-4">
                                     {article.title}
                                 </h3>
-                                <button className="w-full bg-gradient-to-r from-emerald-900 to-green-500 text-white text-center rounded-lg px-4 py-2.5 font-semibold text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                                <button className="w-full bg-gradient-to-r from-emerald-900 to-[#237856] text-white text-center rounded-lg px-4 py-2.5 font-semibold text-xs md:text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
                                     <span>Learn More</span>
                                     <ArrowUpRight className="w-4 h-4" />
                                 </button>
