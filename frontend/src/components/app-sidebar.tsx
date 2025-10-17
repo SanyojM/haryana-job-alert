@@ -37,6 +37,14 @@ const data = {
           url: "/admin/getting-started/categories",
         },
         {
+          title: "Offline Forms",
+          url: "/admin/getting-started/offline-forms",
+        },
+        {
+          title: "Downloadable Files",
+          url: "/admin/getting-started/files",
+        },
+        {
           title: "Tags",
           url: "/admin/getting-started/tags",
         },
