@@ -149,16 +149,7 @@ const AdminFilesManagement: React.FC = () => {
       uploadFormData.append('file', file);
       uploadFormData.append('folder', type === 'file' ? 'files' : 'thumbnails');
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5003'}/files/upload`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: uploadFormData,
-        }
-      ).then(res => res.json());
+      const response = await api.post('/files/upload', uploadFormData);
 
       if (type === 'file') {
         setFormData({ ...formData, file_url: response.publicUrl });
