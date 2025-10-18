@@ -182,7 +182,7 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
       amount: order.amount,
       currency: order.currency,
       name: file!.title,
-      description: file!.description || 'File Purchase',
+      description: file!.description?.slice(0, 20) || 'File Purchase',
       order_id: order.id,
       handler: async (response: RazorpayResponse) => {
         try {
