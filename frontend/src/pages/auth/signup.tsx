@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from '@/lib/api';
 import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState('');
@@ -13,7 +15,18 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
+
+  // Get the redirect path from the URL query
+  const { redirect } = router.query;
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.push((redirect as string) || '/dashboard');
+    }
+  }, [user, authLoading, router, redirect]);
 
   // Pre-fill email from URL query if it exists
   useEffect(() => {
@@ -36,6 +49,20 @@ export default function SignupPage() {
       setIsLoading(false);
     }
   };
+
+  // Show loading state while checking authentication
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  // Don't render signup form if already logged in
+  if (user) {
+    return null;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -62,6 +89,12 @@ export default function SignupPage() {
             <Button type="submit" disabled={isLoading} className="w-full">
               {isLoading ? 'Creating Account...' : 'Sign Up'}
             </Button>
+            <p className="text-center text-sm text-gray-600 mt-4">
+              Already have an account?{' '}
+              <Link href={`/auth/login?redirect=${redirect || '/'}`} className="font-medium text-blue-600 hover:underline">
+                Login
+              </Link>
+            </p>
           </form>
         </CardContent>
       </Card>

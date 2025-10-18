@@ -213,12 +213,12 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
   };
 
   const handleDownload = () => {
-    router.push('/user/my-files');
+    router.push('/dashboard/my-files');
   };
 
   const handleCopyLink = () => {
     if (file) {
-      const link = `${window.location.origin}/files/${file.slug}`;
+      const link = `${window.location.origin}/offline-forms/${file.slug}`;
       navigator.clipboard.writeText(link);
     }
   };
@@ -239,7 +239,7 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
               </p>
               <Button 
                 className="w-full h-12 bg-gradient-to-r from-blue-800 to-blue-500 hover:from-blue-700 hover:to-blue-400 text-white"
-                onClick={() => router.push('/files')}
+                onClick={() => router.push('/offline-forms')}
               >
                 View All Files
               </Button>
@@ -277,7 +277,7 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                 <Button 
                   variant="outline" 
                   className="w-full h-12"
-                  onClick={() => router.push('/files')}
+                  onClick={() => router.push('/offline-forms')}
                 >
                   Browse More Files
                 </Button>
@@ -316,7 +316,7 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                 <Button 
                   variant="outline" 
                   className="w-full h-12"
-                  onClick={() => router.push('/files')}
+                  onClick={() => router.push('/offline-forms')}
                 >
                   Browse More Files
                 </Button>
@@ -334,15 +334,15 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
       {/* <Header /> */}
       <main className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex justify-between items-center mb-4">
-          <Link href="/offline-forms" className="flex justify-center items-center gap-2 text-gray-300 hover:bg-gray-100 p-2 rounded-xl border">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-md font-medium">More Forms</span>
+          <Link href="/" className="flex justify-center items-center gap-2 text-gray-300 p-1 pr-3 rounded-full border">
+            <img src="/logo.png" alt="" className='w-10 h-10 rounded-full' />
+            <span className="text-md font-medium">Haryana Job Alerts</span>
           </Link>
           <div className="flex items-center gap-2">
             {
               user ? (
                 <Button 
-                  className="flex items-center gap-2 h-10 bg-black"
+                  className="flex items-center gap-2 h-10 bg-black border rounded-xl"
                   onClick={()=> router.push('/dashboard')}
                 >
                   <Lock className="w-4 h-4" />
@@ -510,7 +510,7 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                       <div className="mt-4 pt-4 border-t border-gray-200 text-center">
                         <p className="text-sm text-gray-600">
                           Already have an account?{' '}
-                          <Link href={`/auth/login?redirect=/files/${file.slug}`} className="text-blue-600 hover:underline font-medium">
+                          <Link href={`/auth/login?redirect=/offline-forms/${file.slug}`} className="text-blue-600 hover:underline font-medium">
                             Log in here
                           </Link>
                         </p>
@@ -570,7 +570,7 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
 
                       <p className="text-center text-xs text-gray-600 mt-3">
                         Already have an account?{' '}
-                        <Link href={`/auth/login?redirect=/files/${file.slug}`} className="text-blue-600 hover:underline font-medium">
+                        <Link href={`/auth/login?redirect=/offline-forms/${file.slug}`} className="text-blue-600 hover:underline font-medium">
                           Log in here
                         </Link>
                       </p>

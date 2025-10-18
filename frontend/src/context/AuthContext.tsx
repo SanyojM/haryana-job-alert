@@ -7,12 +7,16 @@ interface User {
   email: string;
   full_name: string;
   role: 'admin' | 'student';
+  created_at?: string;
   mock_attempts: {
     id: string;
     score: number | null;
     completed_at: string;
     mock_tests: {
       title: string;
+      mock_questions: {
+        marks: number;
+      }[];
     } | null;
   }[];
 }
@@ -64,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('authToken');
     setToken(null);
     setUser(null);
-    router.push('/login');
+    router.push('/auth/login');
   };
 
   return (

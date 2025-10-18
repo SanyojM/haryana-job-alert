@@ -85,5 +85,24 @@ export class PaymentsService {
     });
 
     return { status: 'ok', payment: updatedPayment };
+  } 
+
+  async findByUser(userId: number) {
+    return this.prisma.payments.findMany({
+      where: { user_id: userId },
+      include: {
+        mock_series: {
+          include: {
+            mock_categories: true,
+            mock_series_tests: {
+              include: { test: true },
+            },
+          },
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
   }
 }

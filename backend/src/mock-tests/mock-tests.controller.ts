@@ -68,4 +68,14 @@ export class MockTestsController {
     const user = req.user as any; // The user object is attached by the JwtAuthGuard
     return this.mockTestsService.submitTest(id, user.id, submitTestDto.answers);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('attempts/:id')
+  getAttempt(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+  ) {
+    const user = req.user as any;
+    return this.mockTestsService.findAttempt(id, user.id);
+  }
 }

@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Download, FileText, Calendar, Loader2, ExternalLink } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import Header from '@/components/shared/Header';
-import Footer from '@/components/shared/Footer';
+import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 
 interface PurchasedFile {
   id: string;
@@ -26,12 +25,18 @@ interface PurchasedFile {
 const MyFilesPage: React.FC = () => {
   const [purchases, setPurchases] = useState<PurchasedFile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking user
+    if (authLoading) {
+      return;
+    }
+
+    // Redirect if not authenticated
     if (!user) {
-      router.push('/auth/login');
+      router.push('/auth/login?redirect=/dashboard/my-files');
       return;
     }
 
@@ -48,7 +53,7 @@ const MyFilesPage: React.FC = () => {
     };
 
     fetchPurchases();
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
   const handleDownload = (fileUrl: string, title: string) => {
     // Open file in new tab for download
@@ -63,14 +68,25 @@ const MyFilesPage: React.FC = () => {
     });
   };
 
+  // Show loading state while checking authentication
+  if (authLoading || (!user && loading)) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Don't render if not authenticated
   if (!user) {
     return null;
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <Header />
-      <main className="container mx-auto px-4 py-12 max-w-6xl">
+    <DashboardLayout>
+      <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">My Downloads</h1>
           <p className="text-gray-600">All your purchased files in one place</p>
@@ -146,16 +162,15 @@ const MyFilesPage: React.FC = () => {
           <div className="mt-12 text-center">
             <Button
               variant="outline"
-              onClick={() => router.push('/files')}
+              onClick={() => router.push('/offline-forms')}
             >
               <ExternalLink className="w-4 h-4 mr-2" />
               Browse More Files
             </Button>
           </div>
         )}
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

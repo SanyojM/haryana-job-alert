@@ -42,6 +42,7 @@ export class MockSeriesService {
       include: {
         mock_categories: true,
         mock_series_tags: { include: { tag: true } },
+        mock_series_tests: { include: { test: true } },
       },
     });
   }

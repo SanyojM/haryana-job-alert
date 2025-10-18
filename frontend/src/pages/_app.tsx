@@ -15,7 +15,7 @@ const AdminAuthGuard = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (!isLoading) {
             if (!user || user.role !== 'admin') {
-                router.replace('/login');
+                router.replace('/auth/login');
             }
         }
     }, [user, isLoading, router]);
