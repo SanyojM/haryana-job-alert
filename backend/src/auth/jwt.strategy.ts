@@ -31,6 +31,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             mock_tests: {
               select: {
                 title: true,
+                mock_questions: {
+                  select: {
+                    marks: true,
+                  },
+                },
               },
             },
           },

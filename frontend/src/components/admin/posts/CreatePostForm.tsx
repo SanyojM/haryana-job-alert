@@ -38,6 +38,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
   const [selectedTags, setSelectedTags] = useState<Set<string>>(
     new Set(initialData?.post_tags?.map((pt: { tag_id: number }) => pt.tag_id.toString()) || [])
   );
+  const [templateId, setTemplateId] = useState<string>("");
   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +47,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
 
   const handleTemplateChange = (templateId: string) => {
     const template = templates.find(t => t.id === templateId);
+    setTemplateId(templateId);
     if (template && editorRef.current) {
         editorRef.current.setContent(template.structure);
     }
@@ -75,6 +77,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
       thumbnail_url: thumbnailUrl || null,
       external_url: externalUrl || null,
       tags: Array.from(selectedTags).map(Number),
+      template_id: templateId || null,
       content: initialData?.content || "Legacy content field, can be empty.",
     };
 

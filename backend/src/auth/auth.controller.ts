@@ -1,7 +1,8 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Get, Req } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Get, Req, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import type { Request } from 'express';
 
@@ -25,5 +26,12 @@ export class AuthController {
   getProfile(@Req() req: Request) {
     // Because of the Guard, the user object is attached to the request
     return req.user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('profile')
+  updateProfile(@Req() req: Request, @Body() updateProfileDto: UpdateProfileDto) {
+    const userId = (req.user as any).id;
+    return this.authService.updateProfile(userId, updateProfileDto);
   }
 }

@@ -24,6 +24,7 @@ export class CreatePostDto {
   template_id: number;
 
   @IsObject()
+  @IsOptional()
   content_json: Record<string, any>;
 
   @IsString()

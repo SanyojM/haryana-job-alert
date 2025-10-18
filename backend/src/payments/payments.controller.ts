@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Headers, UseGuards, Req, Param, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Body, Headers, UseGuards, Req, Param, BadRequestException } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -24,5 +24,10 @@ export class PaymentsController {
     }
     
     return this.paymentsService.verifyPayment(body, signature);
+  }
+
+  @Get('user/:userId')
+  findByUser(@Param('userId') userId: string, @Req() req: Request) {
+    return this.paymentsService.findByUser(parseInt(userId));
   }
 }

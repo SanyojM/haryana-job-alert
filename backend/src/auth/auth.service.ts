@@ -2,11 +2,13 @@ import {
   Injectable,
   UnauthorizedException,
   ConflictException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import * as bcrypt from 'bcrypt';
 // The import for user_role is no longer strictly needed here for value assignment
 // but can be kept for type safety if you use it elsewhere.
@@ -56,5 +58,40 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async updateProfile(userId: string, updateProfileDto: UpdateProfileDto) {
+    // Check if user exists
+    const user = await this.prisma.users.findUnique({
+      where: { id: BigInt(userId) },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    // If email is being updated, check if it's already taken by another user
+    if (updateProfileDto.email && updateProfileDto.email !== user.email) {
+      const existingUser = await this.prisma.users.findUnique({
+        where: { email: updateProfileDto.email },
+      });
+
+      if (existingUser) {
+        throw new ConflictException('Email is already taken by another user.');
+      }
+    }
+
+    // Update the user profile
+    const updatedUser = await this.prisma.users.update({
+      where: { id: BigInt(userId) },
+      data: {
+        ...(updateProfileDto.full_name && { full_name: updateProfileDto.full_name }),
+        ...(updateProfileDto.email && { email: updateProfileDto.email }),
+      },
+    });
+
+    // Don't return the password hash
+    const { password_hash, ...result } = updatedUser;
+    return result;
   }
 }

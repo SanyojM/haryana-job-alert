@@ -74,14 +74,6 @@ interface RazorpayOptions {
   };
 }
 
-declare global {
-  interface Window {
-    Razorpay: new (options: RazorpayOptions) => {
-      open: () => void;
-    };
-  }
-}
-
 interface SingleFormPageProps {
   form: Form | null;
 }

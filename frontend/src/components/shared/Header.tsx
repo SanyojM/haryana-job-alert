@@ -3,14 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Search, User, Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'Latest Jobs', href: '/category/latest-jobs' },
   { name: 'Admit Cards', href: '/category/admit-cards' },
-  { name: 'Result', href: '#' },
   { name: 'Offline Forms', href: '/offline-forms' },
   { name: 'Online Forms', href: '/online-forms' },
   { name: 'Answer Keys', href: '/category/answer-keys' },

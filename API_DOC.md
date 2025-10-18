@@ -61,6 +61,23 @@ Handles user authentication, including signup, login, and profile management.
 -   **Request Body:** None
 -   **Returns:** The authenticated User object (without the password hash).
 
+### Update User Profile
+
+-   **Route:** `PUT /auth/profile`
+-   **Authentication:** **JWT Required**. The `access_token` must be provided in the `Authorization` header as a Bearer token.
+-   **Description:** Updates the profile information of the currently authenticated user. Only the provided fields will be updated.
+-   **Request Body:**
+    ```json
+    {
+      "full_name": "string (optional, min 2 characters)",
+      "email": "string (optional, valid email)"
+    }
+    ```
+-   **Returns:** The updated User object (without the password hash).
+-   **Notes:** 
+    - If updating email, the new email must not be already taken by another user.
+    - Both fields are optional - you can update one or both.
+
 ---
 
 ## 📝 Posts API
@@ -485,6 +502,51 @@ Handles mock tests, the series they belong to, and related entities.
     }
     ```
 -   **Returns:** The created Mock Attempt object with the final score.
+
+### Get a single mock test attempt result
+
+-   **Route:** `GET /mock-tests/attempts/:id`
+-   **Authentication:** **JWT Required**.
+-   **Description:** Retrieves detailed information about a specific mock test attempt, including all questions, correct answers, and user's answers. Users can only access their own attempts.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the attempt.
+-   **Request Body:** None
+-   **Returns:** A Mock Attempt object with detailed information:
+    ```json
+    {
+      "id": "string",
+      "test_id": "string",
+      "user_id": "string",
+      "answers": {
+        "questionId": "user_answer"
+      },
+      "score": "number",
+      "started_at": "string (ISO date)",
+      "completed_at": "string (ISO date)",
+      "mock_tests": {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "duration_minutes": "number",
+        "total_marks": "number",
+        "mock_questions": [
+          {
+            "id": "string",
+            "question_text": "string",
+            "question_type": "string",
+            "options": {},
+            "correct_answer": "string",
+            "marks": "number"
+          }
+        ]
+      },
+      "users": {
+        "id": "string",
+        "full_name": "string",
+        "email": "string"
+      }
+    }
+    ```
 
 ---
 

@@ -37,6 +37,16 @@ export class MockTestsService {
     if (!test) {
       throw new NotFoundException(`Mock Test with ID ${id} not found`);
     }
+
+    // Calculate actual total marks from questions
+    if (test.mock_questions && test.mock_questions.length > 0) {
+      const actualTotalMarks = test.mock_questions.reduce(
+        (sum, q) => sum + (q.marks || 1),
+        0
+      );
+      test.total_marks = actualTotalMarks;
+    }
+
     return test;
   }
 
@@ -60,6 +70,16 @@ export class MockTestsService {
     if (!seriesTest) {
         throw new NotFoundException(`Test with slug "${slug}" not found`);
     }
+
+    // Calculate actual total marks from questions
+    if (seriesTest.test && seriesTest.test.mock_questions && seriesTest.test.mock_questions.length > 0) {
+      const actualTotalMarks = seriesTest.test.mock_questions.reduce(
+        (sum, q) => sum + (q.marks || 1),
+        0
+      );
+      seriesTest.test.total_marks = actualTotalMarks;
+    }
+
     return seriesTest;
   }
 
@@ -119,6 +139,9 @@ export class MockTestsService {
       throw new NotFoundException('No questions found for this test.');
     }
 
+    // Calculate actual total marks from questions
+    const actualTotalMarks = questions.reduce((sum, q) => sum + (q.marks || 1), 0);
+
     let score = 0;
     for (const question of questions) {
       const userAnswer = answers[question.id.toString()];
@@ -126,6 +149,12 @@ export class MockTestsService {
         score += question.marks || 1;
       }
     }
+
+    // Update the test's total_marks to reflect actual question marks
+    await this.prisma.mock_tests.update({
+      where: { id: testId },
+      data: { total_marks: actualTotalMarks },
+    });
 
     return this.prisma.mock_attempts.create({
       data: {
@@ -136,5 +165,47 @@ export class MockTestsService {
         completed_at: new Date(),
       },
     });
+  }
+
+  async findAttempt(attemptId: number, userId: number) {
+    const attempt = await this.prisma.mock_attempts.findUnique({
+      where: { id: attemptId },
+      include: {
+        mock_tests: {
+          include: {
+            mock_questions: true,
+          },
+        },
+        users: {
+          select: {
+            id: true,
+            full_name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!attempt) {
+      throw new NotFoundException(`Attempt with ID ${attemptId} not found`);
+    }
+
+    // Check if the attempt belongs to the requesting user
+    if (attempt.user_id !== BigInt(userId)) {
+      throw new NotFoundException(`Attempt not found`);
+    }
+
+    // Calculate actual total marks from questions (in case it's not updated)
+    if (attempt.mock_tests && attempt.mock_tests.mock_questions) {
+      const actualTotalMarks = attempt.mock_tests.mock_questions.reduce(
+        (sum, q) => sum + (q.marks || 1),
+        0
+      );
+      
+      // Update the total_marks in the response to reflect actual question marks
+      attempt.mock_tests.total_marks = actualTotalMarks;
+    }
+
+    return attempt;
   }
 }

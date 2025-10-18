@@ -46,10 +46,10 @@ const FilesPage: NextPage<FilesPageProps> = ({ files }) => {
       <main className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3">
-            Downloadable Files
+            Offline Forms
           </h1>
           <p className="text-gray-600 text-lg">
-            Purchase and download important documents, PDFs, and resources
+            Purchase offline forms and start your application process easily.
           </p>
         </div>
 
