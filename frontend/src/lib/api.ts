@@ -59,4 +59,25 @@ export const api = {
     }
     return response.json();
   },
+
+  // Method for uploading files with FormData
+  postFormData: async (endpoint: string, formData: FormData, token?: string) => {
+    const headers: HeadersInit = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    // Don't set Content-Type header, let browser set it with boundary for FormData
+    
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: 'Failed to upload' }));
+      throw new Error(errorData.message || 'Upload failed');
+    }
+    return response.json();
+  },
 };

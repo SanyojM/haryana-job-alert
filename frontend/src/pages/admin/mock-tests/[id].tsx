@@ -69,15 +69,7 @@ const SingleTestPage: NextPage<SingleTestPageProps> = ({ initialTest }) => {
     formData.append('file', csvFile);
     formData.append('test_id', test.id);
     try {
-      const response = await fetch('http://localhost:3000/mock-questions/upload/csv', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: formData,
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to upload CSV.');
-      }
+      const response = await api.postFormData('/mock-questions/upload/csv', formData, token || undefined);
       alert('CSV uploaded successfully!');
       router.reload();
     } catch (err: unknown) {

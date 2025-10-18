@@ -177,20 +177,13 @@ const SingleFormPage: React.FC<SingleFormPageProps> = ({ form: initialForm }) =>
         submitFormData.append(key, file);
       });
 
-      // Make request with FormData
-      const response: { submission: Submission; order?: RazorpayOrder } = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5003'}/forms/submit`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: submitFormData,
-        }
-      ).then(res => {
-        if (!res.ok) throw new Error('Failed to submit form');
-        return res.json();
-      });
+      // Make request with FormData using api.ts
+      const token = localStorage.getItem('token') || undefined;
+      const response: { submission: Submission; order?: RazorpayOrder } = await api.postFormData(
+        '/forms/submit',
+        submitFormData,
+        token
+      );
       
       if (response.order) {
         // Paid form - initiate payment
