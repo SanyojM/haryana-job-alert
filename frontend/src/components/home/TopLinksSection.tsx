@@ -44,17 +44,18 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
         </p>
 
         <div className="mt-8 flex items-center justify-center gap-4">
-          <button className="w-full sm:w-auto bg-white rounded-xl shadow-md px-6 py-3 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg transition-shadow">
+          <button className="w-full sm:w-auto bg-white rounded-xl shadow-md px-6 py-3 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg transition-shadow cursor-pointer">
             <span className='sm:text-sm text-xs'>Login / Register</span>
             <span className="ml-4 w-5 h-5 rounded-full bg-green-400 flex items-center justify-center">
               <ArrowRight className="w-3 h-3 text-white" />
             </span>
           </button>
           
-          <button className="w-full sm:w-auto bg-white rounded-xl shadow-md px-6 py-3 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg transition-shadow">
+            <a href="https://whatsapp.com/channel/0029VbBbS0R7T8bTQRa9230i">
+          <button className="w-full sm:w-auto bg-white rounded-xl shadow-md px-6 py-3 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg transition-shadow cursor-pointer">
             <span className='text-sm'>Contact Us</span>
             <Image
-              src="https://placehold.co/40x40/60a5fa/ffffff?text=🧑&font=noto" 
+              src="/wp.png" 
               alt="Contact avatar"
               className="w-5 h-5 rounded-full ml-4"
               width={32}
@@ -62,6 +63,7 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
               unoptimized
             />
           </button>
+            </a>
         </div>
       </div>
     </section>

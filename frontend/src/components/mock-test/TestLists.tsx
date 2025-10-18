@@ -1,61 +1,31 @@
-import { useState } from 'react';
+'use client'; // Required for hooks and event handlers
+import { useState } from 'react'; // useMemo is no longer needed
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock, HelpCircle, BarChart2 } from 'lucide-react';
+import { Clock, HelpCircle, BarChart2, FileText, Lock } from 'lucide-react'; // Added Lock icon
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
 import { api } from '@/lib/api';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// MODIFICATION: Renamed to reflect we are using the test's own slug
 type MockTestWithSlug = {
   id: string;
   title: string;
-  slug: string; // We will use this slug
+  slug: string; 
   description: string | null;
   duration_minutes: number;
   total_marks: number;
   is_free: boolean;
 };
 
-const TestListItem = ({ test, onStart, isLoading }: { test: MockTestWithSlug, onStart: (test: MockTestWithSlug) => void, isLoading: boolean }) => {
-  return (
-    <Card className="flex flex-col sm:flex-row items-center justify-between p-4 relative">
-      <div>
-        <h3 className="font-bold text-lg">{test.title}</h3>
-        <p className="text-sm text-gray-600 mt-1">{test.description}</p>
-        <div className="flex items-center gap-4 text-sm text-gray-500 mt-2">
-          <span className="flex items-center gap-1"><HelpCircle className="w-4 h-4" /> {test.total_marks} Questions</span>
-          <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {test.duration_minutes} Mins</span>
-          <span className="flex items-center gap-1"><BarChart2 className="w-4 h-4" /> {test.total_marks} Marks</span>
-        </div>
-      </div>
-      <div className="mt-4 sm:mt-0">
-        <Button onClick={() => onStart(test)} disabled={isLoading}>
-          {test.is_free ? 'Start Free Test' : 'Start Test'}
-        </Button>
-      </div>
-      {isLoading && (
-        <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-lg">
-          <p>Checking access...</p>
-        </div>
-      )}
-    </Card>
-  );
-};
-
 export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug[], seriesId: string }) {
   const { user, token, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('All Tests');
   const [loadingTestId, setLoadingTestId] = useState<string | null>(null);
 
   const handleStartTest = async (test: MockTestWithSlug) => {
     const authToken = token || undefined;
-    
-    // --- MODIFICATION START ---
-    // Construct the URL using the current path and the test's specific slug
     const testUrl = `${router.asPath}/${test.slug}`;
-    // --- MODIFICATION END ---
 
     if (test.is_free) {
       router.push(testUrl);
@@ -84,48 +54,104 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
     }
   };
 
+  const freeTests = tests.filter(test => test.is_free);
+  const paidTests = tests.filter(test => !test.is_free);
+
   if (isAuthLoading) {
     return <div>Loading user status...</div>;
   }
-
-  const freeTests = tests.filter(test => test.is_free);
-  const paidTests = tests.filter(test => !test.is_free);
 
   const renderTestList = (testList: MockTestWithSlug[]) => {
     if (testList.length === 0) {
       return <p className="text-center text-gray-500 py-8">No tests available in this section.</p>;
     }
+
     return (
       <div className="space-y-4">
-        {testList.map(test => (
-          <TestListItem 
-            key={test.id} 
-            test={test} 
-            onStart={handleStartTest} 
-            isLoading={loadingTestId === test.id}
-          />
+        {testList.map((test) => (
+          <div key={test.id} className="bg-white rounded-lg shadow-xl border-gray-400 overflow-hidden relative">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 p-4">
+              <div className="flex-grow">
+                <div className="flex items-center gap-2 mb-2">
+                    <h3 className="text-lg font-bold text-gray-800">{test.title}</h3>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500 mb-3">
+                  <div className="flex items-center gap-1.5"><Clock size={14} /> {test.duration_minutes} Mins</div>
+                  <div className="flex items-center gap-1.5"><HelpCircle size={14} /> {test.total_marks} Questions</div>
+                  <div className="flex items-center gap-1.5"><FileText size={14} /> {test.total_marks} Marks</div>
+                </div>
+              </div>
+              <button 
+                onClick={() => handleStartTest(test)}
+                disabled={loadingTestId === test.id}
+                className="flex-shrink-0 w-full sm:w-auto bg-gradient-to-r from-red-600 to-gray-800 text-white font-semibold py-2.5 px-6 rounded-lg inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                <Lock size={16} /> 
+                {loadingTestId === test.id ? 'Loading...' : (test.is_free ? 'Start Free Test' : 'Unlock Test')}
+              </button>
+            </div>
+            <div className={`p-1 border-t border-gray-200/80 ${test.is_free ? 'bg-green-100' : 'bg-red-100'} rounded-bl-lg rounded-br-lg`}>
+                <span className={`text-xs font-semibold ${test.is_free ? 'text-green-700' : 'text-red-700'} px-2.5 py-1`}>
+                  {test.is_free ? 'Free' : 'Paid'}
+                </span>
+            </div>
+            {loadingTestId === test.id && (
+              <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-lg z-10">
+                <p className="font-semibold text-gray-700">Checking access...</p>
+              </div>
+            )}
+          </div>
         ))}
       </div>
     );
   };
 
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Test Series Content</CardTitle>
-        <div className="border-b">
-          <nav className="flex space-x-4" aria-label="Tabs">
-            <button onClick={() => setActiveTab('All Tests')} className={`px-3 py-2 font-medium text-sm rounded-t-md ${activeTab === 'All Tests' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}>All Tests ({tests.length})</button>
-            <button onClick={() => setActiveTab('Free Tests')} className={`px-3 py-2 font-medium text-sm rounded-t-md ${activeTab === 'Free Tests' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}>Free Tests ({freeTests.length})</button>
-            <button onClick={() => setActiveTab('Paid Tests')} className={`px-3 py-2 font-medium text-sm rounded-t-md ${activeTab === 'Paid Tests' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}>Paid Tests ({paidTests.length})</button>
-          </nav>
+    <section className="bg-gray-100 p-4 md:p-6 rounded-lg">
+      
+      {/* --- 5. REPLACE BUTTONS WITH TABS --- */}
+      <Tabs defaultValue="all" className="w-full">
+        <div className=''>
+          {/* Tab Triggers */}
+          <TabsList className="grid w-fit grid-cols-3 mb-4 bg-white">
+            <TabsTrigger value="all">
+              All tests ({tests.length})
+            </TabsTrigger>
+            <TabsTrigger value="free">
+              Free tests ({freeTests.length})
+            </TabsTrigger>
+            <TabsTrigger 
+              value="paid"
+              // Optional: Add custom styling for the active "Paid" tab
+              className="data-[state=active]:bg-red-600 data-[state=active]:text-white"
+            >
+              Paid Tests ({paidTests.length})
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Tab Content */}
+          <TabsContent value="all">
+            {renderTestList(tests)}
+          </TabsContent>
+          <TabsContent value="free">
+            {renderTestList(freeTests)}
+          </TabsContent>
+          <TabsContent value="paid">
+            {renderTestList(paidTests)}
+          </TabsContent>
         </div>
-      </CardHeader>
-      <CardContent>
-        {activeTab === 'All Tests' && renderTestList(tests)}
-        {activeTab === 'Free Tests' && renderTestList(freeTests)}
-        {activeTab === 'Paid Tests' && renderTestList(paidTests)}
-      </CardContent>
-    </Card>
+      </Tabs>
+      
+      {/* View More Button */}
+      <div className="text-center mt-8">
+        <button className="bg-gray-100 border-2 border-gray-300 rounded-xl px-12 py-3 font-semibold text-gray-800 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
+            <a href="/mock-tests">
+            View More
+            </a>
+        </button>
+      </div>
+ 
+    </section>
   );
 }
