@@ -72,6 +72,7 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series }) => {
       <div className="px-4 py-8 container mx-auto">
         <TestHeader
           seriesId={series.id}
+          seriesCategory={series.mock_categories.name}
           seriesName={series.title}
           title={series.title}
           price={series.price}

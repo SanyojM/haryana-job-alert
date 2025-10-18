@@ -25,6 +25,7 @@ type TestHeaderProps = {
   users: number;
   language: string;
   features: string[];
+  seriesCategory: string;
 };
 
 export default function TestHeader({
@@ -39,6 +40,7 @@ export default function TestHeader({
   users,
   language,
   features,
+  seriesCategory,
 }: TestHeaderProps) {
   // Split features for the two-column layout
   // const midPoint = Math.ceil(features.length / 2);
@@ -143,7 +145,7 @@ export default function TestHeader({
               <li><Link href="/mock-tests" className="hover:text-indigo-600">Mock Tests</Link></li>
               <li><span className="text-gray-400"><ChevronRight /></span></li>
               {/* <li aria-current="page"><span className="font-medium text-gray-700">SSC Exam</span></li> */}
-              <li><Link href="/mock-tests/exams/{id}/{id}" className="hover:text-indigo-600 font-medium text-gray-700">{seriesName}</Link></li>
+              <li><Link href="/mock-tests/exams/{id}/{id}" className="hover:text-indigo-600 font-medium text-gray-700">{seriesCategory}</Link></li>
               <li><span className="text-gray-400"><ChevronRight /></span></li>
               <li><Link href="/mock-tests/{id}" className="hover:text-indigo-600">{title}</Link></li>
             </ol>

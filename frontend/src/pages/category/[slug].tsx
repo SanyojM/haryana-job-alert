@@ -1,4 +1,3 @@
-'use client';
 import { GetServerSideProps, NextPage } from "next";
 import Head from 'next/head';
 import Link from "next/link";
@@ -19,23 +18,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ArrowRight, CalendarDays } from "lucide-react";
 import AdBanner from "@/components/home/AdBanner";
 import Image from "next/image";
-import { useState } from "react";
-
-
-
-type CategoryCategory = {
-  id: string;
-  name: string;
-};
-
-const categories: CategoryCategory[] = [
-  { id: 'all-jobs', name: 'All Jobs' },
-  { id: 'latest', name: 'Latest' },
-  { id: 'govt-jobs', name: 'Govt Jobs' },
-  { id: 'private-jobs', name: 'Private Jobs' },
-  { id: 'teaching', name: 'Teaching' },
-  { id: 'railway', name: 'Railway' },
-];
 
 interface Category {
   id: number;
@@ -75,7 +57,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts }) => {
   const categorySlug = category.name.toLowerCase().replace(/\s+/g, '-');
-  const [activeCategory, setActiveCategory] = useState('all-jobs');
   // Color schemes for cards (cycling through them)
 const cardColors = [
     { bg: 'bg-gradient-to-r from-slate-600 to-slate-400', hover: 'hover:from-slate-700 hover:to-slate-500' },
@@ -120,40 +101,36 @@ const cardColors = [
 
         {/* Category Header */}
         <div className="border-b border-slate-200 pb-4 mb-4">
-        <div className="flex flex-col md:flex-row items-center gap-6 pb-4">
-          <Image
-            src={category.logoUrl}
-            alt={`${category.organization} logo`}
-            width={80}
-            height={80}
-            className="rounded-full border p-1 object-contain flex-shrink-0"
-          />
-          <div className="flex-grow">
-            <h1 className="text-3xl font-extrabold text-gray-800">
-              {category.name}
-            </h1>
-            <p className="text-lg text-gray-600 mt-1">{category.organization}</p>
-          </div>
-        </div>
+            <div className="flex flex-col md:flex-row items-center gap-6 pb-4">
+              {category.logoUrl ? (
+                <Image
+                  src={category.logoUrl}
+                  alt={`${category.organization} logo`}
+                  width={80}
+                  height={80}
+                  className="rounded-full border p-1 object-contain flex-shrink-0"
+                />
+              ) : (
+                <div className="flex items-center justify-center w-[80px] h-[80px] rounded-full border bg-gray-200 text-gray-600 text-2xl font-bold flex-shrink-0">
+                  {category.name
+                    ?.split(' ')
+                    .slice(0, 2)
+                    .map((n) => n[0])
+                    .join('')
+                    .toUpperCase()}
+                </div>
+              )}
+              <div className="flex-grow">
+                <h1 className="text-3xl font-extrabold text-gray-800">
+                  {category.name}
+                </h1>
+                <p className="text-lg text-gray-600 mt-1">{category.organization}</p>
+              </div>
+            </div>
         {/* Category Description */}
         {category.description && (
           <p className="text-gray-700 mb-6 text-xs">{category.description}</p>
         )}
-        </div>
-        {/* <CategoryHeader title={""} organization={""} logoUrl={""} lastDate={""} totalVacancies={0} location={""} /> */}
-        <div className="flex items-center flex-wrap gap-3">
-            {categories.map((category) => (
-                <button
-                    key={category.id}
-                    onClick={() => setActiveCategory(category.id)}
-                    className={`px-5 py-2 rounded-full font-semibold text-sm transition-colors ${activeCategory === category.id
-                        ? 'bg-blue-600 text-white' // Using a different color for better contrast
-                        : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100'
-                        }`}
-                >
-                    {category.name}
-                </button>
-            ))}
         </div>
         {/* <CategoryList /> */}
         <div className="lg:col-span-3 mt-12">
