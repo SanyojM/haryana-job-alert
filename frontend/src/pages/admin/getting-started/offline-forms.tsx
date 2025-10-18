@@ -5,8 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, GripVertical, Edit, ExternalLink, Users, Eye } from 'lucide-react';
+import { Plus, Trash2, Edit, ExternalLink, Download, Upload, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Dialog,
@@ -14,7 +13,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   Table,
@@ -26,65 +24,31 @@ import {
 } from '@/components/ui/table';
 import { api } from '@/lib/api';
 
-interface FormField {
-  key: string;
-  label: string;
-  type: string;
-  required: boolean;
-  options: string[] | null;
-  order: number;
-  meta: Record<string, any>;
-}
-
-interface Form {
+interface DownloadableFile {
   id: string;
   title: string;
   slug: string;
   description?: string;
-  published: boolean;
+  file_url: string;
+  thumbnail_url?: string;
   price: number;
-  fields?: FormField[];
-  createdAt?: string;
-  _count?: {
-    submissions: number;
-  };
-}
-
-interface Submission {
-  id: string;
-  form_id: string;
-  user_id: number;
-  data: Record<string, any>;
-  paid: boolean;
+  is_published: boolean;
+  downloads_count: number;
   created_at: string;
-  user?: {
-    id: number;
-    full_name: string;
-    email: string;
-  };
-  payment?: {
-    amount: number;
-    status: string;
+  _count?: {
+    purchases: number;
+    payments: number;
   };
 }
 
-interface FormData {
+interface FileFormData {
   title: string;
   slug: string;
   description: string;
-  published: boolean;
+  file_url: string;
+  thumbnail_url: string;
   price: number;
-  fields: FormField[];
-}
-
-interface NewField {
-  key: string;
-  label: string;
-  type: string;
-  required: boolean;
-  options: string;
-  order: number;
-  meta: Record<string, any>;
+  is_published: boolean;
 }
 
 interface Message {
@@ -92,584 +56,426 @@ interface Message {
   text: string;
 }
 
-const AdminFormsManagement: React.FC = () => {
-  const [forms, setForms] = useState<Form[]>([]);
+interface Purchase {
+  id: string;
+  file_id: string;
+  user_id: number;
+  purchased_at: string;
+  user: {
+    id: number;
+    full_name: string;
+    email: string;
+  };
+}
+
+const AdminFilesManagement: React.FC = () => {
+  const [files, setFiles] = useState<DownloadableFile[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<Message>({ type: '', text: '' });
-  const [editingForm, setEditingForm] = useState<Form | null>(null);
-  const [formDialogOpen, setFormDialogOpen] = useState<boolean>(false);
-  const [submissionsDialogOpen, setSubmissionsDialogOpen] = useState<boolean>(false);
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [selectedFormId, setSelectedFormId] = useState<string>('');
-  const [selectedFormTitle, setSelectedFormTitle] = useState<string>('');
+  const [editingFile, setEditingFile] = useState<DownloadableFile | null>(null);
+  const [fileDialogOpen, setFileDialogOpen] = useState<boolean>(false);
+  const [purchasesDialogOpen, setPurchasesDialogOpen] = useState<boolean>(false);
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [uploadingFile, setUploadingFile] = useState<boolean>(false);
+  const [uploadingThumbnail, setUploadingThumbnail] = useState<boolean>(false);
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FileFormData>({
     title: '',
     slug: '',
     description: '',
-    published: false,
+    file_url: '',
+    thumbnail_url: '',
     price: 0,
-    fields: []
-  });
-
-  const [newField, setNewField] = useState<NewField>({
-    key: '',
-    label: '',
-    type: 'text',
-    required: false,
-    options: '',
-    order: 0,
-    meta: {}
+    is_published: false,
   });
 
   useEffect(() => {
-    fetchForms();
+    fetchFiles();
   }, []);
 
-  const fetchForms = async (): Promise<void> => {
+  const fetchFiles = async () => {
     try {
       setLoading(true);
-      const data = await api.get('/forms/admin/all');
-      setForms(data);
+      const data = await api.get('/files/admin/all');
+      setFiles(data);
     } catch (error) {
-      console.error('Error fetching forms:', error);
-      setMessage({ type: 'error', text: 'Failed to fetch forms' });
+      console.error('Error fetching files:', error);
+      setMessage({ type: 'error', text: 'Failed to fetch files' });
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchSubmissions = async (formId: string, formTitle: string): Promise<void> => {
-    try {
-      setLoading(true);
-      const response = await api.get(`/forms/${formId}/submissions`);
-      setSubmissions(response.submissions || []);
-      setSelectedFormId(formId);
-      setSelectedFormTitle(formTitle);
-      setSubmissionsDialogOpen(true);
-    } catch (error) {
-      console.error('Error fetching submissions:', error);
-      setMessage({ type: 'error', text: 'Failed to fetch submissions' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateNew = (): void => {
-    setEditingForm(null);
+  const handleCreateFile = () => {
+    setEditingFile(null);
     setFormData({
       title: '',
       slug: '',
       description: '',
-      published: false,
+      file_url: '',
+      thumbnail_url: '',
       price: 0,
-      fields: []
+      is_published: false,
     });
-    setFormDialogOpen(true);
+    setFileDialogOpen(true);
   };
 
-  const handleEditForm = (form: Form): void => {
-    setEditingForm(form);
+  const handleEditFile = (file: DownloadableFile) => {
+    setEditingFile(file);
     setFormData({
-      title: form.title,
-      slug: form.slug,
-      description: form.description || '',
-      published: form.published,
-      price: form.price,
-      fields: form.fields || []
+      title: file.title,
+      slug: file.slug,
+      description: file.description || '',
+      file_url: file.file_url,
+      thumbnail_url: file.thumbnail_url || '',
+      price: file.price,
+      is_published: file.is_published,
     });
-    setFormDialogOpen(true);
+    setFileDialogOpen(true);
   };
 
-  const handleCloseDialog = (): void => {
-    setFormDialogOpen(false);
-    setEditingForm(null);
-    setFormData({
-      title: '',
-      slug: '',
-      description: '',
-      published: false,
-      price: 0,
-      fields: []
-    });
-    setMessage({ type: '', text: '' });
-  };
-
-  const handleDeleteForm = async (formId: string): Promise<void> => {
-    if (!confirm('Are you sure you want to delete this form? This action cannot be undone.')) {
-      return;
-    }
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: 'file' | 'thumbnail') => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
     try {
-      setLoading(true);
-      await api.delete(`/forms/${formId}`);
-      setMessage({ type: 'success', text: 'Form deleted successfully!' });
-      fetchForms();
-    } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'Failed to delete form' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAddField = (): void => {
-    if (!newField.key || !newField.label) {
-      setMessage({ type: 'error', text: 'Field key and label are required' });
-      return;
-    }
-
-    const field: FormField = {
-      ...newField,
-      order: formData.fields.length,
-      options: newField.options ? newField.options.split(',').map(o => o.trim()) : null
-    };
-
-    setFormData({
-      ...formData,
-      fields: [...formData.fields, field]
-    });
-
-    setNewField({
-      key: '',
-      label: '',
-      type: 'text',
-      required: false,
-      options: '',
-      order: 0,
-      meta: {}
-    });
-    setMessage({ type: 'success', text: 'Field added successfully' });
-  };
-
-  const handleRemoveField = (index: number): void => {
-    const updatedFields = formData.fields.filter((_, i) => i !== index);
-    setFormData({
-      ...formData,
-      fields: updatedFields.map((f, i) => ({ ...f, order: i }))
-    });
-  };
-
-  const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    
-    if (!formData.title || !formData.slug) {
-      setMessage({ type: 'error', text: 'Title and slug are required' });
-      return;
-    }
-
-    if (formData.fields.length === 0) {
-      setMessage({ type: 'error', text: 'At least one field is required' });
-      return;
-    }
-
-    try {
-      setLoading(true);
-      
-      if (editingForm) {
-        // Update existing form
-        await api.put(`/forms/${editingForm.id}`, formData);
-        setMessage({ type: 'success', text: 'Form updated successfully!' });
-        setEditingForm(null);
+      if (type === 'file') {
+        setUploadingFile(true);
       } else {
-        // Create new form
-        await api.post('/forms', formData);
-        setMessage({ type: 'success', text: 'Form created successfully!' });
+        setUploadingThumbnail(true);
       }
-      
-      setFormData({
-        title: '',
-        slug: '',
-        description: '',
-        published: false,
-        price: 0,
-        fields: []
-      });
-      fetchForms();
+
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+      uploadFormData.append('folder', type === 'file' ? 'files' : 'thumbnails');
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5003'}/files/upload`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: uploadFormData,
+        }
+      ).then(res => res.json());
+
+      if (type === 'file') {
+        setFormData({ ...formData, file_url: response.publicUrl });
+      } else {
+        setFormData({ ...formData, thumbnail_url: response.publicUrl });
+      }
+
+      setMessage({ type: 'success', text: `${type === 'file' ? 'File' : 'Thumbnail'} uploaded successfully` });
+    } catch (error) {
+      console.error('Upload error:', error);
+      setMessage({ type: 'error', text: 'Upload failed' });
+    } finally {
+      if (type === 'file') {
+        setUploadingFile(false);
+      } else {
+        setUploadingThumbnail(false);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      setMessage({ type: '', text: '' }); // Clear previous messages
+
+      if (editingFile) {
+        await api.put(`/files/${editingFile.id}`, formData);
+        setMessage({ type: 'success', text: 'File updated successfully' });
+      } else {
+        await api.post('/files', formData);
+        setMessage({ type: 'success', text: 'File created successfully' });
+      }
+
+      setFileDialogOpen(false);
+      fetchFiles();
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || `Failed to ${editingForm ? 'update' : 'create'} form` });
+      console.error('File operation error:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Operation failed';
+      setMessage({ type: 'error', text: errorMessage });
     } finally {
       setLoading(false);
     }
   };
 
-  const generateSlug = (title: string): string => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this file?')) return;
+
+    try {
+      await api.delete(`/files/${id}`);
+      setMessage({ type: 'success', text: 'File deleted successfully' });
+      fetchFiles();
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to delete file' });
+    }
+  };
+
+  const handleViewPurchases = async (fileId: string) => {
+    try {
+      const data = await api.get(`/files/${fileId}/purchases`);
+      setPurchases(data);
+      setPurchasesDialogOpen(true);
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to fetch purchases' });
+    }
+  };
+
+  const generateSlug = (title: string) => {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Forms Management</h1>
-        <Button onClick={handleCreateNew}>
-          <Plus className="w-4 h-4 mr-2" />
-          Create New Form
-        </Button>
-      </div>
-
-      {message.text && (
-        <Alert className={`mb-4 ${message.type === 'error' ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50'}`}>
-          <AlertDescription>{message.text}</AlertDescription>
-        </Alert>
-      )}
-
+    <div className="container mx-auto p-6">
       <Card>
         <CardHeader>
-          <CardTitle>All Forms ({forms.length})</CardTitle>
-          <CardDescription>
-            Manage all your forms, view submissions, and update form details
-          </CardDescription>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Files Management</CardTitle>
+              <CardDescription>Manage downloadable files and track purchases</CardDescription>
+            </div>
+            <Button onClick={handleCreateFile} className="bg-blue-600 hover:bg-blue-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Add New File
+            </Button>
+          </div>
         </CardHeader>
+
         <CardContent>
-          {loading && forms.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">Loading forms...</div>
-          ) : forms.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              No forms created yet. Click "Create New Form" to get started!
-            </div>
-          ) : (
-            <div className="border rounded-lg overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Slug</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Fields</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Submissions</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {forms.map((form) => (
-                    <TableRow key={form.id}>
-                      <TableCell className="font-medium">{form.title}</TableCell>
-                      <TableCell>
-                        <code className="text-xs bg-gray-100 px-2 py-1 rounded">{form.slug}</code>
-                      </TableCell>
-                      <TableCell>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          form.published 
-                            ? 'bg-green-100 text-green-700' 
-                            : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          {form.published ? 'Published' : 'Draft'}
-                        </span>
-                      </TableCell>
-                      <TableCell>{form.fields?.length || 0}</TableCell>
-                      <TableCell>
-                        {form.price > 0 ? (
-                          <span className="font-semibold text-green-600">₹{form.price}</span>
-                        ) : (
-                          <span className="text-gray-500">Free</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => fetchSubmissions(form.id, form.title)}
-                          className="text-blue-600 hover:text-blue-700"
-                        >
-                          <Users className="w-4 h-4 mr-1" />
-                          {form._count?.submissions || 0}
-                        </Button>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
-                          {form.published && (
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={() => window.open(`/offline-forms/${form.slug}`, '_blank')}
-                              title="View Live Form"
-                            >
-                              <ExternalLink className="w-4 h-4" />
-                            </Button>
-                          )}
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => handleEditForm(form)}
-                            title="Edit Form"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => handleDeleteForm(form.id)}
-                            className="text-red-600 hover:text-red-700"
-                            title="Delete Form"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+          {message.text && (
+            <Alert className={`mb-4 ${message.type === 'error' ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50'}`}>
+              <AlertDescription className={message.type === 'error' ? 'text-red-700' : 'text-green-700'}>
+                {message.text}
+              </AlertDescription>
+            </Alert>
           )}
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Slug</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Downloads</TableHead>
+                <TableHead>Published</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading && files.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto" />
+                  </TableCell>
+                </TableRow>
+              ) : files.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                    No files found. Create your first file to get started.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                files.map((file) => (
+                  <TableRow key={file.id}>
+                    <TableCell className="font-medium">{file.title}</TableCell>
+                    <TableCell className="text-sm text-gray-600">{file.slug}</TableCell>
+                    <TableCell>₹{file.price}</TableCell>
+                    <TableCell>{file.downloads_count}</TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 rounded text-xs ${file.is_published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                        {file.is_published ? 'Published' : 'Draft'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" onClick={() => handleEditFile(file)}>
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => handleViewPurchases(file.id)}>
+                          <Download className="w-3 h-3" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => window.open(`/files/${file.slug}`, '_blank')}>
+                          <ExternalLink className="w-3 h-3" />
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => handleDelete(file.id)}>
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
 
-      {/* Form Create/Edit Dialog */}
-      <Dialog open={formDialogOpen} onOpenChange={setFormDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      {/* Create/Edit Dialog */}
+      <Dialog open={fileDialogOpen} onOpenChange={setFileDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingForm ? 'Edit Form' : 'Create New Form'}</DialogTitle>
+            <DialogTitle>{editingFile ? 'Edit File' : 'Create New File'}</DialogTitle>
             <DialogDescription>
-              {editingForm ? 'Update the form details and fields' : 'Build a custom form with dynamic fields'}
+              {editingFile ? 'Update file details and settings' : 'Add a new downloadable file'}
             </DialogDescription>
           </DialogHeader>
 
-              <form onSubmit={handleSubmitForm} className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Form Title *</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => {
-                        setFormData({
-                          ...formData,
-                          title: e.target.value,
-                          slug: generateSlug(e.target.value)
-                        });
-                      }}
-                      placeholder="Registration Form"
-                      required
-                    />
-                  </div>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => {
+                  const newTitle = e.target.value;
+                  if (!editingFile) {
+                    setFormData({ ...formData, title: newTitle, slug: generateSlug(newTitle) });
+                  } else {
+                    setFormData({ ...formData, title: newTitle });
+                  }
+                }}
+                placeholder="Enter file title"
+              />
+            </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="slug">Slug *</Label>
-                    <Input
-                      id="slug"
-                      value={formData.slug}
-                      onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                      placeholder="registration-form"
-                      required
-                    />
-                  </div>
-                </div>
+            <div>
+              <Label htmlFor="slug">Slug</Label>
+              <Input
+                id="slug"
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                placeholder="file-slug"
+              />
+            </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Form description..."
-                    rows={3}
-                  />
-                </div>
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Enter file description"
+                rows={4}
+              />
+            </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="price">Price (INR)</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                      placeholder="0"
-                      min="0"
-                    />
-                  </div>
+            <div>
+              <Label htmlFor="price">Price (₹)</Label>
+              <Input
+                id="price"
+                type="number"
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                placeholder="0"
+              />
+            </div>
 
-                  <div className="flex items-center space-x-2 mt-8">
-                    <Switch
-                      id="published"
-                      checked={formData.published}
-                      onCheckedChange={(checked) => setFormData({ ...formData, published: checked })}
-                    />
-                    <Label htmlFor="published">Published</Label>
-                  </div>
-                </div>
+            <div>
+              <Label htmlFor="file">Upload File</Label>
+              <div className="flex gap-2 items-center">
+                <Input
+                  id="file"
+                  type="file"
+                  onChange={(e) => handleFileUpload(e, 'file')}
+                  disabled={uploadingFile}
+                />
+                {uploadingFile && <Loader2 className="w-4 h-4 animate-spin" />}
+              </div>
+              {formData.file_url && (
+                <p className="text-xs text-green-600 mt-1">✓ File uploaded</p>
+              )}
+            </div>
 
-                <div className="border-t pt-6">
-                  <h3 className="text-lg font-semibold mb-4">Form Fields</h3>
-                  
-                  {formData.fields.length > 0 && (
-                    <div className="space-y-2 mb-4">
-                      {formData.fields.map((field, index) => (
-                        <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <GripVertical className="w-4 h-4 text-gray-400" />
-                          <div className="flex-1">
-                            <div className="font-medium">{field.label}</div>
-                            <div className="text-sm text-gray-500">
-                              {field.key} • {field.type} {field.required && '• Required'}
-                            </div>
-                          </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleRemoveField(index)}
-                          >
-                            <Trash2 className="w-4 h-4 text-red-500" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+            <div>
+              <Label htmlFor="thumbnail">Upload Thumbnail (Optional)</Label>
+              <div className="flex gap-2 items-center">
+                <Input
+                  id="thumbnail"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, 'thumbnail')}
+                  disabled={uploadingThumbnail}
+                />
+                {uploadingThumbnail && <Loader2 className="w-4 h-4 animate-spin" />}
+              </div>
+              {formData.thumbnail_url && (
+                <p className="text-xs text-green-600 mt-1">✓ Thumbnail uploaded</p>
+              )}
+            </div>
 
-                  <Card className="bg-blue-50">
-                    <CardHeader>
-                      <CardTitle className="text-base">Add New Field</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label>Field Key</Label>
-                          <Input
-                            value={newField.key}
-                            onChange={(e) => setNewField({ ...newField, key: e.target.value })}
-                            placeholder="email"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Field Label</Label>
-                          <Input
-                            value={newField.label}
-                            onChange={(e) => setNewField({ ...newField, label: e.target.value })}
-                            placeholder="Email Address"
-                          />
-                        </div>
-                      </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="published"
+                checked={formData.is_published}
+                onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+              />
+              <Label htmlFor="published">Publish file</Label>
+            </div>
+          </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label>Field Type</Label>
-                          <Select
-                            value={newField.type}
-                            onValueChange={(value) => setNewField({ ...newField, type: value })}
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="text">Text</SelectItem>
-                              <SelectItem value="email">Email</SelectItem>
-                              <SelectItem value="number">Number</SelectItem>
-                              <SelectItem value="tel">Phone</SelectItem>
-                              <SelectItem value="textarea">Textarea</SelectItem>
-                              <SelectItem value="select">Select</SelectItem>
-                              <SelectItem value="radio">Radio</SelectItem>
-                              <SelectItem value="checkbox">Checkbox</SelectItem>
-                              <SelectItem value="file">File</SelectItem>
-                              <SelectItem value="date">Date</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="flex items-center space-x-2 mt-8">
-                          <Switch
-                            id="required"
-                            checked={newField.required}
-                            onCheckedChange={(checked) => setNewField({ ...newField, required: checked })}
-                          />
-                          <Label htmlFor="required">Required</Label>
-                        </div>
-                      </div>
-
-                      {(newField.type === 'select' || newField.type === 'radio') && (
-                        <div className="space-y-2">
-                          <Label>Options (comma-separated)</Label>
-                          <Input
-                            value={newField.options}
-                            onChange={(e) => setNewField({ ...newField, options: e.target.value })}
-                            placeholder="Option 1, Option 2, Option 3"
-                          />
-                        </div>
-                      )}
-
-                      <Button type="button" onClick={handleAddField} className="w-full">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Field
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? (editingForm ? 'Updating...' : 'Creating...') : (editingForm ? 'Update Form' : 'Create Form')}
-                </Button>
-              </form>
+          <div className="flex justify-end gap-2 flex-col">
+            {!formData.title && (
+              <p className="text-xs text-red-600 text-right">* Title is required</p>
+            )}
+            {!formData.file_url && (
+              <p className="text-xs text-red-600 text-right">* Please upload a file first</p>
+            )}
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setFileDialogOpen(false)}>Cancel</Button>
+              <Button 
+                onClick={handleSubmit} 
+                disabled={loading || !formData.title || !formData.file_url}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (editingFile ? 'Update' : 'Create')}
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 
-      {/* Submissions Dialog */}
-      <Dialog open={submissionsDialogOpen} onOpenChange={setSubmissionsDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      {/* Purchases Dialog */}
+      <Dialog open={purchasesDialogOpen} onOpenChange={setPurchasesDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Form Submissions - {selectedFormTitle}</DialogTitle>
-            <DialogDescription>
-              View all submissions for this form
-            </DialogDescription>
+            <DialogTitle>File Purchases</DialogTitle>
+            <DialogDescription>List of users who purchased this file</DialogDescription>
           </DialogHeader>
-          
-          {loading ? (
-            <div className="text-center py-8">Loading submissions...</div>
-          ) : submissions.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              No submissions yet
-            </div>
-          ) : (
-            <div className="space-y-4 mt-4">
-              {submissions.map((submission) => (
-                <Card key={submission.id}>
-                  <CardContent className="p-4">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <p className="font-semibold">{submission.user?.full_name}</p>
-                        <p className="text-sm text-gray-500">{submission.user?.email}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-gray-500">
-                          {new Date(submission.created_at).toLocaleDateString()}
-                        </p>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          submission.paid 
-                            ? 'bg-green-100 text-green-700' 
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}>
-                          {submission.paid ? 'Paid' : 'Unpaid'}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <div className="border-t pt-3 space-y-2">
-                      {Object.entries(submission.data).map(([key, value]) => (
-                        <div key={key} className="grid grid-cols-3 gap-2">
-                          <span className="text-sm font-medium text-gray-600">{key}:</span>
-                          <span className="text-sm col-span-2 break-words">
-                            {typeof value === 'string' && value.startsWith('http') ? (
-                              <a href={value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center gap-1">
-                                View File <ExternalLink className="w-3 h-3" />
-                              </a>
-                            ) : (
-                              String(value)
-                            )}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>User</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Purchased At</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {purchases.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center py-8 text-gray-500">
+                    No purchases yet
+                  </TableCell>
+                </TableRow>
+              ) : (
+                purchases.map((purchase) => (
+                  <TableRow key={purchase.id}>
+                    <TableCell>{purchase.user.full_name}</TableCell>
+                    <TableCell>{purchase.user.email}</TableCell>
+                    <TableCell>{new Date(purchase.purchased_at).toLocaleDateString()}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </DialogContent>
       </Dialog>
     </div>
   );
 };
 
-export default AdminFormsManagement;
+export default AdminFilesManagement;
