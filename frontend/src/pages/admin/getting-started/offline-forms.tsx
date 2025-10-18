@@ -290,7 +290,7 @@ const AdminFilesManagement: React.FC = () => {
                         <Button size="sm" variant="outline" onClick={() => handleViewPurchases(file.id)}>
                           <Download className="w-3 h-3" />
                         </Button>
-                        <Button size="sm" variant="outline" onClick={() => window.open(`/files/${file.slug}`, '_blank')}>
+                        <Button size="sm" variant="outline" onClick={() => window.open(`/offline-forms/${file.slug}`, '_blank')}>
                           <ExternalLink className="w-3 h-3" />
                         </Button>
                         <Button size="sm" variant="destructive" onClick={() => handleDelete(file.id)}>

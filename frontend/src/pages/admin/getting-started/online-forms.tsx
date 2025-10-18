@@ -384,7 +384,7 @@ const AdminFormsManagement: React.FC = () => {
                             <Button 
                               variant="ghost" 
                               size="sm"
-                              onClick={() => window.open(`/offline-forms/${form.slug}`, '_blank')}
+                              onClick={() => window.open(`/online-forms/${form.slug}`, '_blank')}
                               title="View Live Form"
                             >
                               <ExternalLink className="w-4 h-4" />
