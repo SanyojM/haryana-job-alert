@@ -24,7 +24,11 @@ export default function SignupPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && user) {
-      router.push((redirect as string) || '/dashboard');
+      if (user.role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push((redirect as string) || '/dashboard');
+      }
     }
   }, [user, authLoading, router, redirect]);
 
