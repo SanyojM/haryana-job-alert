@@ -24,7 +24,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (token: string) => Promise<void>;
+  login: (token: string) => Promise<'admin' | 'student'>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(newToken);
     const profile = await api.get('/auth/profile', newToken);
     setUser(profile);
+    return profile.role;
   };
 
   const logout = () => {

@@ -33,9 +33,13 @@ export default function UserLoginPage() {
     setError(null);
     try {
       const data = await api.post('/auth/login', { email, password });
-      await login(data.access_token);
+      const role = await login(data.access_token);
       // Redirect to the intended page, or a default dashboard
-      router.push((redirect as string) || '/dashboard');
+      if (role && String(role).toLowerCase() === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push((redirect as string) || '/dashboard');
+      }
     } catch (err: unknown) {
       setError('Invalid email or password.');
     } finally {
