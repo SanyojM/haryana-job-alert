@@ -7,6 +7,7 @@ interface User {
   email: string;
   full_name: string;
   role: 'admin' | 'student';
+  avatar_url?: string;
   created_at?: string;
   mock_attempts: {
     id: string;
