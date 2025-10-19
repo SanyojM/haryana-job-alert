@@ -7,6 +7,7 @@ import { Category } from '@/pages/admin/getting-started/categories';
 // Define the props for the main section component
 interface MidCardSectionProps {
   categories: Category[];
+  posts: Post[];
 }
 
 // Define the props for a single card
@@ -50,7 +51,7 @@ const MidCard = ({ title, description, posts }: MidCardProps) => (
 );
 
 
-export default function MidCardSection({ categories }: MidCardSectionProps) {
+export default function MidCardSection({ categories, posts }: MidCardSectionProps) {
   return (
     <section className="bg-gray-100 py-12 px-4 md:px-0">
       <div className="max-w-7xl mx-auto">
@@ -60,7 +61,7 @@ export default function MidCardSection({ categories }: MidCardSectionProps) {
               key={category.id}
               title={category.name}
               description={category.description || `Latest updates on ${category.name}` }
-              posts={category.posts || []}
+              posts={posts.filter(post => post.category_id?.toString() === category.id.toString()) || []}
             />
           ))}
         </div>
