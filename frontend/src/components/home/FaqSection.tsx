@@ -35,7 +35,7 @@ interface FaqItemProps {
 
 function FaqItem({ faq, isOpen, onToggle }: FaqItemProps) {
   return (
-    <div className="border-b border-gray-200 py-6">
+    <div className="border-b border-gray-200 py-6 px-4 md:px-0">
       <button
         onClick={onToggle}
         className="w-full flex justify-between items-center text-left focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75 rounded-lg"

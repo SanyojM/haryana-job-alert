@@ -5,7 +5,7 @@ import { Clock, Globe, Star, Users, Award, MonitorPlay, FileText, Download, Chec
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import AdBanner from '../home/AdBanner';
+import AdBanner from '../shared/AdBanner';
 
 // Define the types for the props this component will accept
 type CourseHeaderProps = {
@@ -106,9 +106,9 @@ export default function CourseHeader({
             <AdBanner text={'Google Ads'} className='md:hidden mb-12 h-48' />
         {/* Ratings Block */}
       </div>
-        <div className="md:absolute -bottom-20 z-999 bg-white text-gray-800 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg md:ml-6 lg:ml-18">
-            <div className="flex-shrink-0 bg-gradient-to-tr from-red-900 to-red-600 p-4 rounded-md">
-                <Image src="/logo.png" alt="Logo" width={60} height={60} className="rounded-sm" />
+        <div className="md:absolute -bottom-25 z-999 bg-white text-gray-800 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg md:ml-6 lg:ml-18">
+            <div className="flex-shrink-0 bg-gradient-to-r from-[#982920] to-[#fb3d3d] p-4 rounded-md">
+                <Image src="/logo.png" alt="Logo" width={60} height={60} className="rounded-sm bg-none" />
             </div>
             <div className="flex-grow text-center sm:text-left">
                 <p className="font-semibold text-gray-700 leading-tight">Access the best and the latest top content from Haryana Job Alert, with the <span className="font-bold text-red-600">Pro Subscription</span></p>

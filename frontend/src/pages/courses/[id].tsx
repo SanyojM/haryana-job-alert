@@ -2,7 +2,7 @@ import CourseContentAccordion from "@/components/courses/CourseContentAccordion"
 import CourseDescription from "@/components/courses/CourseDescription";
 import CourseEnrollmentCard from "@/components/courses/CourseEnrollmentCard";
 import CourseHeader from "@/components/courses/CourseHeader";
-import AdBanner from "@/components/home/AdBanner";
+import AdBanner from "@/components/shared/AdBanner";
 import Header from "@/components/shared/Header";
 
 type CoursePageProps = {

@@ -1,5 +1,5 @@
 import { CheckCircle2, ArrowRight } from 'lucide-react';
-import AdBanner from './AdBanner';
+import AdBanner from '../shared/AdBanner';
 
 const resultsData = {
   title: 'Results',

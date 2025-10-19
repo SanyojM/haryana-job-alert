@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ArrowDownUp, ArrowRight, CalendarDays, ListFilter, Search } from "lucide-react";
-import AdBanner from "@/components/home/AdBanner";
+import AdBanner from "@/components/shared/AdBanner";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -65,27 +65,10 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
   const [sortOrder, setSortOrder] = useState("newest");
   const [selectedTag, setSelectedTag] = useState("all");
 
-  const categorySlug = category.name.toLowerCase().replace(/\s+/g, '-');
-
-  const cardColors = [
-    { bg: 'bg-gradient-to-r from-slate-600 to-slate-400', hover: 'hover:from-slate-700 hover:to-slate-500' },
-    { bg: 'bg-gradient-to-r from-orange-600 to-orange-400', hover: 'hover:from-orange-700 hover:to-orange-500' },
-    { bg: 'bg-gradient-to-r from-blue-600 to-blue-400', hover: 'hover:from-blue-700 hover:to-blue-500' },
-    { bg: 'bg-gradient-to-r from-emerald-600 to-emerald-400', hover: 'hover:from-emerald-700 hover:to-emerald-500' },
-    { bg: 'bg-gradient-to-r from-purple-600 to-purple-400', hover: 'hover:from-purple-700 hover:to-purple-500' },
-    { bg: 'bg-gradient-to-r from-rose-600 to-rose-400', hover: 'hover:from-rose-700 hover:to-rose-500' },
-  ];
-
-  const filteredPosts = posts.filter(post => {
-    const query = searchQuery.toLowerCase();
-    const titleMatch = post.title.toLowerCase().includes(query);
-
-    const tagMatch = post.post_tags?.some(pt =>
-      (pt as any).tags.name.toLowerCase().includes(query)
-    );
-
-    return titleMatch || tagMatch;
-  });
+  const getLogoText = (categoryName?: string) => {
+    if (!categoryName) return 'MT';
+    return categoryName.charAt(0).toUpperCase();
+  };
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>();
@@ -294,55 +277,71 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
               </Card>
 
             ) : (
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="space-y-4">
                 {processedPosts.map((post, index) => {
-                  const colorScheme = cardColors[index % cardColors.length];
-
+                  const logoText = getLogoText(post.title);
                   return (
-                    <Card
-                      key={post.id}
-                      className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col h-full"
-                    >
-                      <CardContent className="md:px-6 md:py-6 flex flex-col flex-grow">
-                        <h3 className="md:text-xl font-bold text-gray-900 mb-4 line-clamp-2 flex-grow">
-                          {post.title}
-                        </h3>
-
-                        {post.post_tags && post.post_tags.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {post.post_tags.slice(0, 2).map((pt) => (
-                              <span
-                                key={(pt as any).tags.id}
-                                className={`px-2 py-1 text-xs rounded font-medium ${(pt as any).tags.name === selectedTag
-                                    ? 'bg-blue-50 text-blue-600'
-                                    : 'bg-blue-50 text-blue-600'
-                                  }`}
-                              >
-                                {(pt as any).tags.name}
-                              </span>
-                            ))}
+                    <div key={post.id} className="bg-white rounded-lg shadow-xl border-gray-400 overflow-hidden relative">
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 p-4">
+                        <div>
+                          {post.thumbnail_url ? (
+                            <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
+                              <Image
+                                src={post.thumbnail_url}
+                                alt={post.title}
+                                width={150}
+                                height={100}
+                                className="rounded-lg object-cover w-full h-24 sm:w-24"
+                              />
+                            </div>
+                          ) : (
+                            <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6 flex items-center justify-center 
+                                        w-24 h-24 sm:w-24 sm:h-24 rounded-lg bg-gray-200 text-gray-700 
+                                        font-bold text-4xl leading-none">
+                              {logoText}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-grow">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-bold text-gray-800">{post.title}</h3>
                           </div>
-                        )}
-
-                        {/* {post.created_at && (
-                          <p className="text-xs text-gray-500 mb-4">
-                            Created: {new Date(post.created_at).toLocaleDateString('en-IN', {
-                              day: 'numeric',
-                              month: 'short',
-                              year: 'numeric'
-                            })}
-                          </p>
-                        )} */}
-
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500 mb-3">
+                            {post.post_tags && post.post_tags.length > 0 && (
+                              <div className="flex flex-wrap mt-2">
+                                {post.post_tags.slice(0, 2).map((pt) => (
+                                  <span
+                                    key={(pt as any).tags.id}
+                                    className='text-xs text-gray-500'
+                                  >
+                                    {(pt as any).tags.name}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {post.created_at && (
+                              <p className="text-xs text-gray-500 mt-2">
+                                Created: {new Date(post.created_at).toLocaleDateString('en-IN', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric'
+                                })}
+                              </p>
+                            )}
+                            {/* <div className="flex items-center gap-1.5"><FileText size={14} /> {post.total_marks} Marks</div> */}
+                          </div>
+                        </div>
+                        <div>
                         <Link
                           href={`/posts/${post.slug}`}
-                          className={`${colorScheme.bg} ${colorScheme.hover} text-white md:px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 flex items-center justify-center gap-2 group mt-auto text-sm md:text-md`}
-                        >
+                          className='bg-gradient-to-r from-red-600 to-gray-800 text-white md:px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 flex items-center justify-center gap-2 group mt-auto text-sm md:text-md'
+                          >
                           Learn More
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Link>
-                      </CardContent>
-                    </Card>
+                          </div>
+                      </div>
+                    </div>
                   );
                 })}
               </div>

@@ -1,5 +1,5 @@
 import { Star, Heart } from 'lucide-react';
-import AdBanner from './AdBanner';
+import AdBanner from '../shared/AdBanner';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -62,7 +62,7 @@ const courses = [
 
 export default function CourseSection() {
     return (
-        <section className="bg-gray-100 py-12">
+        <section className="bg-gray-100 py-12 px-4 md:px-0">
             <div>
                 <div className="text-center mb-20">
                     <Image
@@ -74,7 +74,7 @@ export default function CourseSection() {
                     />
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 md:gap-6 gap-3">
                     {courses.map((course) => (
                         <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col">
                             <div className="relative">

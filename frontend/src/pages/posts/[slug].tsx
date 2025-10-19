@@ -34,14 +34,14 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
   const categorySlug = post.categories?.name.toLowerCase().replace(/\s+/g, '-') || 'uncategorized';
 
   return (
-    <div className="bg-white">
+    <div className="bg-gray-100">
       <Head>
         <title>{`${post.title} | Haryana Job Alert`}</title>
         {/* You can also add dynamic meta descriptions for SEO */}
         <meta name="description" content={`Details & Information about ${post.title}.`} />
       </Head>
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 max-w-5xl">
         {/* NEW: Breadcrumb Navigation */}
         <Breadcrumb className="mb-4">
           <BreadcrumbList>

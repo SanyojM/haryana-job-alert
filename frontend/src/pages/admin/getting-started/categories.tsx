@@ -10,12 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/context/AuthContext'; // We'll need the token for authenticated requests
+import { Post } from '../posts';
 
 // Define the type for a single category
 export type Category = {
   id: string;
   name: string;
   description: string | null;
+  posts: Post[] | null;
 };
 
 interface CategoriesPageProps {
