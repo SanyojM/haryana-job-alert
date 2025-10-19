@@ -3,28 +3,28 @@ import { Youtube, Instagram, Phone } from 'lucide-react';
 export default function FloatingSocials() {
   return (
     <div className="fixed top-[30%] md:top[45%] left-0 z-100">
-      <div className="bg-white p-2 rounded-r-2xl shadow-lg border-t border-r border-b border-gray-200/80">
-        <div className="flex flex-col items-center gap-3">
+      <div className="bg-gradient-to-b from-gray-800 to-gray-600 p-2 rounded-r-2xl shadow-lg border-t border-r border-b border-gray-200/80">
+        <div className="flex flex-col items-center gap-4 text-white py-3">
           <a
             href="#"
             aria-label="YouTube"
-            className="w-10 h-10  flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+            className='hover:scale-105'
           >
-            <Youtube size={24} />
+            <Youtube size={21} />
           </a>
           <a
             href="#"
             aria-label="Instagram"
-            className="w-10 h-10  flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-600 to-yellow-500 text-white rounded-full hover:opacity-90 transition-opacity"
+            className='hover:scale-105'
           >
-            <Instagram size={24} />
+            <Instagram size={21} />
           </a>
           <a
             href="#"
             aria-label="Contact"
-            className="w-10 h-10  flex items-center justify-center bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+            className='hover:scale-105'
           >
-            <Phone size={24} />
+            <Phone size={21} />
           </a>
         </div>
       </div>

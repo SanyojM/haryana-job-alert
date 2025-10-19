@@ -64,7 +64,7 @@ const MyMockTestsPage: React.FC = () => {
     if (authLoading) return;
     
     if (!user) {
-      router.push('/auth/login?redirect=/dashboard/mock-tests');
+      router.push('/');
       return;
     }
 

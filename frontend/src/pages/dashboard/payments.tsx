@@ -52,7 +52,7 @@ const PaymentsPage: React.FC = () => {
     if (authLoading) return;
     
     if (!user) {
-      router.push('/auth/login?redirect=/dashboard/payments');
+      router.push('/');
       return;
     }
 

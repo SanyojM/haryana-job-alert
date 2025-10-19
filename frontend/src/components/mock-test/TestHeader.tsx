@@ -78,7 +78,7 @@ export default function TestHeader({
   const handlePurchase = async () => {
     const authToken = token || undefined;
     if (!isLoggedIn) {
-      router.push(`/auth/login?redirect=${router.asPath}`);
+      alert('Please login to purchase this test series.');
       return;
     }
     setIsLoading(true);
@@ -118,16 +118,14 @@ export default function TestHeader({
 
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    const redirectUrl = encodeURIComponent(router.asPath);
-    const emailQuery = email ? `&email=${encodeURIComponent(email)}` : '';
-    router.push(`/auth/signup?redirect=${redirectUrl}${emailQuery}`);
+    alert('Please use the Sign Up option in the header to create an account.');
   };
 
   const handleStartTestFlow = () => {
     if (isLoggedIn) {
       alert('You are logged in! Click "Start Test" on an individual test below to begin.');
     } else {
-      router.push(`/auth/login?redirect=${router.asPath}`);
+      alert('Please login to start the test.');
     }
   };
 

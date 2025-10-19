@@ -36,7 +36,7 @@ const MyFilesPage: React.FC = () => {
 
     // Redirect if not authenticated
     if (!user) {
-      router.push('/auth/login?redirect=/dashboard/my-files');
+      router.push('/');
       return;
     }
 

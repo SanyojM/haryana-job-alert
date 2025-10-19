@@ -176,8 +176,9 @@ export default function CurrentAffairsSection() {
                                         <h3 className="md:font-bold font-medium md:text-lg text-gray-800 leading-tight flex-grow mb-4 text-sm line-clamp-3">
                                             {post.title}
                                         </h3>
-                                        <Link href={getArticleLink(post)} passHref>
-                                          <a 
+                                        <div>
+                                          <a
+                                            href={getArticleLink(post)} 
                                             target={post.external_url ? "_blank" : "_self"} 
                                             rel={post.external_url ? "noopener noreferrer" : ""}
                                             className="w-full bg-gradient-to-r from-emerald-900 to-[#237856] text-white text-center rounded-lg px-4 py-2.5 font-semibold text-xs md:text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
@@ -185,7 +186,7 @@ export default function CurrentAffairsSection() {
                                               <span>Learn More</span>
                                               <ArrowUpRight className="w-4 h-4" />
                                           </a>
-                                        </Link>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

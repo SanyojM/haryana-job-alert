@@ -48,7 +48,7 @@ const ResultsPage: React.FC = () => {
     if (authLoading) return;
     
     if (!user) {
-      router.push('/auth/login?redirect=/dashboard/results');
+      router.push('/');
       return;
     }
 
