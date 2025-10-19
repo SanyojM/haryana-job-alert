@@ -1,4 +1,4 @@
-import AdBanner from "../home/AdBanner";
+import AdBanner from "../shared/AdBanner";
 
 type CourseDescriptionProps = {
     description: string;

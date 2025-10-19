@@ -23,7 +23,16 @@ export type MockSeries = {
   mock_series_tests?: Array<{
     test_id: number;
     slug: string;
-    test: any;
+    test: {
+      created_at: string;
+      description: string | null;
+      duration_minutes: number;
+      id: string;
+      is_free: boolean;
+      slug: string;
+      title: string;
+      total_marks: number;
+    };
   }>;
 };
 
@@ -50,11 +59,6 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
   const getTestCount = (mockSeries: MockSeries) => {
     return mockSeries.mock_series_tests?.length || 0;
   };
-
-  const getFreeTestCount = (mockSeries: MockSeries) => {
-    const count = mockSeries.mock_series_tests?.filter(test => test.test.is_free).length || 0;
-    return count;
-  }
 
   const formatLanguages = (tags: { tag: { name: string } }[]) => {
     if (!tags || tags.length === 0) return 'English, Hindi';
@@ -86,7 +90,6 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {series.map((s) => {
               const testCount = getTestCount(s);
-              const freeTestCount = getFreeTestCount(s);
               const categorySlug = s.mock_categories?.slug || 'category';
               const detailUrl = `/mock-tests/${categorySlug}/${s.slug}`;
               const logoText = getLogoText(s.mock_categories?.name);
@@ -100,6 +103,10 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
                     <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
                       <span className="text-slate-700 font-bold text-lg">{logoText}</span>
                     </div>
+                    <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
+                      <User className="w-3 h-3" />
+                      <span>1000+ Users</span>
+                    </div>
                   </div>
 
                   <h3 className="font-bold text-gray-800 leading-tight mb-1.5 line-clamp-2">
@@ -107,7 +114,7 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
                   </h3>
                   
                   <p className="text-sm text-gray-500 mb-2">
-                    {testCount} Total Tests | {freeTestCount} Free Tests
+                    {testCount} Total Tests | {testCount > 0 ? '5' : '0'} Free Tests
                   </p>
 
                   {s.mock_categories && (

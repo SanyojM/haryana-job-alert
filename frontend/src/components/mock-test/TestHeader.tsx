@@ -3,7 +3,7 @@
 import { ChevronDown, Clock, Users, Globe, ChevronRight, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import AdBanner from '../home/AdBanner';
+import AdBanner from '../shared/AdBanner';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button'; // Import Button
 import { Input } from '@/components/ui/input'; // Import Input
@@ -200,7 +200,7 @@ export default function TestHeader({
             <Button
               onClick={handlePurchase}
               disabled={isLoading}
-              className="md:max-w-xl w-full bg-gradient-to-r from-green-600 to-green-800 text-white font-bold py-3 px-12 rounded-lg hover:opacity-90 transition-opacity text-lg"
+              className="md:max-w-lg w-full bg-gradient-to-r from-green-600 to-green-800 text-white font-bold py-3 px-12 rounded-lg hover:opacity-90 transition-opacity text-lg"
             >
               {isLoading ? 'Processing...' : `Buy Now for ₹${price}`}
             </Button>
@@ -211,11 +211,11 @@ export default function TestHeader({
                 </div>
             )}
           </div>
-          <AdBanner text={'Google Ads'} className='h-48 mt-12 w-full md:w-[90%]'/>
+          <AdBanner text={'Google Ads'} className='h-48 mt-12 w-full md:w-[80%] md:ml-18'/>
         </div>
 
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
-        <div className=' flex flex-col gap-4 w-full lg:w-96'>
+        <div className=' flex flex-col gap-4 w-full lg:w-[60%]'>
         {!isLoggedIn && ( // Use the dynamic isLoggedIn state
           <div className="flex-shrink-0 w-full">
             <div className="bg-gray-100 rounded-lg border border-gray-400 p-6 text-center">

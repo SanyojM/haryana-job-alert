@@ -1,13 +1,12 @@
 import { CheckCircle2, ArrowRight } from 'lucide-react';
-import AdBanner from './AdBanner';
+import AdBanner from '../shared/AdBanner';
 import { Post } from '@/pages/admin/posts'; // Import the Post type
 import Link from 'next/link';
+import { Category } from '@/pages/admin/getting-started/categories';
 
 // Define the props for the main section component
 interface MidCardSectionProps {
-  answerKeyPosts: Post[];
-  admitCardPosts: Post[];
-  admissionPosts: Post[];
+  categories: Category[];
 }
 
 // Define the props for a single card
@@ -41,33 +40,29 @@ const MidCard = ({ title, description, posts }: MidCardProps) => (
                         </Link>
                     </li>
                 ))}
+
+                {posts.length === 0 && (
+                    <li className="text-gray-500">No posts available</li>
+                )}
             </ul>
         </div>
     </div>
 );
 
 
-export default function MidCardSection({ answerKeyPosts, admitCardPosts, admissionPosts }: MidCardSectionProps) {
+export default function MidCardSection({ categories }: MidCardSectionProps) {
   return (
-    <section className="bg-gray-100 py-12">
+    <section className="bg-gray-100 py-12 px-4 md:px-0">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
-          <MidCard 
-            title="Answer Keys"
-            description="Links for Government exam answer keys"
-            posts={answerKeyPosts}
-          />
-          <MidCard 
-            title="Admit Cards"
-            description="Links for exam admit cards and hall tickets"
-            posts={admitCardPosts}
-          />
-          <AdBanner text="Google Ads Section" className="h-24 md:hidden" />
-          <MidCard
-            title="Admissions"
-            description="Links for university and college admissions"
-            posts={admissionPosts}
-          />
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+          {categories.map(category => (
+            <MidCard 
+              key={category.id}
+              title={category.name}
+              description={category.description || `Latest updates on ${category.name}` }
+              posts={category.posts || []}
+            />
+          ))}
         </div>
       </div>
     </section>

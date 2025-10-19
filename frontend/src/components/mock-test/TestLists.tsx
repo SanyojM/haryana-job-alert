@@ -86,8 +86,16 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
                 disabled={loadingTestId === test.id}
                 className="flex-shrink-0 w-full sm:w-auto bg-gradient-to-r from-red-600 to-gray-800 text-white font-semibold py-2.5 px-6 rounded-lg inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50"
               >
-                <Lock size={16} /> 
-                {loadingTestId === test.id ? 'Loading...' : (test.is_free ? 'Start Free Test' : 'Unlock Test')}
+                {loadingTestId === test.id ? (
+                  'Loading...'
+                ) : test.is_free ? (
+                  'Start Free Test'
+                ) : (
+                  <>
+                    <Lock size={16} /> 
+                    Unlock Test
+                  </>
+                )}
               </button>
             </div>
             <div className={`p-1 border-t border-gray-200/80 ${test.is_free ? 'bg-green-100' : 'bg-red-100'} rounded-bl-lg rounded-br-lg`}>
@@ -108,12 +116,9 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
 
 
   return (
-    <section className="bg-gray-100 p-4 md:p-6 rounded-lg">
-      
-      {/* --- 5. REPLACE BUTTONS WITH TABS --- */}
+    <section className="bg-gray-100 py-4 md:py-6 rounded-lg">
       <Tabs defaultValue="all" className="w-full">
         <div className=''>
-          {/* Tab Triggers */}
           <TabsList className="grid w-fit grid-cols-3 mb-4 bg-white">
             <TabsTrigger value="all">
               All tests ({tests.length})
@@ -121,16 +126,11 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
             <TabsTrigger value="free">
               Free tests ({freeTests.length})
             </TabsTrigger>
-            <TabsTrigger 
-              value="paid"
-              // Optional: Add custom styling for the active "Paid" tab
-              className="data-[state=active]:bg-red-600 data-[state=active]:text-white"
-            >
+            <TabsTrigger value="paid">
               Paid Tests ({paidTests.length})
             </TabsTrigger>
           </TabsList>
 
-          {/* Tab Content */}
           <TabsContent value="all">
             {renderTestList(tests)}
           </TabsContent>
@@ -142,15 +142,6 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
           </TabsContent>
         </div>
       </Tabs>
-      
-      {/* View More Button */}
-      <div className="text-center mt-8">
-        <button className="bg-gray-100 border-2 border-gray-300 rounded-xl px-12 py-3 font-semibold text-gray-800 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
-            <a href="/mock-tests">
-            View More
-            </a>
-        </button>
-      </div>
  
     </section>
   );
