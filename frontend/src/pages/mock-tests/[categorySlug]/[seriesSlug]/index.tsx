@@ -12,6 +12,7 @@ import Link from "next/link";
 import SeriesSection from "@/components/mock-test/SeriesSection";
 import MockTestSection from "@/components/home/MockTestSection";
 import { MockSeries } from "@/pages/mock-tests";
+import FloatingSocials from "@/components/shared/FloatingSocials";
 
 
 export type MockTest = {
@@ -92,14 +93,14 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories })
           language="English, Hindi"
           features={[]}
         />
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-6">
-          <main className="lg:col-span-4 space-y-8 md:ml-24">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
+          <main className="lg:col-span-3 space-y-8 md:ml-24">
             <TestLists tests={testsInSeries} seriesId={series.id} />
             <AdBanner text={"Google Ads"} className="h-48"/>
             <SeriesSection series={categories} />
             <FaqSection />
           </main>
-          <aside className="space-y-8 col-span-1">
+          <aside className="space-y-8 col-span-1 ml-12">
             <Sidebar />
           </aside>
         </div>

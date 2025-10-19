@@ -17,7 +17,7 @@ export type Category = {
   id: string;
   name: string;
   description: string | null;
-  posts: Post[] | null;
+  posts?: Post[] | null;
 };
 
 interface CategoriesPageProps {

@@ -38,7 +38,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
     const [selectedCategorySlug, setSelectedCategorySlug] = useState('all');
-    console.log("rdcfgvbhjnertrvgtybhjxdrcfghvbjdrtfvygbh", series)
 
     const uniqueCategories = useMemo(() => {
         const categoriesMap = new Map<string, SeriesCategory>();
@@ -132,7 +131,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+                    <div className="flex overflow-x-auto scrollbar-hide gap-3">
                         {filteredSeries.map((s) => {
                             const testCount = getTestCount(s);
                             const freeTestCount = getFreeTestCount(s);
@@ -143,7 +142,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                             return (
                                 <div
                                     key={s.id}
-                                    className="bg-white rounded-2xl border border-gray-200/90 shadow-lg p-3 flex flex-col hover:shadow-xl transition-shadow duration-300"
+                                    className="bg-white flex-shrink-0 md:w-[30%] w-[70%] rounded-2xl border border-gray-200/90 shadow-lg p-3 flex flex-col hover:shadow-xl transition-shadow duration-300"
                                 >
                                     {/* --- Card Header --- */}
                                     <div className="flex justify-between items-start mb-4">

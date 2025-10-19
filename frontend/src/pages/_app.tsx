@@ -6,6 +6,7 @@ import AdminLayout from '@/components/admin/AdminLayout'; // Corrected import
 import { ReactNode, useEffect, useState } from 'react'; // Import useEffect
 import { HashLoader } from 'react-spinners'; // Loading spinner
 import Router from 'next/router';
+import FloatingSocials from '@/components/shared/FloatingSocials';
 
 // This component handles the protection logic
 const AdminAuthGuard = ({ children }: { children: ReactNode }) => {
@@ -69,7 +70,10 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </AdminAuthGuard>
       ) : (
+        <>
+        <FloatingSocials />
         <Component {...pageProps} />
+        </>
       )}
     </AuthProvider>
   );

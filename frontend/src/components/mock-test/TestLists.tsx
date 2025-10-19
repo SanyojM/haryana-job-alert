@@ -1,5 +1,5 @@
 'use client'; // Required for hooks and event handlers
-import { useState } from 'react'; // useMemo is no longer needed
+import { useEffect, useState } from 'react'; // useMemo is no longer needed
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, HelpCircle, BarChart2, FileText, Lock } from 'lucide-react'; // Added Lock icon
@@ -22,6 +22,24 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
   const { user, token, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
   const [loadingTestId, setLoadingTestId] = useState<string | null>(null);
+  const isLoggedIn = !!user;
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  
+    useEffect(() => {
+      const checkEnrollment = async () => {
+        const authToken = token || undefined;
+        if (isLoggedIn) {
+          try {
+            const response = await api.get(`/mock-series/${seriesId}/check-enrollment`, authToken);
+            setIsEnrolled(response.enrolled);
+          } catch (error) {
+            console.error('Error checking enrollment:', error);
+          }
+        }
+      };
+  
+      checkEnrollment();
+    }, [isLoggedIn, seriesId, token]);
 
   const handleStartTest = async (test: MockTestWithSlug) => {
     const authToken = token || undefined;
@@ -87,15 +105,17 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
                 className="flex-shrink-0 w-full sm:w-auto bg-gradient-to-r from-red-600 to-gray-800 text-white font-semibold py-2.5 px-6 rounded-lg inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {loadingTestId === test.id ? (
-                  'Loading...'
-                ) : test.is_free ? (
-                  'Start Free Test'
-                ) : (
-                  <>
-                    <Lock size={16} /> 
-                    Unlock Test
-                  </>
-                )}
+        'Loading...'
+      ) : test.is_free ? (
+        'Start Free Test'
+      ) : isEnrolled ? ( 
+        'Start Test'     
+      ) : (
+        <>
+          <Lock size={16} /> 
+          Unlock Test      
+        </>
+      )}
               </button>
             </div>
             <div className={`p-1 border-t border-gray-200/80 ${test.is_free ? 'bg-green-100' : 'bg-red-100'} rounded-bl-lg rounded-br-lg`}>

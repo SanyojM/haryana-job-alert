@@ -137,7 +137,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="flex overflow-x-auto scrollbar-hide gap-3">
             {filteredSeries.map((s) => {
               const testCount = getTestCount(s);
               const freeTestCount = getFreeTestCount(s);
@@ -148,7 +148,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
               return (
                 <div
                   key={s.id}
-                  className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col hover:shadow-lg transition-shadow"
+                  className="bg-white w-[70%] lg:w-[35%] flex-shrink-0 rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col hover:shadow-lg transition-shadow"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
@@ -156,7 +156,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                     </div>
                     <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
                                                                 <Image src="/bolt.png" width={12} height={12} alt='bolt' />
-                                                                <span className='text-[7px]'>1977+ Users</span>
+                                                                <span className='text-[10px]'>1977+ Users</span>
                                                             </div>
                   </div>
 
