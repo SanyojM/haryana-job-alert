@@ -125,7 +125,7 @@ export default function Header() {
                     <Link
                       key={link.name}
                       href={link.href}
-                      className={`px-4 py-2 rounded-xl text-md font-medium transition-colors ${
+                      className={`px-4 py-2 rounded-xl text-md font-medium transition-colors whitespace-nowrap ${
                         link.href === currentPath
                           ? "bg-black text-white"
                           : "text-gray-600 hover:bg-gray-200"
@@ -136,7 +136,7 @@ export default function Header() {
                   ))}
                   <HoverCard openDelay={0} closeDelay={200}>
                     <HoverCardTrigger asChild>
-                      <button className="px-4 py-2 rounded-xl text-md font-medium transition-colors text-gray-600 hover:bg-gray-200">
+                      <button className="px-4 py-2 rounded-xl text-md font-medium transition-colors text-gray-600 hover:bg-gray-200 whitespace-nowrap">
                         More
                       </button>
                     </HoverCardTrigger>
@@ -161,7 +161,7 @@ export default function Header() {
                                 href={`/category/${category.name
                                   .toLowerCase()
                                   .replace(/\s+/g, "-")}`}
-                                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100"
+                                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
                               >
                                 {category.name}
                               </Link>
@@ -207,14 +207,14 @@ export default function Header() {
                             <hr className="my-1" />
                             <Link
                               href="/dashboard"
-                              className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700"
+                              className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700 whitespace-nowrap"
                             >
                               <House className="w-4 h-4" />
                               <span>Dashboard</span>
                             </Link>
                             <Link
                               href="/dashboard/profile/edit"
-                              className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700"
+                              className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700 whitespace-nowrap"
                             >
                               <User className="w-4 h-4" />
                               <span>Profile</span>
@@ -222,7 +222,7 @@ export default function Header() {
                             <hr className="my-1" />
                             <button
                               onClick={() => logout()} // Call your logout function
-                              className="flex items-center gap-3 p-2 rounded-md hover:bg-red-50 text-sm font-medium text-red-600 w-full"
+                              className="flex items-center gap-3 p-2 rounded-md hover:bg-red-50 text-sm font-medium text-red-600 w-full whitespace-nowrap"
                             >
                               <LogOut className="w-4 h-4" />
                               <span>Logout</span>
@@ -295,7 +295,7 @@ export default function Header() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`block px-3 py-2 rounded-md text-base font-medium ${
+                  className={`block px-3 py-2 rounded-md text-base font-medium whitespace-nowrap ${
                     link.href === currentPath
                       ? "bg-black text-white"
                       : "text-gray-700 hover:bg-gray-100"
@@ -311,7 +311,7 @@ export default function Header() {
                 open={isCategoriesOpen}
                 onOpenChange={setIsCategoriesOpen}
               >
-                <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">
+                <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 whitespace-nowrap">
                   <span>More</span>
                   <ChevronDown
                     className={`w-4 h-4 transition-transform ${
@@ -337,7 +337,7 @@ export default function Header() {
                             href={`/category/${category.name
                               .toLowerCase()
                               .replace(/\s+/g, "-")}`}
-                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 whitespace-nowrap"
                             onClick={() => setIsMenuOpen(false)}
                           >
                             {category.name}
@@ -352,7 +352,7 @@ export default function Header() {
                 <>
                   <Link
                     href="/dashboard"
-                    className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium"
+                    className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium whitespace-nowrap"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <House className="w-4 h-4" />
@@ -360,7 +360,7 @@ export default function Header() {
                   </Link>
                   <Link
                     href="/dashboard/profile/edit"
-                    className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium"
+                    className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium whitespace-nowrap"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <User className="w-4 h-4" />
@@ -371,7 +371,7 @@ export default function Header() {
                       logout();
                       setIsMenuOpen(false);
                     }}
-                    className="flex items-center gap-2 text-red-500 hover:bg-red-50 p-2 rounded-md text-base font-medium w-full text-left"
+                    className="flex items-center gap-2 text-red-500 hover:bg-red-50 p-2 rounded-md text-base font-medium w-full text-left whitespace-nowrap"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -383,7 +383,7 @@ export default function Header() {
                     setIsAuthDialogOpen(true);
                     setIsMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium w-full"
+                  className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium w-full whitespace-nowrap"
                 >
                   <User className="w-4 h-4" />
                   Login

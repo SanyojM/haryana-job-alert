@@ -59,7 +59,7 @@ export function AuthDialog({
 
   const { login } = useAuth();
 
-  const handleLogin = async (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoginLoading(true);
     setLoginError(null);
@@ -68,6 +68,9 @@ export function AuthDialog({
         email: loginEmail,
         password: loginPassword,
       });
+      
+      await login(data.access_token);
+
       // Close dialog
       onOpenChange(false);
 
@@ -126,7 +129,11 @@ export function AuthDialog({
         </DialogTrigger>
         <div className="flex sm:hidden justify-end">
           <DialogTrigger asChild>
-            <button className="text-white text-2xl font-light hover:text-gray-300 transition-colors">
+            <button 
+              className="text-white text-2xl font-light hover:text-gray-300 transition-colors"
+              aria-label="Close dialog"
+              title="Close"
+            >
               <X
                 size={17}
                 className="bg-white/20 text-black rounded-full p-0.5"
