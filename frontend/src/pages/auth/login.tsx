@@ -9,16 +9,13 @@ import { api } from '@/lib/api';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 
-export default function UserLoginPage() {
+export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { login, user, isLoading: authLoading } = useAuth();
   const router = useRouter();
-  
-  // Get the redirect path from the URL query
-  const { redirect } = router.query;
 
   // Redirect if already logged in
   useEffect(() => {
@@ -26,10 +23,11 @@ export default function UserLoginPage() {
       if (user.role === 'admin') {
         router.push('/admin');
       } else {
-        router.push((redirect as string) || '/dashboard');
+        // Non-admin users should not be on this page
+        router.push('/dashboard');
       }
     }
-  }, [user, authLoading, router, redirect]);
+  }, [user, authLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,11 +36,13 @@ export default function UserLoginPage() {
     try {
       const data = await api.post('/auth/login', { email, password });
       const role = await login(data.access_token);
-      // Redirect to the intended page, or a default dashboard
+      
+      // Only allow admin login on this page
       if (role && String(role).toLowerCase() === 'admin') {
         router.push('/admin');
       } else {
-        router.push((redirect as string) || '/dashboard');
+        setError('Access denied. This login page is for administrators only.');
+        // Optionally log them out
       }
     } catch (err: unknown) {
       setError('Invalid email or password.');
@@ -69,8 +69,8 @@ export default function UserLoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Login to your account to continue.</CardDescription>
+          <CardTitle>Admin Login</CardTitle>
+          <CardDescription>Login with your administrator account.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,14 +84,8 @@ export default function UserLoginPage() {
             </div>
             {error && <p className="text-sm text-red-600">{error}</p>}
             <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Logging in...' : 'Login as Admin'}
             </Button>
-            <p className="text-center text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link href={`/auth/signup?redirect=${redirect || '/'}`} className="font-medium text-blue-600 hover:underline">
-                Sign Up
-              </Link>
-            </p>
           </form>
         </CardContent>
       </Card>

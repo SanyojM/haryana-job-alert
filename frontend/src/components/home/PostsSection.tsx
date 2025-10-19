@@ -1,4 +1,4 @@
-import { ArrowUpRight, Newspaper, ShieldCheck, FilePlus, Heart, Trophy } from 'lucide-react';
+import { ArrowUpRight, Newspaper, ShieldCheck, FilePlus, Heart, Trophy, File, FileAxis3DIcon } from 'lucide-react';
 import Link from 'next/link'; // Import the Link component
 import { Post } from '@/pages/admin/posts'; // Import the Post type
 
@@ -17,8 +17,7 @@ const colors = [
 const features = [
     { icon: Newspaper, title: 'Current Affairs', subtitle: 'Daily Learning Content' },
     { icon: ShieldCheck, title: 'Quality Mock Tests', subtitle: 'Test your Knowledge' },
-    { icon: FilePlus, title: 'Request Any Material', subtitle: 'Study Material ( All Type )' },
-    { icon: Heart, title: 'Loved by Students', subtitle: 'Over 1000+ positive reviews' },
+    { icon: File, title: 'Exclusive Courses', subtitle: 'Enroll Now (Designed for You)' },
     { icon: Trophy, title: 'We Deliver Quality', subtitle: 'Quality Information' },
 ];
 
@@ -50,16 +49,16 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
           ))}
         </div>
 
-        <div className="bg-gray-800 rounded-full px-2 py-2 shadow-xl hidden md:block">
+        <div className="bg-[#0d0625] rounded-full px-2 py-4 shadow-xl hidden md:block">
             <div className="flex items-center justify-between gap-4 px-4">
                 {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-1 text-white justify-center w-full">
+                    <div key={index} className="flex items-center gap-3 text-white justify-center w-full">
                         <div className="flex-grow-0">
-                            <feature.icon className="w-5 h-5 text-indigo-400" />
+                            <feature.icon className="w-7 h-7 text-[#8c52ff]" />
                         </div>
                         <div className='w-full'>
-                            <p className="text-[12px] leading-tight">{feature.title}</p>
-                            <p className="text-[8px] text-gray-400">{feature.subtitle}</p>
+                            <p className="text-[13px] leading-tight">{feature.title}</p>
+                            <p className="text-[10px] text-gray-400">{feature.subtitle}</p>
                         </div>
                     </div>
                 ))}

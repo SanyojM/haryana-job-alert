@@ -15,14 +15,28 @@ interface MidCardProps {
   title: string;
   description: string;
   posts: Post[];
+  index: number; 
 }
 
 // Reusable component for a single card
-const MidCard = ({ title, description, posts }: MidCardProps) => (
+const MidCard = ({ title, description, posts, index }: MidCardProps) => (
     <div className="flex flex-col h-full">
-        <div className={`bg-gradient-to-r from-[#5055CA] to-[#8B90F8] text-white text-center md:font-bold font-medium text-sm md:text-2xl py-4 rounded-t-2xl`}>
-            {title}
-        </div>
+        {(() => {
+          const gradientOptions = [
+            'from-[#ed213a] to-[#93291e]',
+            'from-[#ed213a] to-[#93291e]',
+            'from-[#4e54c8] to-[#8f94fb]',
+            'from-[#4e54c8] to-[#8f94fb]',
+            'from-[#093028] to-[#237a57]',
+            'from-[#093028] to-[#237a57]',
+          ];
+          const chosen = gradientOptions[index % gradientOptions.length];
+          return (
+            <div className={`bg-gradient-to-r ${chosen} text-white text-center md:font-bold font-medium text-sm md:text-2xl py-4 rounded-t-2xl`}>
+              {title}
+            </div>
+          );
+        })()}
         <div className="bg-black text-white text-center text-xs py-2 px-2">
             {description}
         </div>
@@ -53,14 +67,15 @@ const MidCard = ({ title, description, posts }: MidCardProps) => (
 
 export default function MidCardSection({ categories, posts }: MidCardSectionProps) {
   return (
-    <section className="bg-gray-100 py-12 px-4 md:px-0">
+    <section className="bg-gray-100 py-12 px-2 md:px-0">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-          {categories.map(category => (
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8">
+          {categories.map((category, index) => (
             <MidCard 
               key={category.id}
               title={category.name}
-              description={category.description || `Latest updates on ${category.name}` }
+              description={category.description || `Latest updates on ${category.name}`}
+              index={index}
               posts={posts.filter(post => post.category_id?.toString() === category.id.toString()) || []}
             />
           ))}

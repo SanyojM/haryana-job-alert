@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -12,6 +12,7 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
+import { AuthDialog } from '@/components/auth/AuthDialog';
 
 interface DownloadableFile {
   id: string;
@@ -92,9 +93,20 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
+  const [showAuth, setShowAuth] = useState<boolean>(false);
   
   const { user } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.razorpay.com/widgets/trusted-business/bundle.js';
+    script.setAttribute('data-id', 'rzp_live_ROHcOBQ5rXFy6f');
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   // Check if user has already purchased
   React.useEffect(() => {
@@ -131,8 +143,9 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
         password 
       });
       
-      // After successful signup, redirect to login with current page as redirect
-      router.push(`/auth/login?redirect=/files/${file?.slug}`);
+      // After successful signup, close the signup form and user can login
+      setShowSignupForm(false);
+      alert('Account created successfully! Please login to continue.');
     } catch (err: any) {
       setError(err.message || 'Failed to create account. Please try again.');
     } finally {
@@ -332,10 +345,10 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
   return (
     <div className="min-h-screen image-bg">
       {/* <Header /> */}
-      <main className="container mx-auto px-4 py-8 max-w-5xl">
+      <main className="container mx-auto sm:px-4 p-0 py-8 max-w-5xl">
         <div className="flex justify-between items-center mb-4">
           <Link href="/" className="flex justify-center items-center gap-2 text-gray-300 p-1 pr-3 rounded-full border">
-            <img src="/logo.png" alt="" className='w-10 h-10 rounded-full' />
+            <img src="/logo.png" alt="" className='w-8 h-8 rounded-full' />
             <span className="text-md font-medium">Haryana Job Alerts</span>
           </Link>
           <div className="flex items-center gap-2">
@@ -350,18 +363,18 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                 </Button>
               ) : (
                 <Button 
-                  className="flex items-center gap-2 h-10 bg-black border rounded-xl"
+                  className="flex items-center gap-2 h-10 bg-black border rounded-full"
                   onClick={() => setShowSignupForm(true)}
                 >
                   <UserPlus className="w-4 h-4" />
-                  Create Account to Purchase
+                  Register
                 </Button>
               )
             }
           </div>
         </div>
         {/* Main Grid Layout - Two Columns */}
-        <div className="grid lg:grid-cols-3 gap-8 bg-white border shadow-sm rounded-4xl p-6">
+        <div className="grid lg:grid-cols-3 gap-8 bg-white border shadow-sm rounded-4xl p-3 sm:p-6">
           {/* Left Column - File Details (2/3 width) */}
           <div className="lg:col-span-2">
             <div>
@@ -375,25 +388,25 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                 </div>
               )}
               
-              <CardContent className="p-8">
+              <CardContent className="px-3 sm:px-8 py-8">
                 {/* Title */}
                 <div className="mb-6">
-                  <h1 className="text-3xl font-bold text-gray-900 mb-3">{file.title}</h1>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{file.title}</h1>
                 </div>
 
                 {/* Description */}
                 {file.description && (
                   <div className="mb-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-3">ABOUT THE PAGE</h2>
-                    <div className="prose prose-gray max-w-none">
+                    <ul className="prose prose-gray max-w-none pl-4">
                       {file.description.split(/\r?\n/).map((line, idx) => (
                         line.trim() && (
-                          <p key={idx} className="text-gray-700 leading-relaxed mb-2">
+                          <li key={idx} className="text-gray-700 list-disc text-sm leading-relaxed mb-2">
                             {line}
-                          </p>
+                          </li>
                         )
                       ))}
-                    </div>
+                    </ul>
                   </div>
                 )}
 
@@ -411,13 +424,22 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                     </div>
                   </div>
                 </div>
+
+                {/* Invite Network */}
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">INVITE YOUR NETWORK</p>
+                        <Button variant="outline" className="w-full" onClick={handleCopyLink}>
+                          <FileText className="w-4 h-4 mr-2" />
+                          Copy link
+                        </Button>
+                      </div>
               </CardContent>
             </div>
           </div>
 
           {/* Right Column - Purchase Card (1/3 width) */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
+            <div className="sticky bottom-4 sm:top-8">
               <Card className="shadow-lg border bg-white rounded-2xl">
                 <CardContent className="p-6">
                   {/* Error Alert */}
@@ -510,9 +532,9 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                       <div className="mt-4 pt-4 border-t border-gray-200 text-center">
                         <p className="text-sm text-gray-600">
                           Already have an account?{' '}
-                          <Link href={`/auth/login?redirect=/offline-forms/${file.slug}`} className="text-blue-600 hover:underline font-medium">
+                          <button onClick={()=> setShowAuth(true)} className="text-blue-600 hover:underline font-medium">
                             Log in here
-                          </Link>
+                          </button>
                         </p>
                       </div>
 
@@ -570,9 +592,9 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
 
                       <p className="text-center text-xs text-gray-600 mt-3">
                         Already have an account?{' '}
-                        <Link href={`/auth/login?redirect=/offline-forms/${file.slug}`} className="text-blue-600 hover:underline font-medium">
+                        <button onClick={() => setShowAuth(true)} className="text-blue-600 hover:underline font-medium">
                           Log in here
-                        </Link>
+                        </button>
                       </p>
 
                       {/* Invite Network */}
@@ -597,7 +619,8 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                       </div>
 
                       {/* Price Summary */}
-                      <div className="py-4 border-y border-gray-200 space-y-2 mb-4">
+                      <div className="">
+                        <div className="py-4 border-y border-gray-200 space-y-2 mb-4">
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Sub Total</span>
                           <span className="text-gray-900">
@@ -625,18 +648,12 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                             Processing...
                           </>
                         ) : (
-                          'Get it now →'
+                          'Get it now ' + (file.price === 0 ? 'Free' : `₹${file.price}`)
                         )}
                       </Button>
-
-                      {/* Invite Network */}
-                      <div className="mt-6 pt-6 border-t border-gray-200">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">INVITE YOUR NETWORK</p>
-                        <Button variant="outline" className="w-full" onClick={handleCopyLink}>
-                          <FileText className="w-4 h-4 mr-2" />
-                          Copy link
-                        </Button>
                       </div>
+
+                      
                     </div>
                   )}
 
@@ -645,6 +662,8 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                     <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
                       <Lock className="w-3 h-3" />
                       <span>Secure payment powered by Razorpay</span>
+                      {/* <razorpay-trusted-business key="rzp_live_ROHcOBQ5rXFy6f"></razorpay-trusted-business> */}
+                      <div id="razorpay-trusted-business-widget"></div>
                     </div>
                   </div>
                 </CardContent>
@@ -654,6 +673,10 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
         </div>
       </main>
       {/* <Footer /> */}
+      <AuthDialog
+        open={showAuth}
+        onOpenChange={setShowAuth}
+      />
     </div>
   );
 };

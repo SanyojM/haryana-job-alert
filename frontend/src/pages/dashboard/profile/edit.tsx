@@ -23,7 +23,7 @@ export default function EditProfilePage() {
   // Redirect if not logged in
   useEffect(() => {
     if (!authLoading && !user) {
-      router.push('/auth/login?redirect=/dashboard/profile/edit');
+      router.push('/');
     }
   }, [user, authLoading, router]);
 

@@ -178,7 +178,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                     {formatLanguages(s.mock_series_tags)}
                   </div>
 
-                  <ul className="space-y-1.5 text-sm text-gray-600 mb-5 flex-grow">
+                  <ul className="space-y-1.5 text-xs text-gray-600 mb-5 flex-grow">
                     {s.description ? (
                       s.description
                         .split(/\r?\n/)
@@ -209,9 +209,6 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                   </ul>
 
                   <div className="space-y-2">
-                    <div className="text-lg font-bold text-gray-800">
-                      {formatPrice(s.price)}
-                    </div>
                     <Link href={detailUrl}>
                       <button className="w-full bg-gradient-to-r from-indigo-800 to-indigo-500 hover:from-indigo-700 hover:to-indigo-400 text-white md:text-center rounded-lg px-1 md:px-4 py-2.5 font-semibold text-sm inline-flex items-center justify-center gap-2 transition-all">
                         <span className='text-xs md:text-sm text-wrap'>View test series</span>

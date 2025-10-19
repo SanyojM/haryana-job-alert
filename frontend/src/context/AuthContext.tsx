@@ -67,10 +67,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
+    const wasAdmin = user?.role === 'admin';
     localStorage.removeItem('authToken');
     setToken(null);
     setUser(null);
-    router.push('/auth/login');
+    // Only redirect admins to login page, regular users go to home
+    if (wasAdmin) {
+      router.push('/auth/login');
+    } else {
+      router.push('/');
+    }
   };
 
   return (

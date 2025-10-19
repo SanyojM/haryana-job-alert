@@ -16,7 +16,7 @@ const AdminAuthGuard = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (!isLoading) {
             if (!user || user.role !== 'admin') {
-                router.replace('/auth/login');
+                router.replace('/');
             }
         }
     }, [user, isLoading, router]);
@@ -54,7 +54,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       {loading && (
-        <div className="max-h-screen min-h-screen max-w-screen min-w-screen fixed top-0 right-0 bg-white/60 flex justify-center items-center">
+        <div className="max-h-screen min-h-screen max-w-screen min-w-screen fixed top-0 right-0 bg-white/60 flex justify-center items-center z-[999]">
         <div className="bg-white h-40 w-40 rounded-2xl flex items-center justify-center shadow-lg">
           <HashLoader color="#10B981" size={80} />
         </div>
