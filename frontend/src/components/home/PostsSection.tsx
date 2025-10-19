@@ -51,14 +51,14 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
         </div>
 
         <div className="bg-gray-800 rounded-full px-2 py-2 shadow-xl hidden md:block">
-            <div className="flex items-center justify-between gap-6 md:gap-10 px-4">
+            <div className="flex items-center justify-between gap-4 px-4">
                 {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-1 text-white">
-                        <div className="flex-shrink-0">
-                            <feature.icon className="w-4 h-4 text-indigo-400" />
+                    <div key={index} className="flex items-center gap-1 text-white justify-center w-full">
+                        <div className="flex-grow-0">
+                            <feature.icon className="w-5 h-5 text-indigo-400" />
                         </div>
-                        <div>
-                            <p className="text-[10px] leading-tight">{feature.title}</p>
+                        <div className='w-full'>
+                            <p className="text-[12px] leading-tight">{feature.title}</p>
                             <p className="text-[8px] text-gray-400">{feature.subtitle}</p>
                         </div>
                     </div>

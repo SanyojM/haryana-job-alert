@@ -18,6 +18,7 @@ import CurrentAffairsSection from '@/components/home/CurrentAffairsSection';
 import CourseSection from '@/components/home/CourseSection';
 import FaqSection from '@/components/home/FaqSection';
 import { MockSeries } from "./mock-tests";
+import FloatingSocials from "@/components/shared/FloatingSocials";
 
 interface HomePageProps {
   posts: Post[];
@@ -56,12 +57,10 @@ const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
         <meta name="description" content="Your one-stop destination for the latest government job alerts, exam results, and admit cards in Haryana and across India." />
       </Head>
       <Header />
-      {/* Pass the dynamic categories data to the component */}
       <TopLinksSection categories={categories} />
       <main className="md:p-4 container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
             <div className="lg:col-span-3 flex flex-col gap-6">
-            {/* <AdBanner text="Google Ads Section" className="h-24" /> */}
             <PostsSection posts={posts.slice(0, 8)} />
             <AdBanner text="Google Ads Section" className="h-88" />
             <MidCards 
@@ -75,7 +74,7 @@ const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
             <AboutSection />
             <FaqSection />
             </div>
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 ml-18">
             <Sidebar />
           </div>
         </div>

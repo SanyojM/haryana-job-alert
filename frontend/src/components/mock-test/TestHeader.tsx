@@ -215,10 +215,10 @@ export default function TestHeader({
         </div>
 
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
-        <div className=' flex flex-col gap-4 w-full lg:w-[60%]'>
+        <div className=' flex flex-col gap-4 w-full lg:w-[50%]'>
         {!isLoggedIn && ( // Use the dynamic isLoggedIn state
           <div className="flex-shrink-0 w-full">
-            <div className="bg-gray-100 rounded-lg border border-gray-400 p-6 text-center">
+            <div className="bg-white rounded-lg border border-gray-400 p-6 text-center">
               <h3 className="text-lg font-bold text-gray-800 mb-1">Sign Up To Test Your Exam</h3>
               <p className="text-gray-800 font-bold mb-4">Knowledge Now!</p>
               

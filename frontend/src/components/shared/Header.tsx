@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Search, User, Menu, X, LogOut } from 'lucide-react';
+import { Search, User, Menu, X, LogOut, House } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -11,6 +11,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -27,6 +28,8 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const currentPath = usePathname();
   const { logout } = useAuth();
+  const { user } = useAuth();
+  const isLoggedIn = !!user;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -84,37 +87,63 @@ export default function Header() {
                     </Link>
                   ))}
                   <div className="border-l border-gray-200 ml-2 pl-4 flex items-center space-x-3">
-                    <HoverCard openDelay={0} closeDelay={100}>
-                      <HoverCardTrigger asChild>
-                        {/* This is the trigger element (your profile icon) */}
-                        <button className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 rounded-md">
-                          <Image src="/profile.png" width={18} height={18} alt='profile'/>
-                        </button>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-48 p-2" side="top">
-                        {/* This is the menu content */}
-                        <div className="flex flex-col space-y-1">
-                          <Link
-                            href="/dashboard"
-                            className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700"
-                          >
-                            <User className="w-4 h-4" />
-                            <span>Profile</span>
-                          </Link>
+                    {isLoggedIn ? (
+        // --- LOGGED-IN STATE ---
+        // Show HoverCard with Avatar
+        <HoverCard openDelay={0} closeDelay={100}>
+          <HoverCardTrigger asChild>
+            <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+              <Avatar className="h-8 w-8">
+                {/* Use the user's image */}
+                <AvatarImage src={user?.avatar_url || '/avatar2.png'} alt={user.full_name || 'User'} />
+                {/* Fallback to user's initials */}
+                <AvatarFallback>
+                  {user.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
+                </AvatarFallback>
+              </Avatar>
+            </button>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-48 p-1 bg-gray-200 rounded-2xl" side="bottom">
+            {/* This is the menu content */}
+            <div className="flex flex-col space-y-1 border-2 border-gray-200 rounded-2xl bg-white">
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700"
+              >
+                <House className="w-4 h-4" />
+                <span>Dashboard</span>
+              </Link>
+              <Link
+                href="/dashboard/profile/edit"
+                className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700"
+              >
+                <User className="w-4 h-4" />
+                <span>Profile</span>
+              </Link>
+              <hr className="my-1" />
+              <button
+                onClick={() => logout()} // Call your logout function
+                className="flex items-center gap-3 p-2 rounded-md hover:bg-red-50 text-sm font-medium text-red-600 w-full"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </button>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
 
-                          {/* This is the divider */}
-                          <hr className="my-1" />
+      ) : (
 
-                          <button
-                            onClick={() => logout()} // Call your logout function
-                            className="flex items-center gap-3 p-2 rounded-md hover:bg-red-50 text-sm font-medium text-red-600 w-full"
-                          >
-                            <LogOut className="w-4 h-4" />
-                            <span>Logout</span>
-                          </button>
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
+        // --- LOGGED-OUT STATE ---
+        // Show original image, wrapped in a Link to the login page
+        <Link
+          href="/auth/login" // <-- Set this to your login/signup page
+          className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md"
+        >
+          <Image src="/profile.png" width={18} height={18} alt='Login'/>
+        </Link>
+        
+      )}
                     <Link href="#" className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md">
                       <Search className="w-5 h-5" />
                     </Link>

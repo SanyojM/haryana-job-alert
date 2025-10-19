@@ -135,7 +135,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
       </Head>
 
       <Header />
-      <main className="max-w-7xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4">
+      <main className="max-w-6xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4">
         <div className="lg:col-span-3">
           <Breadcrumb className="mb-6">
             <BreadcrumbList>
@@ -152,61 +152,19 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-
-          <div className="border-b border-slate-200 pb-4 mb-4">
-            <div className="flex flex-col md:flex-row items-center gap-6 pb-4">
-              {category.logoUrl ? (
-                <Image
-                  src={category.logoUrl}
-                  alt={`${category.organization} logo`}
-                  width={80}
-                  height={80}
-                  className="rounded-full border p-1 object-contain flex-shrink-0"
-                />
-              ) : (
-                <div className="flex items-center justify-center w-[80px] h-[80px] rounded-full border bg-gray-200 text-gray-600 text-2xl font-bold flex-shrink-0">
-                  {category.name
-                    ?.split(' ')
-                    .slice(0, 2)
-                    .map((n) => n[0])
-                    .join('')
-                    .toUpperCase()}
-                </div>
-              )}
-              <div className="flex-grow">
-                <h1 className="text-3xl font-extrabold text-gray-800">
-                  {category.name}
-                </h1>
-                <p className="text-lg text-gray-600 mt-1">{category.organization}</p>
-              </div>
-            </div>
-            {category.description && (
-              <p className="text-gray-700 mb-6 text-xs">{category.description}</p>
-            )}
-          </div>
+          
+          <hr className="mb-4"/>
 
           <div className="grid grid-cols-2 mb-6">
-            <div className="relative">
-              <input
-                id="search-posts"
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Search in ${category.name}...`}
-                className="w-full px-2 py-2 pl-10 rounded-3xl border border-gray-200 shadow-sm bg-white focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300"
-              />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            </div>
-            <div className="flex justify-end items-center">
+            <div className="flex items-center">
               <div className="flex gap-4 w-full md:w-auto md:flex-shrink-0 justify-end md:justify-start">
-
                 <div className="md:flex-1 ml-4 md:ml-0">
                   <DropdownMenu>
 
                     <DropdownMenuTrigger className="p-3 bg-white rounded-full shadow-lg">
                       <ListFilter className="w-5 h-5" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-white p-4 rounded-3xl border-gray-400 shadow-xl">
+                    <DropdownMenuContent className="bg-white p-4 rounded-3xl border-gray-400 shadow-xl z-100">
                       {allTags.map(tag => (
                         <DropdownMenuItem
                           key={tag}
@@ -219,13 +177,12 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-
                 <div className="md:flex-1">
                   <DropdownMenu>
                     <DropdownMenuTrigger className="p-3 bg-white rounded-full shadow-lg">
                       <ArrowDownUp className="w-5 h-5" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-white p-4 rounded-3xl border-gray-400 shadow-xl">
+                    <DropdownMenuContent className="bg-white p-4 rounded-3xl border-gray-400 shadow-xl z-100">
                       <DropdownMenuItem
                         onSelect={() => setSortOrder('newest')}
                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer rounded-2xl"
@@ -255,6 +212,18 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                 </div>
               </div>
             </div>
+            <div className="relative">
+              <input
+                id="search-posts"
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={`Search in ${category.name}...`}
+                className="w-full px-2 py-2 pl-10 rounded-3xl border border-gray-200 shadow-sm bg-white focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            </div>
+            
           </div>
 
           <div>
@@ -350,7 +319,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
         </div>
         <div className="lg:col-span-1">
           <AdBanner text="Google Ads Section" className="h-88" />
-          <div className="mt-12">
+          <div className="mt-12 ml-12">
             <Sidebar />
           </div>
         </div>

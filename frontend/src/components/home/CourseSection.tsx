@@ -74,9 +74,9 @@ export default function CourseSection() {
                     />
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 md:gap-6 gap-3">
+                <div className="flex overflow-x-auto scrollbar-hide gap-3">
                     {courses.map((course) => (
-                        <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col">
+                        <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col flex-shrink-0 w-[70%] md:w-[35%]">
                             <div className="relative">
                                 <a href={course.courseUrl}>
                                     <Image
@@ -92,7 +92,7 @@ export default function CourseSection() {
 
                             <div className="py-5 px-1 flex flex-col flex-grow justify-between">
                                 <div className="flex justify-between items-start mb-2 flex-col sm:flex-row">
-                                    <h3 className="md:text-xl text-sm font-bold text-gray-800 leading-tight">
+                                    <h3 className="md:text-md text-sm font-bold text-gray-800 leading-tight">
                                         <a href={course.courseUrl}>{course.title}</a>
                                     </h3>
                                     <div className="flex items-center gap-1 text-sm text-gray-600 flex-shrink-0 ml-2">
