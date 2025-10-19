@@ -59,10 +59,13 @@ export default function Header() {
           </div>
         </div>
 
-        <nav className="lg:container mx-auto px-4 mt-5">
+        <nav className="lg:container mx-auto px-4 mt-2 sm:mt-5">
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex-shrink-0">
-              <img className="h-14 w-14 rounded-full" src="/logo.png" alt="Haryana Job Alert Logo" />
+              {/* <img className="h-14 w-14 rounded-full" src="/logo.png" alt="Haryana Job Alert Logo" /> */}
+              <h1 className="text-xl font-bold italic">
+                Haryana <span className="text-green-600">Job</span> Alert
+              </h1>
             </Link>
 
             <div className="hidden lg:flex items-center justify-center flex-1 mr-14">

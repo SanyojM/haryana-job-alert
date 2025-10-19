@@ -11,7 +11,7 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
   return (
     <section className="bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto text-center">
-        <h1 className="sm:text-4xl md:text-4xl font-bold text-gray-800 tracking-tight">
+        <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
           Haryana <span className="text-yellow-500">Job</span> Alert is a <span className="text-yellow-500">FREE</span> Website to get
         </h1>
 

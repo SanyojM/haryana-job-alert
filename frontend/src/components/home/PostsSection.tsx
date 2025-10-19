@@ -25,9 +25,9 @@ const features = [
 // The component now accepts a 'posts' prop
 export default function PostsSection({ posts }: { posts: Post[] }) {
   return (
-    <section className="bg-gray-100 px-4 sm:px-6 lg:px-8">
+    <section className="bg-gray-100 px-2">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
+        <div className="grid grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6 mb-12">
           {/* We now map over the 'posts' from the props */}
           {posts.slice(0, 8).map((post, index) => ( // Show up to 8 posts
             <Link
@@ -36,13 +36,13 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
               passHref
               legacyBehavior>
               <a
-                className={`relative p-5 rounded-xl text-white overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 bg-gradient-to-r ${colors[index % colors.length]}`} // Cycle through colors
+                className={`relative py-2 sm:py-5 px-2 rounded-xl flex items-center justify-center text-white overflow-hidden shadow-lg hover:scale-105 transition-transform text-center duration-300 bg-gradient-to-r ${colors[index % colors.length]}`} // Cycle through colors
               >
                 <div className="relative z-10">
-                  <h3 className="font-medium text-xs md:text-sm leading-tight text-wrap">{post.title}</h3>
+                  <h3 className="font-medium text-[12px] md:text-sm leading-tight text-wrap">{post.title}</h3>
                   {/* The 'count' property doesn't exist on our dynamic posts, so it's removed */}
                 </div>
-                <div className="absolute top-1 right-1 w-5 h-5 bg-white/20 rounded-full flex items-center justify-center group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-1 right-1 w-5 h-5 bg-white/20 rounded-full items-center justify-center group-hover:opacity-100 transition-opacity sm:flex hidden">
                   <ArrowUpRight className="w-4 h-4 text-white" />
                 </div>
               </a>
