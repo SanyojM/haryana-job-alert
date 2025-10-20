@@ -69,7 +69,7 @@ export function AuthDialog({
         password: loginPassword,
       });
       
-      await login(data.access_token);
+      const role = await login(data.access_token);
 
       // Close dialog
       onOpenChange(false);
@@ -77,6 +77,10 @@ export function AuthDialog({
       // Reset form
       setLoginEmail("");
       setLoginPassword("");
+
+      if(role === "admin") {
+        router.push("/admin");
+      }
 
     } catch (err: unknown) {
       setLoginError("Invalid email or password.");
