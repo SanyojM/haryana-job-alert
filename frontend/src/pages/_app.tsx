@@ -62,11 +62,6 @@ export default function App({ Component, pageProps }: AppProps) {
       )}
       {router.pathname.startsWith('/admin') ? (
         <AdminAuthGuard>
-          {loading && (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-          <HashLoader color="#8a79ab" size={100} />
-            </div>
-          )}
           <Component {...pageProps} />
         </AdminAuthGuard>
       ) : (
