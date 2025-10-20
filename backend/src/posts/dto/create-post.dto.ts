@@ -35,13 +35,25 @@ export class CreatePostDto {
   @IsOptional()
   thumbnail_url?: string;
 
-  @IsString()
-  @IsOptional()
-  external_url?: string;
-
   @IsArray()
   @IsInt({ each: true })
   @ArrayNotEmpty()
   @IsOptional()
   tags?: number[]; // Array of tag IDs
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsString()
+  @IsOptional()
+  meta_title?: string;
+
+  @IsString()
+  @IsOptional()
+  meta_description?: string;
+
+  @IsString()
+  @IsOptional()
+  meta_keywords?: string;
 }
