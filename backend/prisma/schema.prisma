@@ -227,7 +227,6 @@ model posts {
   title          String
   slug           String          @unique
   content        String
-  external_url   String?
   thumbnail_url  String?
   published_at   DateTime?       @db.Timestamp(6)
   created_by     BigInt?
@@ -238,6 +237,12 @@ model posts {
   content_html   String?
   comments       comments[]
   post_tags      post_tags[]
+
+  description      String?
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
+
   categories     categories?     @relation(fields: [category_id], references: [id], onUpdate: NoAction)
   users          users?          @relation(fields: [created_by], references: [id], onUpdate: NoAction)
   post_templates post_templates? @relation(fields: [template_id], references: [id], onUpdate: NoAction)
