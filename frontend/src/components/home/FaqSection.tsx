@@ -67,7 +67,7 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="bg-gray-100 py-12 px-2">
+    <section className="bg-white py-12 px-2">
       <div>
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center mb-10">
           FAQ&#39;s

@@ -17,6 +17,7 @@ import { MobileLoginCard } from '../auth/LoginCard';
 type TestHeaderProps = {
    seriesId: string;
    seriesName: string;
+   description: string;
   title: string;
   price: number | null;
   level: string;
@@ -32,6 +33,7 @@ type TestHeaderProps = {
 export default function TestHeader({
   seriesId,
   seriesName,
+  description,
   title,
   price,
   level,
@@ -173,9 +175,14 @@ export default function TestHeader({
               <span className='text-gray-400'>|</span>
               <div className="flex items-center gap-1.5"><Users size={16} /> {users} Users</div>
               <span className='text-gray-400'>|</span>
-              <div className="flex items-center gap-1.5 text-cyan-500"><Globe size={16} /> {language}</div>
+              <div className="flex items-center gap-1.5 text-blue-400">
+                <Image src="/lang.png" width={18} height={18} alt='lang' />
+                {language}</div>
             </div>
 
+            <div>
+              <p>{}</p>
+            </div>
             {/* Features List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-gray-800 font-medium mb-12">
               {featureGroups.map((group, groupIndex) => (

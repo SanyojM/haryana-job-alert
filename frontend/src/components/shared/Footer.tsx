@@ -17,7 +17,7 @@ const importantPages = [
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-gray-800 pt-16 pb-8 px-4 sm:px-6 lg:px-8 rounded-tl-[50px] rounded-tr-[50px]">
+    <footer className="bg-white text-gray-800 pt-16 pb-8 px-4 sm:px-6 lg:px-8 rounded-tl-[50px] rounded-tr-[50px] shadow-md">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           

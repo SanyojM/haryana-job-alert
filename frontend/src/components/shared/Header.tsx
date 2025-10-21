@@ -87,7 +87,7 @@ export default function Header() {
         }
       `}</style>
 
-      <header className="bg-gray-100">
+      <header className='bg-white'>
         <div className="bg-black text-white py-1 overflow-hidden whitespace-nowrap text-sm">
           <div className="marquee-content flex">
             <p className="px-4">
@@ -112,11 +112,12 @@ export default function Header() {
 
         <nav className="lg:container mx-auto px-4 mt-2 sm:mt-5">
           <div className="flex items-center justify-between h-20">
-            {/* <Link href="/" className="flex-shrink-0">
-              <h1 className="text-2xl font-bold playfair">
+            <Link href="/" className="flex-shrink-0">
+              <img className="h-14 w-14 rounded-full" src="/logo.png" alt="Haryana Job Alert Logo" />
+              {/* <h1 className="text-xl font-bold italic">
                 Haryana <span className="text-green-600">Job</span> Alert
-              </h1>
-            </Link> */}
+              </h1> */}
+            </Link>
 
             <div className="hidden lg:flex items-center justify-center flex-1 mr-14">
               <div className="p-2 rounded-xl border">
@@ -172,18 +173,14 @@ export default function Header() {
                   </HoverCard>
                   <div className="border-l border-gray-200 ml-2 pl-4 flex items-center space-x-3">
                     {isLoggedIn ? (
-                      // --- LOGGED-IN STATE ---
-                      // Show HoverCard with Avatar
                       <HoverCard openDelay={0} closeDelay={200}>
                         <HoverCardTrigger asChild>
                           <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                             <Avatar className="h-8 w-8 bg-blue-500">
-                              {/* Use the user's image */}
                               <AvatarImage
                                 src={user?.avatar_url || "/user.png"}
                                 alt={user.full_name || "User"}
                               />
-                              {/* Fallback to user's initials */}
                               <AvatarFallback>
                                 {user.full_name
                                   ? user.full_name.charAt(0).toUpperCase()
@@ -196,7 +193,6 @@ export default function Header() {
                           className="w-60 p-2 bg-gray-100 rounded-3xl mt-6 mr-14"
                           side="bottom"
                         >
-                          {/* This is the menu content */}
                           <div className="flex flex-col space-y-1 border-2 border-gray-200 rounded-2xl bg-white">
                             <div className="font-bold p-3 pb-0.5">
                               {user.full_name || "User"}

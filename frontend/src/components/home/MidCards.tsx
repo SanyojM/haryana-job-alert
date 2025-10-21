@@ -67,7 +67,7 @@ const MidCard = ({ title, description, posts, index }: MidCardProps) => (
 
 export default function MidCardSection({ categories, posts }: MidCardSectionProps) {
   return (
-    <section className="bg-gray-100 py-12 px-2 md:px-0">
+    <section className="bg-gray-100 py-12 px-4 md:px-0">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8">
           {categories.map((category, index) => (

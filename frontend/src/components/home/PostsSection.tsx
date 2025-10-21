@@ -24,7 +24,7 @@ const features = [
 // The component now accepts a 'posts' prop
 export default function PostsSection({ posts }: { posts: Post[] }) {
   return (
-    <section className="bg-gray-100 px-2">
+    <section className="bg-white px-2">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6 mb-12">
           {/* We now map over the 'posts' from the props */}

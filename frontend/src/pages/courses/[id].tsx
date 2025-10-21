@@ -3,6 +3,7 @@ import CourseDescription from "@/components/courses/CourseDescription";
 import CourseEnrollmentCard from "@/components/courses/CourseEnrollmentCard";
 import CourseHeader from "@/components/courses/CourseHeader";
 import AdBanner from "@/components/shared/AdBanner";
+import BannerHeader from "@/components/shared/BannerHeader";
 import Header from "@/components/shared/Header";
 
 type CoursePageProps = {
@@ -55,7 +56,7 @@ export default function CoursePage({ id }: CoursePageProps) {
 
     return (
         <div className="bg-gray-100">
-            <Header />
+            <BannerHeader />
             <div className="mt-6">
                 <CourseHeader
                     title={courseData.title}

@@ -43,7 +43,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
 
   return (
-    <div className='bg-gray-100'>
+    <div className="bg-white">
       <Head>
         <title>Haryana Job Alert - Latest Govt Jobs, Results, Admit Cards</title>
         <meta name="description" content="Your one-stop destination for the latest government job alerts, exam results, and admit cards in Haryana and across India." />

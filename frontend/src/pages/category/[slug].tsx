@@ -22,6 +22,7 @@ import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import BannerHeader from "@/components/shared/BannerHeader";
 
 interface Category {
   id: number;
@@ -134,7 +135,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
         />
       </Head>
 
-      <Header />
+      <BannerHeader />
       <main className="max-w-6xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4">
         <div className="lg:col-span-3">
           <Breadcrumb className="mb-6">
