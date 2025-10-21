@@ -38,7 +38,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
   const [selectedCategorySlug, setSelectedCategorySlug] = useState('all');
-  console.log("rdcfgvbhjnertrvgtybhjxdrcfghvbjdrtfvygbh", series)
 
   const uniqueCategories = useMemo(() => {
     const categoriesMap = new Map<string, SeriesCategory>();

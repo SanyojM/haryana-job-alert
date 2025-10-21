@@ -47,9 +47,9 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
         </p>
 
         <div className="mt-8 flex items-center justify-center gap-4">
-          <button className="w-full sm:w-auto bg-white rounded-xl shadow-md px-1 py-1 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg cursor-pointer hover:scale-105 duration-300 transition-transform hover:bg-gradient-to-r hover:from-[#222627] hover:to-[#414245] hover:text-white" onClick={() => setShowSignupForm(true)}>
-            <span className='sm:text-sm text-xs pl-3'>Login / Register</span>
-            <span className="ml-4 w-10 h-10 rounded-md bg-green-400 object-cover flex items-center justify-center">
+          <button className="group w-full sm:w-auto bg-gradient-to-r from-[#222627] to-[#414245] rounded-xl shadow-md px-1 py-1 flex items-center justify-between font-semibold text-white hover:shadow-lg cursor-pointer hover:scale-105 duration-300 transition-transform hover:bg-gradient-to-b hover:from-[#1c1e47] hover:via-[#2b2d6c] hover:to-[#34387e]" onClick={() => setShowSignupForm(true)}>
+            <span className='sm:text-sm text-sm pl-3'>Login / Register</span>
+            <span className="ml-4 w-10 h-10 rounded-md bg-green-400 group-hover:bg-white object-cover flex items-center justify-center">
               <Image src="/arrow.png" width={48} height={48} alt='arrow' className='rounded-md' />
             </span>
           </button>

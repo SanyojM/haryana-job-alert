@@ -19,6 +19,7 @@ import CourseSection from '@/components/home/CourseSection';
 import FaqSection from '@/components/home/FaqSection';
 import { MockSeries } from "./mock-tests";
 import FloatingSocials from "@/components/shared/FloatingSocials";
+import FancyContainer from "@/components/about/FancyContainer";
 
 interface HomePageProps {
   posts: Post[];
@@ -29,11 +30,9 @@ interface HomePageProps {
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     // Fetch both posts and categories at the same time
-    const [posts, categories, series] = await Promise.all([
-        api.get('/posts'),
-        api.get('/categories'),
-        api.get('/mock-series'),
-    ]);
+    const posts = await api.get('/posts');
+    const categories = await api.get('/categories');
+    const series = await api.get('/mock-series');
     return { props: { posts, categories, series } };
   } catch (error) {
     console.error("Failed to fetch data for homepage:", error);
@@ -42,13 +41,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
-  console.log("Categories fetched for homepage:", categories);
-  console.log("Posts fetched for homepage:", posts);
-  console.log("Mock series fetched for homepage:", series);
-
-  const answerKeyPosts = posts.filter(p => p.categories?.name === 'Answer Key').slice(0, 6);
-  const admitCardPosts = posts.filter(p => p.categories?.name === 'Admit Cards').slice(0, 5);
-  const admissionPosts = posts.filter(p => p.categories?.name === 'Admissions').slice(0, 5);
 
   return (
     <div className='bg-gray-100'>
@@ -79,7 +71,8 @@ const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
           </div>
         </div>
         <div>
-          <ProfileCard />
+          {/* <ProfileCard /> */}
+          <FancyContainer/>
         </div>
       </main>
       <Footer />
