@@ -19,7 +19,7 @@ interface MidCardProps {
 
 // Reusable component for a single card
 const MidCard = ({ title, description, posts }: MidCardProps) => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full rounded-2xl shadow-md">
         <div className={`bg-gradient-to-r from-[#5055CA] to-[#8B90F8] text-white text-center md:font-bold font-medium text-sm md:text-2xl py-4 rounded-t-2xl`}>
             {title}
         </div>
@@ -53,7 +53,7 @@ const MidCard = ({ title, description, posts }: MidCardProps) => (
 
 export default function MidCardSection({ categories, posts }: MidCardSectionProps) {
   return (
-    <section className="bg-gray-100 py-12 px-4 md:px-0">
+    <section className="bg-white py-12 px-4 md:px-0">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {categories.map(category => (

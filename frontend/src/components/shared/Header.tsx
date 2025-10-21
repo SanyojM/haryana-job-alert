@@ -51,7 +51,7 @@ export default function Header() {
         }
       `}</style>
 
-      <header className='bg-gray-100'>
+      <header className='bg-white'>
         <div className="bg-black text-white py-1 overflow-hidden whitespace-nowrap text-sm">
           <div className="marquee-content flex">
             <p className="px-4">You can Now Give MOCK TESTS on Haryana Job Alert for FREE.</p>

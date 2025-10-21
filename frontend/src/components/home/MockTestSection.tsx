@@ -38,7 +38,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
   const [selectedCategorySlug, setSelectedCategorySlug] = useState('all');
-  console.log("rdcfgvbhjnertrvgtybhjxdrcfghvbjdrtfvygbh", series)
 
   const uniqueCategories = useMemo(() => {
     const categoriesMap = new Map<string, SeriesCategory>();
@@ -85,7 +84,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
   };
 
   return (
-    <section className="bg-gray-100 py-12">
+    <section className="bg-white py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-800 mb-2">Mock Tests</h2>
@@ -93,7 +92,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
         </div>
 
         {uniqueCategories.length > 0 && (
-          <div className="mb-4 bg-white p-1 rounded-xl shadow-sm flex items-center justify-between">
+          <div className="mb-4 bg-white p-1 rounded-xl shadow-md flex items-center justify-between">
             <div className="flex items-center space-x-3 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => setSelectedCategorySlug('all')}
@@ -137,7 +136,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
             </p>
           </div>
         ) : (
-          <div className="flex overflow-x-auto scrollbar-hide gap-3">
+          <div className="flex overflow-x-auto scrollbar-hide gap-3 py-2">
             {filteredSeries.map((s) => {
               const testCount = getTestCount(s);
               const freeTestCount = getFreeTestCount(s);
@@ -148,7 +147,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
               return (
                 <div
                   key={s.id}
-                  className="bg-white w-[70%] md:w-[32%] flex-shrink-0 rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col hover:shadow-lg transition-shadow"
+                  className="bg-white w-[70%] md:w-[30%] flex-shrink-0 rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col hover:shadow-lg transition-shadow"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
