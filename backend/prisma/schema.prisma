@@ -233,7 +233,6 @@ model posts {
   created_at     DateTime?       @default(now()) @db.Timestamp(6)
   updated_at     DateTime?       @default(now()) @db.Timestamp(6)
   template_id    BigInt?
-  content_json   Json?
   content_html   String?
   comments       comments[]
   post_tags      post_tags[]
