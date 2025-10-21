@@ -235,21 +235,16 @@ export class FormsService {
     if (files && files.length > 0) {
       for (const file of files) {
         const fieldName = file.fieldname;
-        const timestamp = Date.now();
-        const fileName = `${timestamp}-${file.originalname}`;
-        const path = `forms/${form.id}/${fileName}`;
-        
-        const { data, error } = await this.supabase.uploadFile(
-          path, 
-          file.buffer,
-          file.mimetype
-        );
-        
-        if (error) {
+        try {
+          const publicUrl = await this.supabase.uploadFile(
+            file,
+            'forms', // bucket name
+            `${form.id}` // path within bucket
+          );
+          formData[fieldName] = publicUrl;
+        } catch (error) {
           throw new BadRequestException(`File upload failed: ${error.message}`);
         }
-        
-        formData[fieldName] = data.publicUrl;
       }
     }
 

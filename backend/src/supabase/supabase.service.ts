@@ -1,41 +1,51 @@
-// supabase.service.ts
+// src/supabase/supabase.service.ts
+
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private supabaseUrl: string;
 
-  constructor() {
-    const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // use service key for server-side uploads
-    if (!url || !key) {
-      throw new InternalServerErrorException('Supabase credentials are not set');
+  constructor(private configService: ConfigService) {
+    const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
+    const supabaseKey = this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('FATAL: Supabase URL or Key not found in .env');
+      throw new InternalServerErrorException('Supabase URL or Key not provided in .env');
     }
 
-    this.supabase = createClient(url, key);
+    this.supabaseUrl = supabaseUrl;
+    
+    this.supabase = createClient(this.supabaseUrl, supabaseKey);
   }
 
-  /**
-   * Uploads a file buffer to Supabase Storage and returns public URL
-   */
-  async uploadFile(path: string, fileBuffer: Buffer, mimeType?: string) {
-    const bucketName = 'forms'; // your bucket
+  async uploadFile(file: Express.Multer.File, bucket: string, path: string): Promise<string> {
+    const fileName = `${path}/${Date.now()}-${file.originalname}`;
+
     const { data, error } = await this.supabase.storage
-      .from(bucketName)
-      .upload(path, fileBuffer, {
-        contentType: mimeType,
-        upsert: true,
+      .from(bucket)
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false,
       });
 
-      console.log('Supabase upload response:', data, error);
-
     if (error) {
-      return { error };
+      // The error.message is what you are seeing: "Unexpected token '<', ..."
+      throw new InternalServerErrorException(`Failed to upload file to Supabase: ${error.message}`);
     }
 
-    // Generate public URL
-    const { data: { publicUrl } } = this.supabase.storage.from(bucketName).getPublicUrl(path);
-    return { data: { ...data, publicUrl } };
+    const { data: publicUrlData } = this.supabase.storage
+      .from(bucket)
+      .getPublicUrl(data.path);
+      
+    if (!publicUrlData) {
+      throw new InternalServerErrorException('Could not retrieve public URL for the uploaded file.');
+    }
+
+    return publicUrlData.publicUrl;
   }
 }

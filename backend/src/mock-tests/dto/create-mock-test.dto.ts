@@ -9,6 +9,10 @@ export class CreateMockTestDto {
   @IsOptional()
   description?: string;
 
+  @IsString()
+  @IsOptional()
+  thumbnail_url?: string;
+
   @IsInt()
   duration_minutes: number;
 

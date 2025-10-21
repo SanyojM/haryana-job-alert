@@ -1,5 +1,6 @@
 import { ArrowRight, Instagram, Star } from 'lucide-react';
 import Image from 'next/image';
+import FancyContainer from '../about/FancyContainer';
 
 // --- TYPE DEFINITION ---
 interface ProfileCardProps {

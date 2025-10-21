@@ -68,7 +68,7 @@ const TestPage: NextPage<TestPageProps> = ({ test }) => {
   // Protection effect: redirect if not logged in
   useEffect(() => {
     if (!isAuthLoading && !user) {
-      router.replace(`/auth/login?redirect=${router.asPath}`);
+      router.replace('/');
     }
   }, [user, isAuthLoading, router]);
 

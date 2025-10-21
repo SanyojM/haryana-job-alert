@@ -67,7 +67,7 @@ export default function TestResultPage() {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.push('/auth/login?redirect=/dashboard');
+      router.push('/');
     }
   }, [user, authLoading, router]);
 

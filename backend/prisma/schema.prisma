@@ -227,17 +227,21 @@ model posts {
   title          String
   slug           String          @unique
   content        String
-  external_url   String?
   thumbnail_url  String?
   published_at   DateTime?       @db.Timestamp(6)
   created_by     BigInt?
   created_at     DateTime?       @default(now()) @db.Timestamp(6)
   updated_at     DateTime?       @default(now()) @db.Timestamp(6)
   template_id    BigInt?
-  content_json   Json?
   content_html   String?
   comments       comments[]
   post_tags      post_tags[]
+
+  description      String?
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
+
   categories     categories?     @relation(fields: [category_id], references: [id], onUpdate: NoAction)
   users          users?          @relation(fields: [created_by], references: [id], onUpdate: NoAction)
   post_templates post_templates? @relation(fields: [template_id], references: [id], onUpdate: NoAction)

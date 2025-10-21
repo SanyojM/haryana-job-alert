@@ -87,24 +87,21 @@ Handles all operations related to blog posts.
 ### Create a new post
 
 -   **Route:** `POST /posts`
--   **Description:** Creates a new post. Note: This route currently uses a hardcoded user ID. It should be updated to use the ID from an authenticated user.
--   **Request Body:**
-    ```json
-    {
-      "title": "string",
-      "slug": "string (unique)",
-      "category_id": "number",
-      "template_id": "number",
-      "content_json": {},
-      "content_html": "string (optional)",
-      "thumbnail_url": "string (optional)",
-      "external_url": "string (optional)",
-      "tags": [
-        "number"
-      ]
-    }
-    ```
--   **Returns:** The newly created Post object.
+-   **Description:** Creates a new post. If a thumbnail is included, it's uploaded automatically.
+-   **Request Body:** `multipart/form-data`. This request combines the image file and all other post data.
+    -   **file** (file, optional): The thumbnail image file.
+    -   **title** (string): The title of the post.
+    -   **slug** (string): The unique slug for the URL.
+    -   **category\_id** (number): The ID of the category.
+    -   **template\_id** (number): The ID of the post template.
+    -   **content\_html** (string): The final HTML content of the post.
+    -   **content\_json** (string, optional): A JSON string representing the structured content (e.g., `'{"key":"value"}'`).
+    -   **tags** (string, optional): A comma-separated string of tag IDs (e.g., `"1,2,3"`).
+    -   **description** (string, optional)
+    -   **meta\_title** (string, optional)
+    -   **meta\_description** (string, optional)
+    -   **meta\_keywords** (string, optional)
+-   **Returns:** The newly created Post object, including the `thumbnail_url` if a file was uploaded.
 
 ### Get all posts
 
@@ -345,18 +342,15 @@ Handles mock tests, the series they belong to, and related entities.
 ### Create a new mock test series
 
 -   **Route:** `POST /mock-series`
--   **Description:** Creates a new series to group mock tests.
--   **Request Body:**
-    ```json
-    {
-      "title": "string",
-      "description": "string (optional)",
-      "price": "number",
-      "category_id": "number",
-      "tagIds": ["number"]
-    }
-    ```
--   **Returns:** The newly created Mock Series object.
+-   **Description:** Creates a new series to group mock tests. If a thumbnail is included, it's uploaded automatically.
+-   **Request Body:** `multipart/form-data`. This request combines the image file and all other series data.
+    -   **file** (file, optional): The thumbnail image file.
+    -   **title** (string): The title of the series.
+    -   **description** (string, optional)
+    -   **price** (number): The price of the series.
+    -   **category\_id** (number): The ID of the mock category.
+    -   **tagIds** (string, optional): A comma-separated string of tag IDs (e.g., `"1,2,3"`).
+-   **Returns:** The newly created Mock Series object, including the `thumbnail_url` if a file was uploaded.
 
 ### Get a single mock series by ID
 

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import * as express from 'express'; // Import express
 
 // Add this line to handle BigInt serialization
 (BigInt.prototype as any).toJSON = function () {
@@ -8,18 +9,27 @@ import { ValidationPipe } from '@nestjs/common';
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // 1. Disable the default body parser
+  const app = await NestFactory.create(AppModule, {
+    bodyParser: false,
+  });
 
-  // Enable validation and transformation
+  // 2. Add the global validation pipe (your existing code is perfect here)
   app.useGlobalPipes(
     new ValidationPipe({
-      transform: true, // Enable transformation
-      whitelist: true, // Strip properties that don't have decorators
+      transform: true,
+      whitelist: true,
       transformOptions: {
-        enableImplicitConversion: true, // Enable implicit type conversion
+        enableImplicitConversion: true,
       },
     }),
   );
+
+  // 3. Manually add the body parsers for JSON and URL-encoded data.
+  //    This is necessary because we disabled the default one.
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
 
   // Enable CORS
   app.enableCors({

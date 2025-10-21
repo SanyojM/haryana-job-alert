@@ -335,21 +335,16 @@ export class FilesService {
 
   // Upload file to Supabase (admin)
   async uploadFileToStorage(file: Express.Multer.File, folder: string = 'files') {
-    const timestamp = Date.now();
-    const fileName = `${timestamp}-${file.originalname}`;
-    const path = `${folder}/${fileName}`;
-
-    const { data, error } = await this.supabase.uploadFile(
-      path,
-      file.buffer,
-      file.mimetype
-    );
-
-    if (error) {
+    try {
+      const publicUrl = await this.supabase.uploadFile(
+        file,
+        'downloadable', // bucket name
+        folder // path within bucket
+      );
+      return { publicUrl };
+    } catch (error) {
       throw new BadRequestException(`File upload failed: ${error.message}`);
     }
-
-    return data;
   }
 
   // Get file purchases (admin)

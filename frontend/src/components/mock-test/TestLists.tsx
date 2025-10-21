@@ -51,7 +51,7 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
     }
 
     if (!user) {
-      router.push(`/auth/login?redirect=${router.asPath}`);
+      alert('Please login to access this test.');
       return;
     }
 
