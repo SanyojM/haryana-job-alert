@@ -12,13 +12,18 @@ interface TopLinksSectionProps {
 export default function TopLinksSection({ categories }: TopLinksSectionProps) {
   const [showSignupForm, setShowSignupForm] = useState(false);
   return (
-    <section className="bg-white py-8 px-4 sm:px-6 lg:px-8">
+    <section className="bg-white pb-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto text-center">
-        <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
-          Haryana <span className="text-yellow-500">Job</span> Alert is a <span className="text-yellow-500">FREE</span> Website to get
-        </h1>
+        <div className="flex items-center justify-center gap-4 mb-6">
 
-        <div className="mt-10 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-6 gap-y-4">
+        <img src="/leftarrow.png" alt="" className='inline w-17 h-12 object-cover' />
+        <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
+          Haryana <span className="text-red-500">Job</span> Alert is a <span className="text-red-500">FREE</span> Website to get
+        </h1>
+        <img src="/rightarrow.png" alt="" className='inline w-17 h-12 object-cover' />
+        </div>
+
+        <div className="mt-10 flex flex-wrap space-x-3 space-y-2 justify-center">
           {/* Map over the dynamic categories to create links */}
           {categories.map((category) => (
             <Link
@@ -27,12 +32,12 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
               passHref
               legacyBehavior
             >
-              <a className="inline-flex items-center md:justify-center text-gray-700 font-medium hover:scale-105 hover:text-gray-900 transition-transform duration-200">
+              <a className="inline-flex items-center justify-center text-gray-700 font-medium hover:scale-105 hover:text-gray-900 transition-transform duration-200">
                 <CheckCircle2 className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
                 <span className="whitespace-nowrap underline decoration-gray-300 transition-all text-sm text-center">
                   {category.name}
                 </span>
-                <ArrowUpRight className="w-4 h-4 text-gray-400 ml-1" />
+                <ArrowUpRight className="min-w-4 min-h-4 w-4 h-4 text-gray-400 ml-1" />
               </a>
             </Link>
           ))}

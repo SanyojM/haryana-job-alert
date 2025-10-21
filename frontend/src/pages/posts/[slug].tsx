@@ -41,7 +41,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
         {/* You can also add dynamic meta descriptions for SEO */}
         <meta name="description" content={`Details & Information about ${post.title}.`} />
       </Head>
-      <BannerHeader />
+      <Header />
       <main className="container mx-auto px-4 py-8 max-w-5xl">
         {/* NEW: Breadcrumb Navigation */}
         <Breadcrumb className="mb-4">

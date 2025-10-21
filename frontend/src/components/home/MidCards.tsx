@@ -32,15 +32,15 @@ const MidCard = ({ title, description, posts, index }: MidCardProps) => (
           ];
           const chosen = gradientOptions[index % gradientOptions.length];
           return (
-            <div className={`bg-gradient-to-r ${chosen} text-white text-center md:font-bold font-medium text-sm md:text-2xl py-4 rounded-t-2xl`}>
+            <div className={`bg-gradient-to-r ${chosen} text-white text-center md:font-bold font-medium text-sm md:text-2xl py-4 rounded-t-2xl shadow-lg`}>
               {title}
             </div>
           );
         })()}
-        <div className="bg-black text-white text-center text-xs py-2 px-2">
+        <div className="bg-black shadow text-white text-center text-xs py-2 px-2">
             {description}
         </div>
-        <div className="bg-white py-6 px-4 rounded-b-2xl flex-grow">
+        <div className="bg-white shadow-lg py-6 px-4 rounded-b-2xl flex-grow">
             <ul className="space-y-4">
                 {posts.map(post => (
                     <li key={post.id}>
@@ -67,7 +67,7 @@ const MidCard = ({ title, description, posts, index }: MidCardProps) => (
 
 export default function MidCardSection({ categories, posts }: MidCardSectionProps) {
   return (
-    <section className="bg-gray-100 py-12 px-4 md:px-0">
+    <section className="bg-white py-12 px-4 md:px-0">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8">
           {categories.map((category, index) => (

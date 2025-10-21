@@ -56,7 +56,7 @@ export default function CoursePage({ id }: CoursePageProps) {
 
     return (
         <div className="bg-gray-100">
-            <BannerHeader />
+            <Header />
             <div className="mt-6">
                 <CourseHeader
                     title={courseData.title}

@@ -12,13 +12,13 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
       <div
         className={`relative p-10 max-w-5xl mx-auto min-h-[350px] h-[436px] md:h-[0] sm:h-[0] bg-gradient-to-r from-[#093028] to-[#237a57] rounded-[50px] ${className}`}
         >
-        <div className="absolute top-0 -right-[10px] w-[80px] h-[100px] bg-gray-100 rounded-bl-[50px]" />
-        <div className="absolute bottom-0 left-0 w-[180px] h-[80px] bg-gray-100 rounded-tr-[50px]" />
+        <div className="absolute top-0 -right-[10px] w-[80px] h-[100px] bg-white rounded-bl-[50px]" />
+        <div className="absolute bottom-0 left-0 w-[180px] h-[80px] bg-white rounded-tr-[50px]" />
 
-        <div className="absolute top-0 right-[70px] w-[70px] h-[70px] bg-gray-100" />
+        <div className="absolute top-0 right-[70px] w-[70px] h-[70px] bg-white" />
         <div className="absolute top-0 right-[70px] w-[80px] h-[80px] bg-gradient-to-r from-[#185E46] sm:from-[#1f6e51] to-[#207454] rounded-tr-[50px]" />
         
-        <div className="absolute bottom-[80px] left-0 w-[70px] h-[70px] bg-gray-100" />
+        <div className="absolute bottom-[80px] left-0 w-[70px] h-[70px] bg-white" />
         <div className="absolute bottom-[80px] left-0 w-[80px] h-[80px] bg-gradient-to-r from-[#093028] to-[#0d3d2e] sm:to-[#0a362d] rounded-bl-[50px] z-10" />
 
         <div className="absolute top-5 -right-3 bg-black p-4 rounded-full">
@@ -89,13 +89,13 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
       <div
         className={`relative p-10 max-w-5xl mx-auto min-h-[350px] h-[436px] md:h-[0] sm:h-[0] bg-gradient-to-r from-[#93291e] to-[#ed213a] rounded-[50px] ${className}`}
         >
-        <div className="absolute top-0 -right-[10px] w-[80px] h-[100px] bg-gray-100 rounded-bl-[50px]" />
-        <div className="absolute -bottom-[10px] left-0 w-[180px] h-[90px] bg-gray-100 rounded-tr-[50px]" />
+        <div className="absolute top-0 -right-[10px] w-[80px] h-[100px] bg-white rounded-bl-[50px]" />
+        <div className="absolute -bottom-[10px] left-0 w-[180px] h-[90px] bg-white rounded-tr-[50px]" />
 
-        <div className="absolute top-0 right-[70px] w-[70px] h-[70px] bg-gray-100" />
+        <div className="absolute top-0 right-[70px] w-[70px] h-[70px] bg-white" />
         <div className="absolute top-0 right-[70px] w-[80px] h-[80px] bg-gradient-to-r from-[#c4282f] sm:from-[#df2537] to-[#e72238] rounded-tr-[50px]" />
         
-        <div className="absolute bottom-[80px] left-0 w-[70px] h-[70px] bg-gray-100" />
+        <div className="absolute bottom-[80px] left-0 w-[70px] h-[70px] bg-white" />
         <div className="absolute bottom-[80px] left-0 w-[80px] h-[80px] bg-gradient-to-r from-[#93291e] to-[#a42a24] sm:to-[#9a2821] rounded-bl-[50px] z-10" />
 
         <div className="absolute top-5 -right-3 bg-black p-4 rounded-full">

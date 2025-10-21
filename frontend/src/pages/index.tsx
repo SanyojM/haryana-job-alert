@@ -20,6 +20,7 @@ import FaqSection from '@/components/home/FaqSection';
 import { MockSeries } from "./mock-tests";
 import FloatingSocials from "@/components/shared/FloatingSocials";
 import FancyContainer from "@/components/about/FancyContainer";
+import BannerHeader from "@/components/shared/BannerHeader";
 
 interface HomePageProps {
   posts: Post[];
@@ -43,12 +44,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
 
   return (
-    <div className="bg-white">
+    <div className="bg-white overflow-x-hidden">
       <Head>
         <title>Haryana Job Alert - Latest Govt Jobs, Results, Admit Cards</title>
         <meta name="description" content="Your one-stop destination for the latest government job alerts, exam results, and admit cards in Haryana and across India." />
       </Head>
       <Header />
+        {/* <Header /> */}
       <TopLinksSection categories={categories} />
       <main className="md:p-4 container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">

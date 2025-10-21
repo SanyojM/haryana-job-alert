@@ -135,7 +135,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
         />
       </Head>
 
-      <BannerHeader />
+      <Header />
       <main className="max-w-6xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4">
         <div className="lg:col-span-3">
           <Breadcrumb className="mb-6">
