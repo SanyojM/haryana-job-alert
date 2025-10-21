@@ -7,17 +7,40 @@ import {
   Delete,
   Put,
   ParseIntPipe,
-  UseGuards, Req
+  UseGuards, 
+  Req,
+  UseInterceptors, // Add this
+  UploadedFile,     // Add this
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express'; // Add this
 import { MockSeriesService } from './mock-series.service';
 import { CreateMockSeriesDto } from './dto/create-mock-series.dto';
 import { UpdateMockSeriesDto } from './dto/update-mock-series.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { SupabaseService } from '../supabase/supabase.service'; // Add this
 import type { Request } from 'express';
 
 @Controller('mock-series')
 export class MockSeriesController {
-  constructor(private readonly mockSeriesService: MockSeriesService) {}
+  constructor(
+    private readonly mockSeriesService: MockSeriesService,
+    private readonly supabaseService: SupabaseService, // Inject SupabaseService
+  ) {}
+
+  @Post()
+  @UseInterceptors(FileInterceptor('file')) // Handle 'file' upload
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createMockSeriesDto: CreateMockSeriesDto
+  ) {
+    if (file) {
+      const bucket = 'thumbnails';
+      const path = 'mock-series';
+      const publicUrl = await this.supabaseService.uploadFile(file, bucket, path);
+      createMockSeriesDto.thumbnail_url = publicUrl; // Add URL to the DTO
+    }
+    return this.mockSeriesService.create(createMockSeriesDto);
+  }
 
   @Get('slug/:categorySlug/:seriesSlug')
   findBySlugs(
@@ -25,11 +48,6 @@ export class MockSeriesController {
     @Param('seriesSlug') seriesSlug: string,
   ) {
     return this.mockSeriesService.findBySlugs(categorySlug, seriesSlug);
-  }
-
-  @Post()
-  create(@Body() createMockSeriesDto: CreateMockSeriesDto) {
-    return this.mockSeriesService.create(createMockSeriesDto);
   }
 
   @Get()

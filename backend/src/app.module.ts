@@ -16,13 +16,13 @@ import { MockTestsModule } from './mock-tests/mock-tests.module';
 import { MockQuestionsModule } from './mock-questions/mock-questions.module';
 import { PaymentsModule } from './payments/payments.module';
 import { DeploymentModule } from './deployment/deployment.module';
-import { FormsModule } from './forms/forms.module';
-import { FilesModule } from './files/files.module';
+import { SupabaseModule } from './supabase/supabase.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    SupabaseModule,
     AuthModule,
     CoursesModule,
     PostsModule,
@@ -36,8 +36,6 @@ import { FilesModule } from './files/files.module';
     MockQuestionsModule,
     PaymentsModule,
     DeploymentModule,
-    FormsModule,
-    FilesModule
   ],
   controllers: [AppController],
   providers: [AppService],

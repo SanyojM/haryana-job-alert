@@ -53,14 +53,22 @@ export class MockSeriesService {
       include: {
         mock_categories: true,
         mock_series_tags: { include: { tag: true } },
-        mock_series_tests: { include: { test: true } }, 
+        mock_series_tests: { include: { test: true } },
       },
     });
 
     if (!series) {
       throw new NotFoundException(`Mock Series with ID ${id} not found`);
     }
-    return series;
+
+    const enrolled_users_count = await this.prisma.payments.count({
+      where: {
+        mock_series_id: id,
+        status: 'success',
+      },
+    });
+
+    return { ...series, enrolled_users_count };
   }
 
   async findBySlugs(categorySlug: string, seriesSlug: string) {
@@ -76,7 +84,7 @@ export class MockSeriesService {
         mock_series_tags: { include: { tag: true } },
         mock_series_tests: {
           include: {
-            test: true, // Include the full test details for each test in the series
+            test: true,
           },
         },
       },
@@ -87,7 +95,15 @@ export class MockSeriesService {
         `Series with slug "${seriesSlug}" in category "${categorySlug}" not found`,
       );
     }
-    return series;
+
+    const enrolled_users_count = await this.prisma.payments.count({
+      where: {
+        mock_series_id: series.id,
+        status: 'success',
+      },
+    });
+
+    return { ...series, enrolled_users_count };
   }
 
   async addTestToSeries(seriesId: number, testId: number) {

@@ -10,12 +10,10 @@ export class PostsService {
   async create(createPostDto: CreatePostDto, userId: number) {
     const { tags, ...postData } = createPostDto;
 
-    // TODO: Add validation here to ensure content_json matches the template_id's structure
-
     return this.prisma.posts.create({
       data: {
         ...postData,
-        content: postData.content_html || '', // <-- FIX: Provide a value for the required 'content' field
+        content: postData.content_html || '',
         created_by: userId,
         post_tags: tags
           ? {

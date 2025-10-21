@@ -94,9 +94,9 @@ Handles all operations related to blog posts.
     -   **slug** (string): The unique slug for the URL.
     -   **category\_id** (number): The ID of the category.
     -   **template\_id** (number): The ID of the post template.
-    -   **content\_json** (string): A JSON string representing the structured content (e.g., `'{"key":"value"}'`).
+    -   **content\_html** (string): The final HTML content of the post.
+    -   **content\_json** (string, optional): A JSON string representing the structured content (e.g., `'{"key":"value"}'`).
     -   **tags** (string, optional): A comma-separated string of tag IDs (e.g., `"1,2,3"`).
-    -   **content\_html** (string, optional)
     -   **description** (string, optional)
     -   **meta\_title** (string, optional)
     -   **meta\_description** (string, optional)
