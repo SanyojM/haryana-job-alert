@@ -13,6 +13,7 @@ import SeriesSection from "@/components/mock-test/SeriesSection";
 import MockTestSection from "@/components/home/MockTestSection";
 import { MockSeries } from "@/pages/mock-tests";
 import FloatingSocials from "@/components/shared/FloatingSocials";
+import BannerHeader from "@/components/shared/BannerHeader";
 
 
 export type MockTest = {
@@ -29,9 +30,10 @@ export type MockSeriesDetails = {
   id: string;
   title: string;
   slug: string;
-  description: string | null;
+  description?: string;
   price: number | null;
   created_at: string;
+  enrolled_users_count: number;
   mock_series_tests: {
       test: MockTest;
       full_slug: string;
@@ -63,6 +65,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories }) => {
+  console.log("series", categories)
   const testsInSeries = series.mock_series_tests.map(join => ({
     ...join.test,
     full_slug: join.full_slug
@@ -77,7 +80,7 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories })
 
   return (
     <div className="bg-gray-100 ">
-      <Header />
+      <BannerHeader />
       <div className="px-4 py-8 container mx-auto max-w-6xl">
         <TestHeader
           seriesId={series.id}
@@ -88,16 +91,17 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories })
           lastUpdated={formattedDate}
           totalTests={testsInSeries.length}
           freeTests={testsInSeries.filter(t => t.is_free).length}
-          users={0} 
+          users={series.enrolled_users_count} 
           level="Beginner"
           language="English, Hindi"
           features={[]}
+          description={series.description || ''}
         />
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
           <main className="lg:col-span-3 space-y-8 md:ml-24">
             <TestLists tests={testsInSeries} seriesId={series.id} />
             <AdBanner text={"Google Ads"} className="h-48"/>
-            <SeriesSection series={categories} />
+            <SeriesSection categories={categories} series={series}/>
             <FaqSection />
           </main>
           <aside className="space-y-8 col-span-1 ml-12">

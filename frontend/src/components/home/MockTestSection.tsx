@@ -148,7 +148,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
               return (
                 <div
                   key={s.id}
-                  className="bg-white w-[70%] lg:w-[35%] flex-shrink-0 rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col hover:shadow-lg transition-shadow"
+                  className="bg-white w-[70%] md:w-[32%] flex-shrink-0 rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col hover:shadow-lg transition-shadow"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">

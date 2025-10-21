@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import BannerHeader from "@/components/shared/BannerHeader";
 
 // Types for our data
 type MockQuestion = {
@@ -101,7 +102,7 @@ const TestPage: NextPage<TestPageProps> = ({ test }) => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <Header />
+      <BannerHeader />
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">{test.title}</h1>
