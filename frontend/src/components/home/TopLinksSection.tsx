@@ -54,7 +54,7 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
             </span>
           </button>
           
-          <button className="w-full sm:w-auto bg-white rounded-xl shadow-md p-1 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg transition-transform cursor-pointer hover:scale-105 duration-300 hover:bg-gradient-to-r hover:from-[#222627] hover:to-[#414245] hover:text-white">
+          <button className="w-full sm:w-auto bg-gradient-to-r from-[#222627] to-[#414245] rounded-xl shadow-md p-1 flex items-center justify-between font-semibold text-white hover:shadow-lg transition-transform cursor-pointer hover:scale-105 duration-300 hover:bg-gradient-to-b hover:from-[#1c1e47] hover:via-[#2b2d6c] hover:to-[#34387e]">
             <a href="https://whatsapp.com/channel/0029VbBbS0R7T8bTQRa9230i" target="_blank" rel="noopener noreferrer" className='w-full flex items-center justify-between'>
             <span className='text-sm pl-3'>Join WhatsApp</span>
             <Image
