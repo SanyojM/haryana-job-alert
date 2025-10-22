@@ -42,7 +42,7 @@ const courses = [
 
 export default function CourseSection() {
   return (
-    <section className="bg-gray-100 py-12">
+    <section className="bg-white py-12">
       <div className="">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center mb-10">
           Courses
@@ -50,7 +50,7 @@ export default function CourseSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
           {courses.map((course) => (
-            <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col">
+            <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col shadow-sm">
               <div className="relative">
                 <a href={course.courseUrl}>
                   <Image

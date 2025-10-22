@@ -7,9 +7,29 @@ import Link from 'next/link';
 import { GetServerSideProps, NextPage } from 'next';
 import { MockSeries } from '@/pages/mock-tests';
 import Image from 'next/image';
+import { MockTest } from '@/pages/mock-tests/[categorySlug]/[seriesSlug]';
+
+export type MockSeriesDetails = {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  price: number | null;
+  created_at: string;
+  enrolled_users_count: number;
+  mock_series_tests: {
+      test: MockTest;
+      full_slug: string;
+  }[];
+  mock_categories: {
+    name: string;
+    slug: string;
+  };
+};
 
 interface MockTestsHomePageProps {
-    series: MockSeries[];
+    categories: MockSeries[];
+    series: MockSeriesDetails
 }
 
 interface MockCategory {
@@ -24,25 +44,28 @@ type SeriesCategory = {
     slug: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-    try {
-        const [series] = await Promise.all([
-            api.get('/mock-series'),
-        ]);
-        return { props: { series } };
-    } catch (error) {
-        console.error("Failed to fetch mock data:", error);
-        return { props: { series: [] } };
-    }
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { categorySlug, seriesSlug } = context.params!;
+  try {
+    const [categories, series] = await Promise.all([
+        api.get('/mock-series'),
+        api.get(`/mock-series/slug/${categorySlug}/${seriesSlug}`)
+    ]);
+    return { props: { categories, series } };
+  } catch (error) {
+    console.error(`Failed to fetch mock series with slug /${categorySlug}/${seriesSlug}:`, error);
+    console.error("Failed to fetch data for homepage:", error);
+    return { props: { categories: [], series: [] } };
+  }
 };
 
-const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
+const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series }) => {
     const [selectedCategorySlug, setSelectedCategorySlug] = useState('all');
 
     const uniqueCategories = useMemo(() => {
         const categoriesMap = new Map<string, SeriesCategory>();
 
-        series.forEach(s => {
+        categories.forEach(s => {
             // Check if the series has a category and it hasn't been added yet
             if (s.mock_categories && !categoriesMap.has(s.mock_categories.slug)) {
                 categoriesMap.set(s.mock_categories.slug, s.mock_categories);
@@ -51,14 +74,14 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
 
         // Return an array of the unique category objects
         return Array.from(categoriesMap.values());
-    }, [series]);
+    }, [categories]);
 
     const filteredSeries = useMemo(() => {
         if (selectedCategorySlug === 'all') {
-            return series;
+            return categories;
         }
-        return series.filter(s => s.mock_categories?.slug === selectedCategorySlug);
-    }, [series, selectedCategorySlug]);
+        return categories.filter(s => s.mock_categories?.slug === selectedCategorySlug);
+    }, [categories, selectedCategorySlug]);
 
     const getLogoText = (categoryName?: string) => {
         if (!categoryName) return 'MT';
@@ -131,7 +154,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                         </p>
                     </div>
                 ) : (
-                    <div className="flex overflow-x-auto scrollbar-hide gap-3">
+                    <div className="flex overflow-x-auto scrollbar-hide gap-3 py-2">
                         {filteredSeries.map((s) => {
                             const testCount = getTestCount(s);
                             const freeTestCount = getFreeTestCount(s);
@@ -142,7 +165,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                             return (
                                 <div
                                     key={s.id}
-                                    className="bg-white flex-shrink-0 md:w-[30%] w-[70%] rounded-2xl border border-gray-200/90 shadow-lg p-3 flex flex-col hover:shadow-xl transition-shadow duration-300"
+                                    className="bg-white flex-shrink-0 md:w-[32%] w-[70%] rounded-2xl border border-gray-200/90 shadow-sm p-3 flex flex-col hover:shadow-xl transition-shadow duration-300"
                                 >
                                     {/* --- Card Header --- */}
                                     <div className="flex justify-between items-start mb-4">
@@ -153,7 +176,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                                         {/* User Count Pill */}
                                         <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
                                             <Image src="/bolt.png" width={12} height={12} alt='bolt' />
-                                            <span className='text-[7px]'>1977+ Users</span>
+                                            <span className='text-[7px]'>{series.enrolled_users_count || 0}</span>
                                         </div>
                                     </div>
 
@@ -172,8 +195,8 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
 
                                     {/* --- Language --- */}
                                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                                        <Languages className="w-4 h-4 text-gray-500 text-xs" />
-                                        <span className='text-xs'>{formatLanguages(s.mock_series_tags)}</span>
+                                        <Image src="/lang.png" width={12} height={12} alt='lang' />
+                                        <span className='text-xs text-blue-400'>English, Hindi</span>
                                     </div>
 
                                     <hr className="mb-2" />

@@ -62,7 +62,7 @@ const courses = [
 
 export default function CourseSection() {
     return (
-        <section className="bg-gray-100 py-12 px-4 md:px-0">
+        <section className="bg-white py-12 px-4 md:px-0">
             <div>
                 <div className="text-center mb-20">
                     <Image
@@ -74,9 +74,9 @@ export default function CourseSection() {
                     />
                 </div>
 
-                <div className="flex overflow-x-auto scrollbar-hide gap-3">
+                <div className="flex overflow-x-auto scrollbar-hide gap-3 py-2">
                     {courses.map((course) => (
-                        <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col flex-shrink-0 w-[70%] md:w-[35%]">
+                        <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col flex-shrink-0 w-[70%] md:w-[32%] shadow-sm">
                             <div className="relative">
                                 <a href={course.courseUrl}>
                                     <Image

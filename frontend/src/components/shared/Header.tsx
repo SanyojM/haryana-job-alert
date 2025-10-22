@@ -87,7 +87,7 @@ export default function Header() {
         }
       `}</style>
 
-      <header className="bg-gray-100">
+      <header className="bg-white relative">
         <div className="bg-black text-white py-1 overflow-hidden whitespace-nowrap text-sm">
           <div className="marquee-content flex">
             <p className="px-4">
@@ -108,18 +108,36 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="max-w-5xl "></div>
-
-        <nav className="lg:container mx-auto px-4 mt-2 sm:mt-5">
-          <div className="flex items-center justify-between h-20">
-            {/* <Link href="/" className="flex-shrink-0">
-              <h1 className="text-2xl font-bold playfair">
-                Haryana <span className="text-green-600">Job</span> Alert
+        <div>
+          <div
+            className="relative bg-center bg-cover h-25 sm:h-45 w-full"
+            style={{ backgroundImage: "url('/header.jpg')" }}
+          >
+            <div className="absolute top-5 sm:top-12 left-[45%] translate-x-[-50%] sm:left-[35vw] flex flex-col items-end">
+              <h1 className="text-2xl sm:text-4xl font-bold text-white z-10 flex items-center">
+                <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
+                <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
               </h1>
-            </Link> */}
+              <img src="/header-arrow.jpg" alt="" className="h-4 w-30 sm:w-40 object-cover -mt-3 -mr-10 sm:mr-0" />
+            </div>
+
+            <div className="absolute lg:block playfair text-xl !font-light hidden top-25 text-white left-[60vw] z-20">
+              theharyana<span className="text-[#fdf500]">jobalerts</span>.com
+            </div>
+          </div>
+        </div>
+
+        <nav className="lg:container mx-auto px-4 mt-2 sm:mt-5 relative bottom-12 sm:-top-15">
+          <div className="flex items-center justify-between h-20">
+            <Link href="/" className="flex-shrink-0">
+              {/* <img className="h-14 w-14 rounded-full" src="/logo.png" alt="Haryana Job Alert Logo" /> */}
+              {/* <h1 className="text-xl font-bold italic">
+                Haryana <span className="text-green-600">Job</span> Alert
+              </h1> */}
+            </Link>
 
             <div className="hidden lg:flex items-center justify-center flex-1 mr-14">
-              <div className="p-2 rounded-xl border">
+              <div className="p-2 rounded-xl border bg-gray-100">
                 <div className="bg-white rounded-xl shadow-lg px-4 py-2 flex items-center space-x-2">
                   {navLinks.map((link) => (
                     <Link
@@ -172,18 +190,14 @@ export default function Header() {
                   </HoverCard>
                   <div className="border-l border-gray-200 ml-2 pl-4 flex items-center space-x-3">
                     {isLoggedIn ? (
-                      // --- LOGGED-IN STATE ---
-                      // Show HoverCard with Avatar
                       <HoverCard openDelay={0} closeDelay={200}>
                         <HoverCardTrigger asChild>
                           <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                            <Avatar className="h-8 w-8 bg-blue-500">
-                              {/* Use the user's image */}
+                            <Avatar className="min-h-8 min-w-8 bg-blue-500">
                               <AvatarImage
                                 src={user?.avatar_url || "/user.png"}
                                 alt={user.full_name || "User"}
                               />
-                              {/* Fallback to user's initials */}
                               <AvatarFallback>
                                 {user.full_name
                                   ? user.full_name.charAt(0).toUpperCase()
@@ -196,7 +210,6 @@ export default function Header() {
                           className="w-60 p-2 bg-gray-100 rounded-3xl mt-6 mr-14"
                           side="bottom"
                         >
-                          {/* This is the menu content */}
                           <div className="flex flex-col space-y-1 border-2 border-gray-200 rounded-2xl bg-white">
                             <div className="font-bold p-3 pb-0.5">
                               {user.full_name || "User"}
@@ -238,10 +251,9 @@ export default function Header() {
                         className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md"
                         aria-label="Login"
                       >
-                        <Image
+                        <img
                           src="/profile.png"
-                          width={18}
-                          height={18}
+                          className="min-h-5 min-w-5 w-5"
                           alt="Login"
                         />
                       </button>
@@ -258,38 +270,96 @@ export default function Header() {
             </div>
 
             <div
-              className="lg:hidden flex items-center justify-between w-full"
+              className="lg:hidden w-full border rounded-xl p-2 bg-gray-100"
               ref={menuRef}
             >
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 rounded-md text-gray-700 hover:bg-gray-200"
-              >
-                {isMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
-              </button>
-              {isMenuOpen && !isLoggedIn && (
+              <div className="bg-white rounded-lg shadow-lg flex items-center justify-between w-full py-0.5 px-3">
                 <button
-                  onClick={() => setIsAuthDialogOpen(true)}
-                  className="p-1"
-                  aria-label="Login"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="rounded-md text-gray-700 hover:bg-gray-200"
                 >
-                  <img
-                    src="/profile.png"
-                    className="h-7 w-7 rounded-lg bg-white p-1"
-                    alt="Login"
-                  />
+                  {isMenuOpen ? (
+                    <X className="w-6 h-6" />
+                  ) : (
+                    <Menu className="w-5 h-5" />
+                  )}
                 </button>
-              )}
+                {isLoggedIn ? (
+                  <HoverCard openDelay={0} closeDelay={200}>
+                    <HoverCardTrigger asChild>
+                      <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                        <Avatar className="min-h-6 min-w-6 w-4 h-4 bg-blue-500">
+                          <AvatarImage
+                            src={user?.avatar_url || "/user.png"}
+                            alt={user.full_name || "User"}
+                          />
+                          <AvatarFallback>
+                            {user.full_name
+                              ? user.full_name.charAt(0).toUpperCase()
+                              : "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                      </button>
+                    </HoverCardTrigger>
+                    <HoverCardContent
+                      className="w-60 p-2 bg-gray-100 rounded-3xl mt-6 mr-14"
+                      side="bottom"
+                    >
+                      <div className="flex flex-col space-y-1 border-2 border-gray-200 rounded-2xl bg-white">
+                        <div className="font-bold p-3 pb-0.5">
+                          {user.full_name || "User"}
+                        </div>
+                        <div className="text-sm text-gray-600 pl-3">
+                          {user.email || "No Email"}
+                        </div>
+                        <hr className="my-1" />
+                        <Link
+                          href="/dashboard"
+                          className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700 whitespace-nowrap"
+                        >
+                          <House className="w-4 h-4" />
+                          <span>Dashboard</span>
+                        </Link>
+                        <Link
+                          href="/dashboard/profile/edit"
+                          className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700 whitespace-nowrap"
+                        >
+                          <User className="w-4 h-4" />
+                          <span>Profile</span>
+                        </Link>
+                        <hr className="my-1" />
+                        <button
+                          onClick={() => logout()} // Call your logout function
+                          className="flex items-center gap-3 p-2 rounded-md hover:bg-red-50 text-sm font-medium text-red-600 w-full whitespace-nowrap"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span>Logout</span>
+                        </button>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                ) : (
+                  // --- LOGGED-OUT STATE ---
+                  // Show original image, open auth dialog on click
+                  <button
+                    onClick={() => setIsAuthDialogOpen(true)}
+                    className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md"
+                    aria-label="Login"
+                  >
+                    <img
+                      src="/profile.png"
+                      className="min-h-5 min-w-5 w-5 h-5"
+                      alt="Login"
+                    />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </nav>
 
         {isMenuOpen && (
-          <div className="lg:hidden bg-gray-100 shadow-lg absolute w-full z-999 origin-top-right">
+          <div className="lg:hidden bg-gray-100 shadow-lg absolute w-full z-999 origin-top-right top-45">
             <div className="flex flex-col space-y-1 px-2 pt-2 pb-3">
               {navLinks.map((link) => (
                 <Link
@@ -347,48 +417,6 @@ export default function Header() {
                   </div>
                 </CollapsibleContent>
               </Collapsible>
-
-              {isLoggedIn ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium whitespace-nowrap"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <House className="w-4 h-4" />
-                    Dashboard
-                  </Link>
-                  <Link
-                    href="/dashboard/profile/edit"
-                    className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium whitespace-nowrap"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <User className="w-4 h-4" />
-                    Profile
-                  </Link>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="flex items-center gap-2 text-red-500 hover:bg-red-50 p-2 rounded-md text-base font-medium w-full text-left whitespace-nowrap"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => {
-                    setIsAuthDialogOpen(true);
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md text-base font-medium w-full whitespace-nowrap"
-                >
-                  <User className="w-4 h-4" />
-                  Login
-                </button>
-              )}
             </div>
           </div>
         )}

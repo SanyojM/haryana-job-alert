@@ -17,6 +17,8 @@ import { MockQuestionsModule } from './mock-questions/mock-questions.module';
 import { PaymentsModule } from './payments/payments.module';
 import { DeploymentModule } from './deployment/deployment.module';
 import { SupabaseModule } from './supabase/supabase.module';
+import { FilesModule } from './files/files.module';
+import { FormsModule } from './forms/forms.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { SupabaseModule } from './supabase/supabase.module';
     MockQuestionsModule,
     PaymentsModule,
     DeploymentModule,
+    FilesModule,
+    FormsModule
   ],
   controllers: [AppController],
   providers: [AppService],

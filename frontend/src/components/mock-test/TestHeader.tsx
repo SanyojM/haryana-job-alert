@@ -10,12 +10,14 @@ import { Input } from '@/components/ui/input'; // Import Input
 import { useRouter } from 'next/router'; // Import the router
 import { useAuth } from '@/context/AuthContext';
 import { api } from '@/lib/api';
+import { MobileLoginCard } from '../auth/LoginCard';
 
 
 // Define the types for the props this component will accept
 type TestHeaderProps = {
    seriesId: string;
    seriesName: string;
+   description: string;
   title: string;
   price: number | null;
   level: string;
@@ -31,6 +33,7 @@ type TestHeaderProps = {
 export default function TestHeader({
   seriesId,
   seriesName,
+  description,
   title,
   price,
   level,
@@ -172,9 +175,14 @@ export default function TestHeader({
               <span className='text-gray-400'>|</span>
               <div className="flex items-center gap-1.5"><Users size={16} /> {users} Users</div>
               <span className='text-gray-400'>|</span>
-              <div className="flex items-center gap-1.5 text-cyan-500"><Globe size={16} /> {language}</div>
+              <div className="flex items-center gap-1.5 text-blue-400">
+                <Image src="/lang.png" width={18} height={18} alt='lang' />
+                {language}</div>
             </div>
 
+            <div>
+              <p>{}</p>
+            </div>
             {/* Features List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-gray-800 font-medium mb-12">
               {featureGroups.map((group, groupIndex) => (
@@ -214,38 +222,18 @@ export default function TestHeader({
 
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
         <div className=' flex flex-col gap-4 w-full lg:w-[50%]'>
-        {!isLoggedIn && ( // Use the dynamic isLoggedIn state
+        {!isLoggedIn ? ( // Use the dynamic isLoggedIn state
           <div className="flex-shrink-0 w-full">
-            <div className="bg-white rounded-lg border border-gray-400 p-6 text-center">
-              <h3 className="text-lg font-bold text-gray-800 mb-1">Sign Up To Test Your Exam</h3>
-              <p className="text-gray-800 font-bold mb-4">Knowledge Now!</p>
-              
-              <form className="space-y-3 border border-gray-400 p-6 rounded-lg" onSubmit={handleSignUp}>
-                <div className="relative border-b border-gray-300 mb-4">
-                  <Smartphone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <Input 
-                    type="email" 
-                    placeholder="Enter your Email" 
-                    className="w-full border-none pl-10 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <Button type="submit" className="w-full bg-gradient-to-r from-green-950 to-green-600 text-white font-semibold py-2.5 rounded-md hover:opacity-90 transition-opacity">
-                  Sign up now
-                </Button>
-              </form>
-              <p className="text-xs text-gray-500 mt-3 flex items-center justify-center gap-1">
-                {/* ... svg icon ... */}
-                {users} users have enrolled till now
-              </p>
+            <MobileLoginCard />
+          </div>
+        ):(
+          <div className="flex-shrink-0 w-full">
+            <div className="bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] p-4 flex items-center justify-center rounded-2xl min-h-[550px] relative">
+              <img src="/ribbon.webp" alt="" className='absolute -left-7 -top-4 w-2/3' />
             </div>
           </div>
         )}
         <AdBanner text={'Google Ads'} className='h-48 md:hidden'/>
-        <div className="mt-6 hidden lg:flex justify-center">
-             <Image src="/illust2.png" alt="Person studying for an exam" width={600} height={400} />
-           </div>
         </div>
       </div>
     </section>

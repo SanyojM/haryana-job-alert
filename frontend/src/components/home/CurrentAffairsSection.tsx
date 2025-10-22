@@ -103,7 +103,7 @@ export default function CurrentAffairsSection() {
     };
 
     return (
-        <section className="bg-gray-100 py-12 px-4 md:px-0">
+        <section className="bg-white py-12 px-4 md:px-0">
             <div>
                 <div className="text-center mb-20">
                     <Image
@@ -163,7 +163,7 @@ export default function CurrentAffairsSection() {
                         {/* 11. Update render logic to use dynamic data */}
                         <div className="grid grid-cols-2 lg:grid-cols-3 md:gap-6 gap-3">
                             {filteredArticles.slice(0, 3).map((post) => (
-                                <div key={post.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col mb-8">
+                                <div key={post.id} className="bg-white p-2 rounded-2xl shadow-sm overflow-hidden flex flex-col mb-8">
                                     <Image
                                         src={post.thumbnail_url || PLACEHOLDER_IMAGE}
                                         alt={post.title}

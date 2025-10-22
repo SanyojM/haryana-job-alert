@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { ArrowUpRight, User } from "lucide-react";
+import BannerHeader from "@/components/shared/BannerHeader";
 
 export type MockSeries = {
   id: string;

@@ -14,6 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import BannerHeader from "@/components/shared/BannerHeader";
 
 interface PostPageProps {
   post: Post;

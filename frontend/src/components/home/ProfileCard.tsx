@@ -1,5 +1,6 @@
 import { ArrowRight, Instagram, Star } from 'lucide-react';
 import Image from 'next/image';
+import FancyContainer from '../about/FancyContainer';
 
 // --- TYPE DEFINITION ---
 interface ProfileCardProps {
@@ -105,7 +106,7 @@ const ProfileCard = ({ name, title, description, profileImageUrl, logoUrl, insta
 // --- MAIN EXPORTED SECTION ---
 export default function FoundersSection() {
   return (
-    <section className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <section className="bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="space-y-12">
         {foundersData.map((founder) => (
           <ProfileCard key={founder.name} {...founder} />

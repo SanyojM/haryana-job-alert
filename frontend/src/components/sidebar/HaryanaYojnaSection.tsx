@@ -23,7 +23,7 @@ const yojnaVideos = [
 
 export default function HaryanaYojnaSection() {
   return (
-    <section className="bg-gray-100">
+    <section className="bg-white">
       <div className="">
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">
           Haryana Yojna
@@ -37,7 +37,7 @@ export default function HaryanaYojnaSection() {
               : 'https://placehold.co/600x400/cccccc/333333?text=Video+Unavailable';
 
             return (
-              <div key={video.id} className="rounded-2xl overflow-hidden p-2 bg-white">
+              <div key={video.id} className="rounded-2xl overflow-hidden p-2 bg-white shadow-sm">
                 <a href={video.videoUrl} target="_blank" rel="noopener noreferrer">
                   <Image
                     src={thumbnailUrl} 
@@ -92,7 +92,7 @@ export default function HaryanaYojnaSection() {
               : 'https://placehold.co/600x400/cccccc/333333?text=Video+Unavailable';
 
             return (
-              <div key={video.id} className="rounded-2xl overflow-hidden p-2 bg-white">
+              <div key={video.id} className="rounded-2xl overflow-hidden p-2 bg-white shadow-sm">
                 <a href={video.videoUrl} target="_blank" rel="noopener noreferrer">
                   <Image
                     src={thumbnailUrl} 

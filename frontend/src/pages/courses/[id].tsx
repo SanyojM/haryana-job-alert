@@ -3,6 +3,7 @@ import CourseDescription from "@/components/courses/CourseDescription";
 import CourseEnrollmentCard from "@/components/courses/CourseEnrollmentCard";
 import CourseHeader from "@/components/courses/CourseHeader";
 import AdBanner from "@/components/shared/AdBanner";
+import BannerHeader from "@/components/shared/BannerHeader";
 import Header from "@/components/shared/Header";
 
 type CoursePageProps = {
