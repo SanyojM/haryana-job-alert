@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea"; // Added Textarea import
+import { Textarea } from "@/components/ui/textarea";
 import type { Post } from "@/pages/admin/posts";
 import type { Category, PostTemplate, Tag } from "@/pages/admin/posts/new";
 
@@ -69,7 +69,6 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
     }
   };
 
-  // --- Updated handleSubmit ---
   const handleSubmit = async (e: React.FormEvent) => {
     const authToken = token || undefined;
     e.preventDefault();
@@ -82,10 +81,8 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
     
     const finalContentHtml = editorRef.current.getContent();
     
-    // Use FormData for multipart/form-data
     const formData = new FormData();
     
-    // Append all fields as per the new API spec
     formData.append('title', title);
     formData.append('slug', slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''));
     formData.append('category_id', categoryId);
@@ -95,29 +92,24 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
         formData.append('template_id', templateId);
     }
     
-    // Format tags as a comma-separated string
     const tagsString = Array.from(selectedTags).join(',');
     if (tagsString) {
         formData.append('tags', tagsString);
     }
     
-    // Append new meta fields
     if (metaTitle) formData.append('meta_title', metaTitle);
     if (metaDescription) formData.append('meta_description', metaDescription);
     if (metaKeywords) formData.append('meta_keywords', metaKeywords);
     
-    // Append the file if one is selected
     if (thumbnailFile) {
         formData.append('file', thumbnailFile);
     }
 
     try {
       if (isEditMode) {
-        // Assume the PUT endpoint also accepts FormData for updates
-        // Note: Some backends prefer POST with a _method="PUT" field for FormData
         await api.put(`/posts/${initialData.id}`, formData, authToken);
       } else {
-        await api.post('/posts', formData, authToken);
+        await api.postFormData('/posts', formData, authToken);
       }
       router.push('/admin/posts');
     } catch (err: unknown) {
@@ -194,7 +186,6 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
             </CardContent>
           </Card>
 
-          {/* --- Updated Meta Information Card --- */}
           <Card>
             <CardHeader><CardTitle>Meta Information</CardTitle></CardHeader>
             <CardContent className="space-y-4">
@@ -205,7 +196,6 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
                 {!thumbnailFile && initialData?.thumbnail_url && (
                   <div className="mt-2">
                     <p className="text-sm text-muted-foreground">Current thumbnail:</p>
-                    {/* Ensure the URL is absolute or handled by your image provider */}
                     <img src={initialData.thumbnail_url} alt="Current thumbnail" className="w-32 h-32 object-cover rounded-md border" />
                   </div>
                 )}
@@ -235,7 +225,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
                 <div key={tag.id} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`tag-${tag.id}`}
-                    checked={selectedTags.has(tag.id.toString())} // Ensure consistent string comparison
+                    checked={selectedTags.has(tag.id.toString())}
                     onCheckedChange={() => handleTagChange(tag.id.toString())}
                   />
                   <Label htmlFor={`tag-${tag.id}`}>{tag.name}</Label>

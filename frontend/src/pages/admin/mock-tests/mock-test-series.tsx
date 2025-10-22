@@ -15,7 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-// Types for our data
 type MockCategory = { id: string; name: string; };
 type MockTag = { id: string; name: string; };
 type MockSeries = {
@@ -58,7 +57,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
   const openDialog = (seriesData: Partial<MockSeries> | null = null) => {
-    setEditingSeries(seriesData ? { ...seriesData } : { title: '', description: '', price: 0, category_id: '', mock_series_tags: [], thumbnail_url: '' });
+    setEditingSeries(seriesData ? { ...seriesData } : { title: '', description: '', price: 0, category_id: '', mock_series_tags: [] });
     setThumbnailFile(null);
     setIsEditDialogOpen(true);
   };
@@ -72,24 +71,46 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
   const handleSave = async (e: React.FormEvent) => {
     const authToken = token || undefined;
     e.preventDefault();
-    if (!editingSeries) return;
+    if (!editingSeries || !editingSeries.category_id) {
+      alert("Category is required.");
+      return;
+    }
     setIsLoading(true);
 
     const isEditMode = !!editingSeries.id;
     const endpoint = isEditMode ? `/mock-series/${editingSeries.id}` : '/mock-series';
-    const method = isEditMode ? 'put' : 'post';
 
-    const payload = {
-      thumbnail_url: editingSeries.thumbnail_url,
-      title: editingSeries.title,
-      description: editingSeries.description,
-      price: Number(editingSeries.price),
-      category_id: Number(editingSeries.category_id),
-      tagIds: editingSeries.mock_series_tags?.map(t => Number(t.tag.id)) || [],
-    };
+    const formData = new FormData();
+
+    formData.append('title', editingSeries.title || '');
+    formData.append('price', (editingSeries.price || 0).toString());
+    formData.append('category_id', editingSeries.category_id);
+    
+    if (editingSeries.description) {
+      formData.append('description', editingSeries.description);
+    }
+
+    const tagIds = editingSeries.mock_series_tags
+      ?.map(t => t.tag.id)
+      .join(',') || '';
+      
+    if (tagIds) {
+      formData.append('tagIds', tagIds);
+    }
+
+    if (thumbnailFile) {
+      formData.append('file', thumbnailFile);
+    }
 
     try {
-      const result = await api[method](endpoint, payload, authToken);
+      let result;
+
+      if (isEditMode) {
+        result = await api.put(endpoint, formData, authToken);
+      } else {
+        result = await api.postFormData(endpoint, formData, authToken);
+      }
+      
       if (isEditMode) {
         setSeries(prev => prev.map(s => (s.id === result.id ? result : s)));
       } else {
@@ -165,10 +186,27 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
                 <Label htmlFor="description">Description</Label>
                 <Textarea id="description" value={editingSeries.description || ''} onChange={(e) => setEditingSeries({ ...editingSeries, description: e.target.value })} />
               </div>
+              
               <div className="space-y-2">
-                <Label htmlFor="thumbnail-url">Thumbnail Image</Label>
-                <Input id="thumbnail-url" type="file" accept="image/*" value={editingSeries.thumbnail_url || ''} onChange={(e) => setEditingSeries({ ...editingSeries, thumbnail_url: e.target.value })}/>
+                <Label htmlFor="thumbnail-file">Thumbnail Image</Label>
+                <Input 
+                  id="thumbnail-file" 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleFileChange}
+                />
+                {!thumbnailFile && editingSeries.id && editingSeries.thumbnail_url && (
+                  <div className="mt-2">
+                    <p className="text-sm text-muted-foreground">Current thumbnail:</p>
+                    <img 
+                      src={editingSeries.thumbnail_url} 
+                      alt="Current thumbnail" 
+                      className="w-24 h-24 object-cover rounded-md border" 
+                    />
+                  </div>
+                )}
               </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="price">Price</Label>
