@@ -1,4 +1,5 @@
 import { Youtube, Instagram, Phone } from 'lucide-react';
+import Image from 'next/image';
 
 export default function FloatingSocials() {
   return (
@@ -24,7 +25,7 @@ export default function FloatingSocials() {
             aria-label="Contact"
             className='hover:scale-105'
           >
-            <Phone size={21} />
+            <Image src='/wp-icon.png' width={24} height={24} alt='wp' />
           </a>
         </div>
       </div>

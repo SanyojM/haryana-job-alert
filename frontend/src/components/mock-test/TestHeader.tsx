@@ -133,7 +133,7 @@ export default function TestHeader({
   };
 
   return (
-    <section className="bg-gray-100 p-6 mb-10">
+    <section className="bg-white p-6 mb-10">
       <div className="flex flex-col lg:flex-row gap-8 justify-between">
         
         {/* Left Side: Main Content */}

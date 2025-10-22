@@ -35,7 +35,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
   const categorySlug = post.categories?.name.toLowerCase().replace(/\s+/g, '-') || 'uncategorized';
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-white">
       <Head>
         <title>{`${post.title} | Haryana Job Alert`}</title>
         {/* You can also add dynamic meta descriptions for SEO */}
