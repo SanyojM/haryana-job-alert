@@ -42,6 +42,7 @@ export class MockSeriesService {
       include: {
         mock_categories: true,
         mock_series_tags: { include: { tag: true } },
+        mock_series_tests: { include: { test: true } },
       },
     });
 
@@ -62,6 +63,7 @@ export class MockSeriesService {
       },
     });
 
+    // Build a map from series ID (number) to count, filtering out null keys and converting BigInt to number
     const countsMap = new Map<number, number>(
       paymentCounts
         .filter(count => count.mock_series_id !== null)

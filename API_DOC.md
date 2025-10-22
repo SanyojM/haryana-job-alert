@@ -779,7 +779,7 @@ Handles the text items for the homepage carousel.
 
 -   **Route:** `POST /carousel`
 -   **Authentication:** **JWT Required** with **`admin`** role.
--   **Description:** Creates a new text item for the carousel. If `is_active` is set to `true`, all other items will be automatically set to `false`.
+-   **Description:** Creates a new text item for the carousel. Multiple items can be active simultaneously.
 -   **Request Body:**
     ```json
     {
@@ -817,7 +817,7 @@ Handles the text items for the homepage carousel.
 
 -   **Route:** `PUT /carousel/:id`
 -   **Authentication:** **JWT Required** with **`admin`** role.
--   **Description:** Updates an existing carousel item. If `is_active` is set to `true`, all other items will be automatically set to `false`.
+-   **Description:** Updates an existing carousel item. Multiple items can be active simultaneously.
 -   **URL Parameters:**
     -   `id` (number): The ID of the item to update.
 -   **Request Body:**
