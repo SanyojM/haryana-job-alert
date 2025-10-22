@@ -51,6 +51,10 @@ const data = {
         {
           title: "Users",
           url: "/admin/getting-started/users",
+        },
+        {
+          title: "Carousel",
+          url: "/admin/getting-started/carousel",
         }
       ],
     },

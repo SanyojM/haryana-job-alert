@@ -182,54 +182,6 @@ const ProfilePage: NextPage = () => {
   return (
     <DashboardLayout>
       <div className="max-w-7xl mx-auto">
-        {/* Profile Header Section */}
-        <div className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-6 md:p-8 mb-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            {/* Avatar */}
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-              {user.full_name.charAt(0).toUpperCase()}
-            </div>
-            
-            {/* User Info */}
-            <div className="flex-grow">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-                {user.full_name}
-              </h1>
-              <div className="flex flex-wrap gap-4 text-gray-600">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  <span className="text-sm">{user.email}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span className="text-sm">
-                    Joined {new Date((user as any).created_at).toLocaleDateString('en-US', { 
-                      month: 'long', 
-                      year: 'numeric' 
-                    })}
-                  </span>
-                </div>
-              </div>
-              <div className="mt-3">
-                <Badge variant="secondary" className="text-sm">
-                  {user.role === 'admin' ? '👑 Admin' : '🎓 Student'}
-                </Badge>
-              </div>
-            </div>
-
-            {/* Edit Profile Button */}
-            <div className="w-full md:w-auto">
-              <Button 
-                variant="outline" 
-                className="w-full md:w-auto"
-                onClick={() => router.push('/dashboard/profile/edit')}
-              >
-                Edit Profile
-              </Button>
-            </div>
-          </div>
-        </div>
-
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-white border-2 border-gray-200 hover:shadow-lg transition-shadow">
