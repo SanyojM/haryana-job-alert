@@ -91,6 +91,10 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
     const getTestCount = (mockSeries: MockSeries) => {
         return mockSeries.mock_series_tests?.length || 0;
     };
+   
+    const getUserCount = (mockSeries: MockSeries) => {
+        return mockSeries.enrolled_users_count || 0;
+    };
 
     const getFreeTestCount = (mockSeries: MockSeries) => {
         const count = mockSeries.mock_series_tests?.filter(test => test.test.is_free).length || 0;
@@ -107,7 +111,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
     };
 
     return (
-        <section className="bg-gray-100 py-12">
+        <section className="bg-white py-12">
             <div className="container mx-auto px-4">
                 {uniqueCategories.length > 0 && (
                     <div className="mb-4 bg-white p-1 rounded-xl shadow-sm flex items-center justify-between">
@@ -161,6 +165,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
                             const categorySlug = s.mock_categories?.slug || 'category';
                             const detailUrl = `/mock-tests/${categorySlug}/${s.slug}`;
                             const logoText = getLogoText(s.mock_categories?.name);
+                            const userCount = getUserCount(s);
 
                             return (
                                 <div
@@ -176,7 +181,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
                                         {/* User Count Pill */}
                                         <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
                                             <Image src="/bolt.png" width={12} height={12} alt='bolt' />
-                                            <span className='text-[7px]'>{series.enrolled_users_count || 0}</span>
+                                            <span className='text-[7px]'>{userCount}</span>
                                         </div>
                                     </div>
 

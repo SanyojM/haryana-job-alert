@@ -3,7 +3,7 @@
 
 export default function AboutTestSection() {
   return (
-    <section className="bg-gray-100">
+    <section className="bg-white">
       <div className="px-2">
         {/* Section Title */}
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center mb-10">

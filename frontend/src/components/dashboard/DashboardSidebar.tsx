@@ -96,24 +96,6 @@ export function DashboardSidebar({ isMobileOpen, onMobileClose }: DashboardSideb
         </Link>
       </div>
 
-      {/* User Profile Section */}
-      <div className="p-4 border-b border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
-            {user?.full_name?.charAt(0).toUpperCase()}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-semibold text-gray-900 truncate text-sm">
-              {user?.full_name}
-            </p>
-            <p className="text-xs text-gray-600 truncate">{user?.email}</p>
-            <p className="text-xs text-indigo-600 font-medium capitalize mt-0.5">
-              {user?.role}
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Navigation Items */}
       <nav className="flex-1 overflow-y-auto p-4 space-y-1">
         {navItems.map((item) => {

@@ -69,6 +69,10 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
     return mockSeries.mock_series_tests?.length || 0;
   };
 
+  const getUserCount = (mockSeries: MockSeries) => {
+        return mockSeries.enrolled_users_count || 0;
+    };
+
   const getFreeTestCount = (mockSeries: MockSeries) => {
     const count = mockSeries.mock_series_tests?.filter(test => test.test.is_free).length || 0;
     return count;
@@ -143,6 +147,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
               const categorySlug = s.mock_categories?.slug || 'category';
               const detailUrl = `/mock-tests/${categorySlug}/${s.slug}`;
               const logoText = getLogoText(s.mock_categories?.name);
+              const userCount = getUserCount(s);
 
               return (
                 <div
@@ -154,9 +159,9 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                       <span className="text-slate-700 font-bold text-lg">{logoText}</span>
                     </div>
                     <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
-                                                                <Image src="/bolt.png" width={12} height={12} alt='bolt' />
-                                                                <span className='text-[10px]'>1977+ Users</span>
-                                                            </div>
+                      <Image src="/bolt.png" width={12} height={12} alt='bolt' />
+                      <span className='text-[10px]'>{userCount}</span>
+                    </div>
                   </div>
 
                   <h3 className="font-bold text-gray-800 leading-tight mb-1.5 line-clamp-2">
