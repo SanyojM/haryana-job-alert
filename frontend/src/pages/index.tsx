@@ -50,19 +50,18 @@ const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
         <meta name="description" content="Your one-stop destination for the latest government job alerts, exam results, and admit cards in Haryana and across India." />
       </Head>
       <Header />
-        {/* <Header /> */}
       <TopLinksSection categories={categories} />
       <main className="md:p-4 container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
             <div className="lg:col-span-3 flex flex-col gap-6">
             <PostsSection posts={posts.slice(0, 8)} />
-            <AdBanner text="Google Ads Section" className="h-88" />
+            {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
             <MidCards 
               categories={categories}
               posts={posts}
             />
             <MockTestSection series={series} />
-            <AdBanner text="Google Ads Section" className="h-32" />
+            {/* <AdBanner text="Google Ads Section" className="h-32" /> */}
             <CurrentAffairsSection />
             <CourseSection />
             <AboutSection />

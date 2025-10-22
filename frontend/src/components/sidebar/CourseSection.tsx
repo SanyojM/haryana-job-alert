@@ -18,7 +18,7 @@ const courses = [
       current: 0,
     },
     offerEndsSoon: true,
-    courseUrl: '#',
+    courseUrl: '/courses/id',
   },
   {
     id: 2,
@@ -42,7 +42,7 @@ const courses = [
 
 export default function CourseSection() {
   return (
-    <section className="bg-white py-12">
+    <section className="bg-white pb-12">
       <div className="">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center mb-10">
           Courses
@@ -98,7 +98,7 @@ export default function CourseSection() {
                 <div className="mt-auto flex items-center gap-3">
                   <a
                     href={course.courseUrl}
-                    className="flex-grow bg-gradient-to-r from-red-600 to-gray-800 text-white text-center rounded-lg px-2 py-3 font-semibold text-xs inline-flex items-center justify-center hover:opacity-90 transition-opacity"
+                    className="shine flex-grow bg-gradient-to-r from-red-600 to-gray-800 text-white text-center rounded-lg px-2 py-3 font-semibold text-xs inline-flex items-center justify-center hover:opacity-90 transition-opacity"
                   >
                     View Course
                   </a>

@@ -100,7 +100,7 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories })
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
           <main className="lg:col-span-3 space-y-8 md:ml-24">
             <TestLists tests={testsInSeries} seriesId={series.id} />
-            <AdBanner text={"Google Ads"} className="h-48"/>
+            {/* <AdBanner text={"Google Ads"} className="h-48"/> */}
             <SeriesSection categories={categories} series={series}/>
             <FaqSection />
           </main>

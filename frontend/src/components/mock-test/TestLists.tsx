@@ -102,7 +102,7 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
               <button 
                 onClick={() => handleStartTest(test)}
                 disabled={loadingTestId === test.id}
-                className="flex-shrink-0 w-full sm:w-auto bg-gradient-to-r from-red-600 to-gray-800 text-white font-semibold py-2.5 px-6 rounded-lg inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="shine flex-shrink-0 w-full sm:w-auto bg-gradient-to-r from-red-600 to-gray-800 text-white font-semibold py-2.5 px-6 rounded-lg inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {loadingTestId === test.id ? (
         'Loading...'

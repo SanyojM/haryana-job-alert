@@ -92,8 +92,8 @@ export default function CourseHeader({
         </div>
 
         <div className='flex gap-4 mb-4 fle-wrap flex-col sm:flex-row'>
-            <div className='bg-green-200 text-green-800 px-4 py-2 min-w-[10rem] text-center font-medium rounded-md'>Bestseller</div>
-            <div className='bg-purple-300 text-purple-800 px-4 py-2 min-w-[10rem] text-center font-medium rounded-md'>Free</div>
+            <div className='shine bg-green-200 text-green-800 px-4 py-2 min-w-[10rem] text-center font-medium rounded-md'>Bestseller</div>
+            <div className='shine bg-purple-300 text-purple-800 px-4 py-2 min-w-[10rem] text-center font-medium rounded-md'>Free</div>
         </div>
 
         {/* Meta Info */}
@@ -103,11 +103,11 @@ export default function CourseHeader({
             <div className="flex items-center gap-1.5"><Globe size={16} /> {language}</div>
         </div>
 
-            <AdBanner text={'Google Ads'} className='md:hidden mb-12 h-48' />
+            {/* <AdBanner text={'Google Ads'} className='md:hidden mb-12 h-48' /> */}
         {/* Ratings Block */}
       </div>
         <div className="md:absolute -bottom-25 z-999 bg-white text-gray-800 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg md:ml-6 lg:ml-18">
-            <div className="flex-shrink-0 bg-gradient-to-r from-[#982920] to-[#fb3d3d] p-4 rounded-md">
+            <div className="shine flex-shrink-0 bg-gradient-to-r from-[#982920] to-[#fb3d3d] p-4 rounded-md">
                 <Image src="/logo.png" alt="Logo" width={60} height={60} className="rounded-sm bg-none" />
             </div>
             <div className="flex-grow text-center sm:text-left">
@@ -127,7 +127,7 @@ export default function CourseHeader({
             </div>
         </div>
 
-          <Button className="sm:w-[50%] md:w-[30%] w-full bg-gradient-to-r from-indigo-600 to-indigo-300 xl:hidden mt-8 md:mt-0 md:ml-18">
+          <Button className="shine sm:w-[50%] md:w-[30%] w-full bg-gradient-to-r from-indigo-600 to-indigo-300 xl:hidden mt-8 md:mt-0 md:ml-18">
               Enroll Now
           </Button>
 
@@ -146,7 +146,7 @@ export default function CourseHeader({
             </div>
         </div>
         <div className="p-6">
-            <button className="w-full bg-gradient-to-r from-indigo-600 to-indigo-300 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-colors text-lg">
+            <button className="shine w-full bg-gradient-to-r from-indigo-600 to-indigo-300 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-colors text-lg">
                 Enroll Now
             </button>
             <div className="mt-6 space-y-3 text-gray-600">

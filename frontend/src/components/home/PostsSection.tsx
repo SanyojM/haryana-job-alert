@@ -35,7 +35,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
               passHref
               legacyBehavior>
               <a
-                className={`relative py-2 sm:py-5 px-2 rounded-xl flex items-center justify-center text-white overflow-hidden shadow-lg hover:scale-105 transition-transform text-center duration-300 bg-gradient-to-r ${colors[index % colors.length]}`} // Cycle through colors
+                className={`shine relative py-2 sm:py-5 px-2 rounded-xl flex items-center justify-center text-white overflow-hidden shadow-lg hover:scale-105 transition-transform text-center duration-300 bg-gradient-to-r ${colors[index % colors.length]}`} // Cycle through colors
               >
                 <div className="relative z-10">
                   <h3 className="font-medium text-[12px] md:text-sm leading-tight text-wrap">{post.title}</h3>
