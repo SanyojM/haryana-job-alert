@@ -8,7 +8,10 @@ export type Post = {
   slug: string;
   published_at: string | null;
   created_at: string;
-
+  meta_title?: string;
+  meta_description?: string;
+  template_id?: string;
+  meta_keywords?: string;
   category_id?: number;
   content_html?: string;
   thumbnail_url?: string | null;

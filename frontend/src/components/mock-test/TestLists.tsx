@@ -136,7 +136,7 @@ export default function TestLists({ tests, seriesId }: { tests: MockTestWithSlug
 
 
   return (
-    <section className="bg-gray-100 py-4 md:py-6 rounded-lg">
+    <section className="bg-white py-4 md:py-6 rounded-lg">
       <Tabs defaultValue="all" className="w-full">
         <div className=''>
           <TabsList className="grid w-fit grid-cols-3 mb-4 bg-white">

@@ -1,4 +1,4 @@
-import { useState, useRef} from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { api } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import type { Post } from "@/pages/admin/posts"; 
+import { Textarea } from "@/components/ui/textarea"; // Added Textarea import
+import type { Post } from "@/pages/admin/posts";
 import type { Category, PostTemplate, Tag } from "@/pages/admin/posts/new";
 
 interface CreatePostFormProps {
@@ -20,8 +21,6 @@ interface CreatePostFormProps {
   categories: Category[];
   tags: Tag[];
 }
-
-// Removed unnecessary PROCESS variable; use process.env directly.
 
 export function CreatePostForm({ initialData, templates, categories, tags }: CreatePostFormProps) {
   const { token } = useAuth();
@@ -33,12 +32,15 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
   const [title, setTitle] = useState(initialData?.title || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
   const [categoryId, setCategoryId] = useState<string | undefined>(initialData?.category_id?.toString());
-  const [thumbnailUrl, setThumbnailUrl] = useState(initialData?.thumbnail_url || "");
-  const [externalUrl, setExternalUrl] = useState(initialData?.external_url || "");
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [metaTitle, setMetaTitle] = useState(initialData?.meta_title || "");
+  const [metaDescription, setMetaDescription] = useState(initialData?.meta_description || "");
+  const [metaKeywords, setMetaKeywords] = useState(initialData?.meta_keywords || "");
+  
   const [selectedTags, setSelectedTags] = useState<Set<string>>(
     new Set(initialData?.post_tags?.map((pt: { tag_id: number }) => pt.tag_id.toString()) || [])
   );
-  const [templateId, setTemplateId] = useState<string>("");
+  const [templateId, setTemplateId] = useState<string>(initialData?.template_id?.toString() || "");
   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +48,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
   const [initialContent, setInitialContent] = useState(initialData?.content_html || "");
 
   const handleTemplateChange = (templateId: string) => {
-    const template = templates.find(t => t.id === templateId);
+    const template = templates.find(t => t.id.toString() === templateId);
     setTemplateId(templateId);
     if (template && editorRef.current) {
         editorRef.current.setContent(template.structure);
@@ -61,31 +63,61 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
     });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setThumbnailFile(e.target.files[0]);
+    }
+  };
+
+  // --- Updated handleSubmit ---
   const handleSubmit = async (e: React.FormEvent) => {
     const authToken = token || undefined;
     e.preventDefault();
-    if (!editorRef.current) return;
+    if (!editorRef.current || !categoryId) {
+        setError("Category and content are required.");
+        return;
+    }
     setIsLoading(true);
     setError(null);
     
     const finalContentHtml = editorRef.current.getContent();
-    const postData = {
-      title,
-      slug: slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
-      category_id: Number(categoryId),
-      content_html: finalContentHtml,
-      thumbnail_url: thumbnailUrl || null,
-      external_url: externalUrl || null,
-      tags: Array.from(selectedTags).map(Number),
-      template_id: templateId || null,
-      content: initialData?.content || "Legacy content field, can be empty.",
-    };
+    
+    // Use FormData for multipart/form-data
+    const formData = new FormData();
+    
+    // Append all fields as per the new API spec
+    formData.append('title', title);
+    formData.append('slug', slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''));
+    formData.append('category_id', categoryId);
+    formData.append('content_html', finalContentHtml);
+    
+    if (templateId) {
+        formData.append('template_id', templateId);
+    }
+    
+    // Format tags as a comma-separated string
+    const tagsString = Array.from(selectedTags).join(',');
+    if (tagsString) {
+        formData.append('tags', tagsString);
+    }
+    
+    // Append new meta fields
+    if (metaTitle) formData.append('meta_title', metaTitle);
+    if (metaDescription) formData.append('meta_description', metaDescription);
+    if (metaKeywords) formData.append('meta_keywords', metaKeywords);
+    
+    // Append the file if one is selected
+    if (thumbnailFile) {
+        formData.append('file', thumbnailFile);
+    }
 
     try {
       if (isEditMode) {
-        await api.put(`/posts/${initialData.id}`, postData, authToken);
+        // Assume the PUT endpoint also accepts FormData for updates
+        // Note: Some backends prefer POST with a _method="PUT" field for FormData
+        await api.put(`/posts/${initialData.id}`, formData, authToken);
       } else {
-        await api.post('/posts', postData, authToken);
+        await api.post('/posts', formData, authToken);
       }
       router.push('/admin/posts');
     } catch (err: unknown) {
@@ -131,11 +163,11 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Load Template</Label>
-                <Select onValueChange={handleTemplateChange}>
+                <Select value={templateId} onValueChange={handleTemplateChange}>
                   <SelectTrigger><SelectValue placeholder="Load a template..." /></SelectTrigger>
                   <SelectContent>
                     {templates.map(template => (
-                      <SelectItem key={template.id} value={template.id}>{template.name}</SelectItem>
+                      <SelectItem key={template.id} value={template.id.toString()}>{template.name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -154,7 +186,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
                   <SelectTrigger><SelectValue placeholder="Choose a category..." /></SelectTrigger>
                   <SelectContent>
                     {categories.map(category => (
-                      <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
+                      <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -162,16 +194,36 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
             </CardContent>
           </Card>
 
+          {/* --- Updated Meta Information Card --- */}
           <Card>
             <CardHeader><CardTitle>Meta Information</CardTitle></CardHeader>
             <CardContent className="space-y-4">
+              
               <div className="space-y-2">
-                <Label htmlFor="thumbnail-url">Thumbnail URL</Label>
-                <Input id="thumbnail-url" value={thumbnailUrl} onChange={(e) => setThumbnailUrl(e.target.value)} placeholder="https://example.com/image.jpg" />
+                <Label htmlFor="thumbnail-file">Thumbnail Image</Label>
+                <Input id="thumbnail-file" type="file" onChange={handleFileChange} accept="image/*" />
+                {!thumbnailFile && initialData?.thumbnail_url && (
+                  <div className="mt-2">
+                    <p className="text-sm text-muted-foreground">Current thumbnail:</p>
+                    {/* Ensure the URL is absolute or handled by your image provider */}
+                    <img src={initialData.thumbnail_url} alt="Current thumbnail" className="w-32 h-32 object-cover rounded-md border" />
+                  </div>
+                )}
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="external-url">External URL</Label>
-                <Input id="external-url" value={externalUrl} onChange={(e) => setExternalUrl(e.target.value)} placeholder="https://example.com/source" />
+                <Label htmlFor="meta-title">Meta Title</Label>
+                <Input id="meta-title" value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} placeholder="SEO-friendly title" />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="meta-description">Meta Description</Label>
+                <Textarea id="meta-description" value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} placeholder="SEO-friendly description for search results" />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="meta-keywords">Meta Keywords</Label>
+                <Input id="meta-keywords" value={metaKeywords} onChange={(e) => setMetaKeywords(e.target.value)} placeholder="comma, separated, keywords" />
               </div>
             </CardContent>
           </Card>
@@ -183,8 +235,8 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
                 <div key={tag.id} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`tag-${tag.id}`}
-                    checked={selectedTags.has(tag.id)}
-                    onCheckedChange={() => handleTagChange(tag.id)}
+                    checked={selectedTags.has(tag.id.toString())} // Ensure consistent string comparison
+                    onCheckedChange={() => handleTagChange(tag.id.toString())}
                   />
                   <Label htmlFor={`tag-${tag.id}`}>{tag.name}</Label>
                 </div>

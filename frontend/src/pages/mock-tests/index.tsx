@@ -5,6 +5,7 @@ import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { ArrowUpRight, User } from "lucide-react";
 import BannerHeader from "@/components/shared/BannerHeader";
+import Image from "next/image";
 
 export type MockSeries = {
   id: string;
@@ -12,6 +13,7 @@ export type MockSeries = {
   slug: string;
   description: string | null;
   price: number | null;
+  enrolled_users_count: number;
   mock_categories: {
     name: string;
     slug: string;
@@ -61,6 +63,10 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
     return mockSeries.mock_series_tests?.length || 0;
   };
 
+  const getUserCount = (mockSeries: MockSeries) => {
+        return mockSeries.enrolled_users_count || 0;
+    };
+
   const formatLanguages = (tags: { tag: { name: string } }[]) => {
     if (!tags || tags.length === 0) return 'English, Hindi';
     return tags.map((t) => t.tag.name).join(', ');
@@ -71,7 +77,7 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-white min-h-screen">
       <Header />
       <main className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
@@ -94,6 +100,7 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
               const categorySlug = s.mock_categories?.slug || 'category';
               const detailUrl = `/mock-tests/${categorySlug}/${s.slug}`;
               const logoText = getLogoText(s.mock_categories?.name);
+              const userCount = getUserCount(s);
 
               return (
                 <div
@@ -104,9 +111,9 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
                     <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
                       <span className="text-slate-700 font-bold text-lg">{logoText}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">
-                      <User className="w-3 h-3" />
-                      <span>1000+ Users</span>
+                    <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
+                      <Image src="/bolt.png" width={12} height={12} alt='bolt' />
+                      <span className='text-[10px]'>{userCount}</span>
                     </div>
                   </div>
 

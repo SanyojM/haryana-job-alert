@@ -22,6 +22,7 @@ type MockSeries = {
   id: string;
   title: string;
   description: string | null;
+  thumbnail_url: string | null;
   price: number | null;
   category_id: string;
   mock_categories: { name: string; };
@@ -54,10 +55,18 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
   const [editingSeries, setEditingSeries] = useState<Partial<MockSeries> | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
   const openDialog = (seriesData: Partial<MockSeries> | null = null) => {
-    setEditingSeries(seriesData ? { ...seriesData } : { title: '', description: '', price: 0, category_id: '', mock_series_tags: [] });
+    setEditingSeries(seriesData ? { ...seriesData } : { title: '', description: '', price: 0, category_id: '', mock_series_tags: [], thumbnail_url: '' });
+    setThumbnailFile(null);
     setIsEditDialogOpen(true);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setThumbnailFile(e.target.files[0]);
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -71,6 +80,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
     const method = isEditMode ? 'put' : 'post';
 
     const payload = {
+      thumbnail_url: editingSeries.thumbnail_url,
       title: editingSeries.title,
       description: editingSeries.description,
       price: Number(editingSeries.price),
@@ -154,6 +164,10 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea id="description" value={editingSeries.description || ''} onChange={(e) => setEditingSeries({ ...editingSeries, description: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="thumbnail-url">Thumbnail Image</Label>
+                <Input id="thumbnail-url" type="file" accept="image/*" value={editingSeries.thumbnail_url || ''} onChange={(e) => setEditingSeries({ ...editingSeries, thumbnail_url: e.target.value })}/>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">

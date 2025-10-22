@@ -58,7 +58,7 @@ export default function BannerHeader() {
         }
       `}</style>
 
-      <header className='bg-gray-100 relative mb-24'>
+      <header className='bg-white relative mb-24'>
         {/* Top Marquee Bar (Unchanged) */}
         <div className="bg-black text-white py-1 overflow-hidden whitespace-nowrap text-sm">
           <div className="marquee-content flex">

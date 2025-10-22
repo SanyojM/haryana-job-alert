@@ -126,7 +126,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
   }, [posts, selectedTag, searchQuery, sortOrder]);
 
   return (
-    <div className="bg-gray-100 w-full min-h-screen">
+    <div className="bg-white w-full min-h-screen">
       <Head>
         <title>{`${category.name} | Haryana Job Alert`}</title>
         <meta

@@ -79,7 +79,7 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories })
 
 
   return (
-    <div className="bg-gray-100 ">
+    <div className="bg-white ">
       <Header />
       <div className="px-4 py-8 container mx-auto max-w-6xl">
         <TestHeader
