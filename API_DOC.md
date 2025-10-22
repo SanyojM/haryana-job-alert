@@ -325,9 +325,9 @@ Handles mock tests, the series they belong to, and related entities.
 ### Get all mock test series
 
 -   **Route:** `GET /mock-series`
--   **Description:** Retrieves a list of all mock test series.
+-   **Description:** Retrieves a list of all mock test series, including the count of enrolled users for each.
 -   **Request Body:** None
--   **Returns:** An array of Mock Series objects.
+-   **Returns:** An array of Mock Series objects, each **including an `enrolled_users_count` field**.
 
 ### Get a single mock series by Slugs
 

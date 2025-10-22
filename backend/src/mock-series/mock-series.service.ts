@@ -37,14 +37,41 @@ export class MockSeriesService {
     });
   }
 
-  findAll() {
-    return this.prisma.mock_series.findMany({
+  async findAll() {
+    const series = await this.prisma.mock_series.findMany({
       include: {
         mock_categories: true,
         mock_series_tags: { include: { tag: true } },
-        mock_series_tests: { include: { test: true } },
       },
     });
+
+    if (series.length === 0) {
+      return [];
+    }
+
+    const paymentCounts = await this.prisma.payments.groupBy({
+      by: ['mock_series_id'],
+      where: {
+        status: 'success',
+        mock_series_id: {
+          in: series.map(s => s.id),
+        },
+      },
+      _count: {
+        mock_series_id: true,
+      },
+    });
+
+    const countsMap = new Map<number, number>(
+      paymentCounts
+        .filter(count => count.mock_series_id !== null)
+        .map((count) => [Number(count.mock_series_id), Number(count._count.mock_series_id)] as [number, number]),
+    );
+
+    return series.map(s => ({
+      ...s,
+      enrolled_users_count: countsMap.get(Number(s.id)) || 0,
+    }));
   }
 
   async findOne(id: number) {
