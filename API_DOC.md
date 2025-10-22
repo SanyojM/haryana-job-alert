@@ -771,6 +771,74 @@ Provides a secure, web-based interface to deploy application updates.
 
 ---
 
+## 🎠 Carousel API
+
+Handles the text items for the homepage carousel.
+
+### Create a Carousel Item (Admin)
+
+-   **Route:** `POST /carousel`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Creates a new text item for the carousel. If `is_active` is set to `true`, all other items will be automatically set to `false`.
+-   **Request Body:**
+    ```json
+    {
+      "text": "string",
+      "link": "string (optional, valid URL)",
+      "is_active": "boolean (optional)"
+    }
+    ```
+-   **Returns:** The newly created carousel item.
+
+### Get Active Carousel Items (Public)
+
+-   **Route:** `GET /carousel`
+-   **Description:** Retrieves a list of all carousel items where `is_active` is `true`.
+-   **Request Body:** None
+-   **Returns:** An array of carousel items.
+
+### Get All Carousel Items (Admin)
+
+-   **Route:** `GET /carousel/all`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Retrieves a list of *all* carousel items (both active and inactive).
+-   **Request Body:** None
+-   **Returns:** An array of carousel items.
+
+### Get Single Carousel Item (Admin)
+
+-   **Route:** `GET /carousel/:id`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Retrieves a single carousel item by its ID.
+-   **Request Body:** None
+-   **Returns:** A single carousel item.
+
+### Update a Carousel Item (Admin)
+
+-   **Route:** `PUT /carousel/:id`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Updates an existing carousel item. If `is_active` is set to `true`, all other items will be automatically set to `false`.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the item to update.
+-   **Request Body:**
+    ```json
+    {
+      "text": "string (optional)",
+      "is_active": "boolean (optional)"
+    }
+    ```
+-   **Returns:** The updated carousel item.
+
+### Delete a Carousel Item (Admin)
+
+-   **Route:** `DELETE /carousel/:id`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Deletes a carousel item from the database.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the item to delete.
+-   **Request Body:** None
+-   **Returns:** The deleted carousel item.
+
 ## 🎓 Courses API
 
 This module is currently a placeholder.

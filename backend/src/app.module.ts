@@ -19,11 +19,13 @@ import { DeploymentModule } from './deployment/deployment.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { FilesModule } from './files/files.module';
 import { FormsModule } from './forms/forms.module';
+import { CarouselModule } from './carousel/carousel.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    CarouselModule,
     SupabaseModule,
     AuthModule,
     CoursesModule,
