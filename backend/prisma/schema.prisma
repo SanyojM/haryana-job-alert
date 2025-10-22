@@ -8,14 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model answer_keys {
-  id         BigInt    @id @default(autoincrement())
-  title      String
-  year       Int?
-  file_url   String
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-}
-
 model categories {
   id          BigInt    @id @default(autoincrement())
   name        String    @unique
@@ -24,82 +16,102 @@ model categories {
   posts       posts[]
 }
 
-model comments {
-  id         BigInt    @id @default(autoincrement())
-  post_id    BigInt?
-  user_id    BigInt?
-  content    String
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  posts      posts?    @relation(fields: [post_id], references: [id], onUpdate: NoAction)
-  users      users?    @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+model course_categories {
+  id          BigInt    @id @default(autoincrement())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  courses     courses[]
 }
 
-model course_plans {
-  id            BigInt        @id @default(autoincrement())
-  course_id     BigInt?
-  plan_type     plan_type
-  plan_name     String
-  price         Decimal?      @default(0) @db.Decimal(10, 2)
-  duration_days Int?
-  created_at    DateTime?     @default(now()) @db.Timestamp(6)
-  courses       courses?      @relation(fields: [course_id], references: [id], onUpdate: NoAction)
-  enrollments   enrollments[]
+model course_tags {
+  id         BigInt    @id @default(autoincrement())
+  name       String    @unique
+  slug       String    @unique
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  course_course_tags course_course_tags[]
 }
 
-model course_reviews {
-  id         BigInt    @id @default(autoincrement())
-  course_id  BigInt?
-  user_id    BigInt?
-  rating     Int?
-  review     String?
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  courses    courses?  @relation(fields: [course_id], references: [id], onUpdate: NoAction)
-  users      users?    @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+model course_course_tags {
+  course_id BigInt
+  tag_id    BigInt
+  course    courses     @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  tag       course_tags @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@id([course_id, tag_id])
 }
 
-model course_videos {
-  id         BigInt    @id @default(autoincrement())
-  course_id  BigInt?
-  title      String
-  video_url  String
-  position   Int
-  is_demo    Boolean?  @default(false)
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  courses    courses?  @relation(fields: [course_id], references: [id], onUpdate: NoAction)
+model course_authors {
+  course_id BigInt
+  user_id   BigInt // Refers to the 'users' table (admins)
+  course    courses @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  user      users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@id([course_id, user_id])
 }
 
 model courses {
-  id             BigInt           @id @default(autoincrement())
-  title          String
-  description    String?
-  thumbnail_url  String?
-  created_at     DateTime?        @default(now()) @db.Timestamp(6)
-  updated_at     DateTime?        @default(now()) @db.Timestamp(6)
-  course_plans   course_plans[]
-  course_reviews course_reviews[]
-  course_videos  course_videos[]
-  enrollments    enrollments[]
-  payments       payments[]
+  id                 BigInt             @id @default(autoincrement())
+  title              String
+  slug               String             @unique
+  description        String?            @db.Text
+  thumbnail_url      String?
+  intro_video_url    String?            
+  pricing_model      CoursePricingModel @default(free)
+  regular_price      Decimal?           @db.Decimal(10, 2)
+  sale_price         Decimal?           @db.Decimal(10, 2)
+  category_id        BigInt?            
+  total_duration_sec Int?               
+  status             CourseStatus       @default(draft)
+  created_at         DateTime?          @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?          @updatedAt @db.Timestamp(6)
+
+  category           course_categories? @relation(fields: [category_id], references: [id], onDelete: SetNull)
+  course_authors     course_authors[]
+  course_course_tags course_course_tags[]
+  course_topics      course_topics[]
+  payments           payments[]
+  enrollments        enrollments[]
+}
+
+model course_topics {
+  id          BigInt           @id @default(autoincrement())
+  course_id   BigInt
+  title       String
+  description String?          @db.Text
+  order       Int
+  created_at  DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at  DateTime?        @updatedAt @db.Timestamp(6)
+
+  course      courses          @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  lessons     course_lessons[]
+}
+
+model course_lessons {
+  id                 BigInt        @id @default(autoincrement())
+  topic_id           BigInt
+  title              String
+  description        String?       @db.Text
+  featured_image_url String?
+  video_url          String        // YouTube embed URL
+  video_duration_sec Int?          // Author manual input (in seconds)
+  order              Int
+  created_at         DateTime?     @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?     @updatedAt @db.Timestamp(6)
+
+  topic              course_topics @relation(fields: [topic_id], references: [id], onDelete: Cascade)
 }
 
 model enrollments {
   id           BigInt             @id @default(autoincrement())
   user_id      BigInt?
   course_id    BigInt?
-  plan_id      BigInt?
   status       enrollment_status? @default(active)
   started_at   DateTime?          @default(now()) @db.Timestamp(6)
-  expires_at   DateTime?          @db.Timestamp(6)
-  courses      courses?           @relation(fields: [course_id], references: [id], onUpdate: NoAction)
-  course_plans course_plans?      @relation(fields: [plan_id], references: [id], onUpdate: NoAction)
-  users        users?             @relation(fields: [user_id], references: [id], onUpdate: NoAction)
-}
-
-model google_ads {
-  id         BigInt    @id @default(autoincrement())
-  placement  String
-  ad_code    String
-  created_at DateTime? @default(now()) @db.Timestamp(6)
+  
+  courses      courses?           @relation(fields: [course_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
+  users        users?             @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
 }
 
 model mock_attempts {
@@ -110,15 +122,15 @@ model mock_attempts {
   score        Int?
   started_at   DateTime?   @default(now()) @db.Timestamp(6)
   completed_at DateTime?   @db.Timestamp(6)
-  mock_tests   mock_tests? @relation(fields: [test_id], references: [id], onUpdate: NoAction)
-  users        users?      @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+  mock_tests   mock_tests? @relation(fields: [test_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
+  users        users?      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
 }
 
 model mock_categories {
   id          BigInt        @id @default(autoincrement())
   name        String        @unique
   description String?
-  slug        String?       @unique
+  slug        String       @unique
   mock_series mock_series[]
 }
 
@@ -145,7 +157,7 @@ model mock_questions {
   options        Json?
   correct_answer String
   marks          Int?           @default(1)
-  mock_tests     mock_tests?    @relation(fields: [test_id], references: [id], onUpdate: NoAction)
+  mock_tests     mock_tests?    @relation(fields: [test_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
 }
 
 model mock_series {
@@ -155,8 +167,8 @@ model mock_series {
   description       String?
   created_at        DateTime?           @default(now()) @db.Timestamp(6)
   price             Decimal?            @db.Decimal
-  slug              String?             @unique
-  mock_categories   mock_categories?    @relation(fields: [category_id], references: [id], onUpdate: NoAction)
+  slug              String              @unique
+  mock_categories   mock_categories?    @relation(fields: [category_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
   mock_series_tags  mock_series_tags[]
   mock_series_tests mock_series_tests[]
   payments          payments[]
@@ -170,7 +182,7 @@ model mock_tests {
   total_marks       Int
   created_at        DateTime?           @default(now()) @db.Timestamp(6)
   is_free           Boolean?
-  slug              String?             @unique
+  slug              String              @unique
   mock_attempts     mock_attempts[]
   mock_questions    mock_questions[]
   mock_series_tests mock_series_tests[]
@@ -190,17 +202,19 @@ model payments {
   id             BigInt          @id @default(autoincrement())
   user_id        BigInt?
   course_id      BigInt?
+  mock_series_id BigInt?
   amount         Decimal         @db.Decimal(10, 2)
   payment_method String
   status         payment_status? @default(pending)
   transaction_id String?         @unique
   created_at     DateTime?       @default(now()) @db.Timestamp(6)
-  mock_series_id BigInt?
-  courses        courses?        @relation(fields: [course_id], references: [id], onUpdate: NoAction)
-  mock_series    mock_series?    @relation(fields: [mock_series_id], references: [id], onUpdate: NoAction)
-  users          users?          @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+
+  courses        courses?        @relation(fields: [course_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
+  mock_series    mock_series?    @relation(fields: [mock_series_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
+  users          users?          @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
 
   @@index([user_id, mock_series_id])
+  @@index([user_id, course_id])
 }
 
 model post_tags {
@@ -234,7 +248,6 @@ model posts {
   updated_at     DateTime?       @default(now()) @db.Timestamp(6)
   template_id    BigInt?
   content_html   String?
-  comments       comments[]
   post_tags      post_tags[]
 
   description      String?
@@ -242,17 +255,9 @@ model posts {
   meta_description String?
   meta_keywords    String?
 
-  categories     categories?     @relation(fields: [category_id], references: [id], onUpdate: NoAction)
-  users          users?          @relation(fields: [created_by], references: [id], onUpdate: NoAction)
-  post_templates post_templates? @relation(fields: [template_id], references: [id], onUpdate: NoAction)
-}
-
-model study_materials {
-  id          BigInt    @id @default(autoincrement())
-  title       String
-  description String?
-  file_url    String
-  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  categories     categories?     @relation(fields: [category_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
+  users          users?          @relation(fields: [created_by], references: [id], onUpdate: NoAction, onDelete: SetNull)
+  post_templates post_templates? @relation(fields: [template_id], references: [id], onUpdate: NoAction, onDelete: SetNull)
 }
 
 model tags {
@@ -268,8 +273,6 @@ model users {
   password_hash   String
   role            user_role?       @default(student)
   created_at      DateTime?        @default(now()) @db.Timestamp(6)
-  comments        comments[]
-  course_reviews  course_reviews[]
   enrollments     enrollments[]
   file_payments   file_payment[]
   mock_attempts   mock_attempts[]
@@ -277,6 +280,8 @@ model users {
   posts           posts[]
   purchased_files purchased_file[]
   submissions     submission[]
+
+  authored_courses course_authors[]
 }
 
 model form {
@@ -388,7 +393,6 @@ model purchased_file {
 model carousel_texts {
   id         BigInt    @id @default(autoincrement())
   text       String
-  // link       String?   Optional: in case you want the carousel to be clickable
   is_active  Boolean   @default(false)
   created_at DateTime? @default(now()) @db.Timestamp(6)
 }
@@ -420,4 +424,14 @@ enum question_type {
 enum user_role {
   admin
   student
+}
+
+enum CoursePricingModel {
+  free
+  paid
+}
+
+enum CourseStatus {
+  draft
+  published
 }
