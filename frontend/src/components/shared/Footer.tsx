@@ -127,7 +127,7 @@ export default function Footer() {
             </p>
             {/* Kept your developer credit on the right */}
             <div className="flex-shrink-0">
-                <a href="#" className="inline-flex items-center gap-2 text-sm font-bold text-white">
+                <a href="https://softricity.in" className="inline-flex items-center gap-2 text-sm font-bold text-white">
                    <Image src="/ss.png" alt="Softricity Logo" className="w-6 h-6 rounded" width={24} height={24} />
                    <span className='text-indigo-600 font-bold text-lg'>SOFTRICITY</span> Pvt Ltd
                 </a>

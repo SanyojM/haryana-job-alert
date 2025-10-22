@@ -80,6 +80,8 @@ export function AuthDialog({
 
       if(role === "admin") {
         router.push("/admin");
+      } else {
+        router.push("/dashboard");
       }
 
     } catch (err: unknown) {

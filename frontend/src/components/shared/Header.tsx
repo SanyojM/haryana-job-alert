@@ -49,6 +49,7 @@ export default function Header() {
     Array<{ id: number; name: string; description: string | null }>
   >([]);
   const isLoggedIn = !!user;
+  const [carouselItems, setCarouselItems] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -60,7 +61,17 @@ export default function Header() {
       }
     };
 
+    const fetchCarouselItems = async () => {
+      try {
+        const res = await api.get("/carousel");
+        setCarouselItems(res);
+      } catch (error) {
+        console.error("Failed to fetch carousel items:", error);
+      }
+    };
+
     fetchCategories();
+    fetchCarouselItems();
   }, [user]);
 
   useEffect(() => {
@@ -87,24 +98,17 @@ export default function Header() {
         }
       `}</style>
 
-      <header className="bg-white relative">
-        <div className="bg-black text-white py-1 overflow-hidden whitespace-nowrap text-sm">
+      <header className="bg-white relative h-45 sm:h-60">
+        <div className="bg-black text-white py-1 overflow-hidden whitespace-nowrap text-xs">
           <div className="marquee-content flex">
-            <p className="px-4">
-              You can Now Give MOCK TESTS on Haryana Job Alert for FREE.
-            </p>
-            <p className="px-4">
-              You can Now Give MOCK TESTS on Haryana Job Alert for FREE.
-            </p>
-            <p className="px-4">
-              You can Now Give MOCK TESTS on Haryana Job Alert for FREE.
-            </p>
-            <p className="px-4">
-              You can Now Give MOCK TESTS on Haryana Job Alert for FREE.
-            </p>
-            <p className="px-4">
-              You can Now Give MOCK TESTS on Haryana Job Alert for FREE.
-            </p>
+            {carouselItems.map((item) => (
+              <div
+                key={item.id}
+                className="px-4"
+              >
+                {item.text}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -113,7 +117,7 @@ export default function Header() {
             className="relative bg-center bg-cover h-25 sm:h-45 w-full"
             style={{ backgroundImage: "url('/header.jpg')" }}
           >
-            <div className="absolute top-5 sm:top-12 left-[45%] translate-x-[-50%] sm:left-[35vw] flex flex-col items-end">
+            <div className="absolute top-5 sm:top-12 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-2xl sm:text-4xl font-bold text-white z-10 flex items-center">
                 <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
                 <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
@@ -287,8 +291,8 @@ export default function Header() {
                 {isLoggedIn ? (
                   <HoverCard openDelay={0} closeDelay={200}>
                     <HoverCardTrigger asChild>
-                      <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                        <Avatar className="min-h-6 min-w-6 w-4 h-4 bg-blue-500">
+                      <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 p-2">
+                        <Avatar className="min-h-6 min-w-6 w-5 h-5 bg-blue-500">
                           <AvatarImage
                             src={user?.avatar_url || "/user.png"}
                             alt={user.full_name || "User"}

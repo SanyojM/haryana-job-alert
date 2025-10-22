@@ -32,9 +32,6 @@ interface OfflineFormsPageProps {
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const forms = await api.get('/forms');
-
-    console.log('API Response for /forms:', JSON.stringify(forms, null, 2));
-
     return { props: { forms } };
   } catch (error) {
     console.error("Failed to fetch forms:", error);

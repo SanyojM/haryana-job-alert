@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import BannerHeader from "@/components/shared/BannerHeader";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
 // Types for our data
 type MockQuestion = {
@@ -102,7 +103,7 @@ const TestPage: NextPage<TestPageProps> = ({ test }) => {
 
   return (
     <div className="bg-white min-h-screen">
-      <Header />
+      <DashboardLayout>
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">{test.title}</h1>
@@ -156,7 +157,7 @@ const TestPage: NextPage<TestPageProps> = ({ test }) => {
           )}
         </div>
       </main>
-      <Footer />
+      </DashboardLayout>
     </div>
   );
 };
