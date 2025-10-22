@@ -12,18 +12,18 @@ interface TopLinksSectionProps {
 export default function TopLinksSection({ categories }: TopLinksSectionProps) {
   const [showSignupForm, setShowSignupForm] = useState(false);
   return (
-    <section className="bg-white pb-8 px-4 sm:px-6 lg:px-8">
+    <section className="bg-white pb-8 px-4 sm:px-6 lg:px-8 mt-0">
       <div className="max-w-5xl mx-auto text-center">
         <div className="flex items-center justify-center gap-4 mb-6">
 
-        <img src="/leftarrow.png" alt="" className='inline w-17 h-12 object-cover' />
+        <img src="/leftarrow.png" alt="" className='inline w-17 h-12 object-cover mt-10' />
         <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
           Haryana <span className="text-red-500">Job</span> Alert is a <span className="text-red-500">FREE</span> Website to get
         </h1>
-        <img src="/rightarrow.png" alt="" className='inline w-17 h-12 object-cover' />
+        <img src="/rightarrow.png" alt="" className='inline w-17 h-12 object-cover mt-10' />
         </div>
 
-        <div className="mt-10 flex flex-wrap space-x-3 space-y-2 justify-center">
+        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-2 justify-center">
           {/* Map over the dynamic categories to create links */}
           {categories.map((category) => (
             <Link

@@ -21,6 +21,7 @@ import { MockSeries } from "./mock-tests";
 import FloatingSocials from "@/components/shared/FloatingSocials";
 import FancyContainer from "@/components/about/FancyContainer";
 import BannerHeader from "@/components/shared/BannerHeader";
+import { useEffect, useState } from "react";
 
 interface HomePageProps {
   posts: Post[];
@@ -30,19 +31,36 @@ interface HomePageProps {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    // Fetch both posts and categories at the same time
-    const posts = await api.get('/posts');
-    const categories = await api.get('/categories');
-    const series = await api.get('/mock-series');
-    return { props: { posts, categories, series } };
+    const [categories, series] = await Promise.all([
+      api.get('/categories'),
+      api.get('/mock-series'),
+    ]);
+
+    return { props: { categories, series } };
   } catch (error) {
     console.error("Failed to fetch data for homepage:", error);
-    return { props: { posts: [], categories: [], series: [] } };
+    return { props: { categories: [], series: [] } };
   }
 };
 
-const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
+const HomePage: NextPage<HomePageProps> = ({ categories, series }) => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
 
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await api.get('/posts');
+        setPosts(res);
+      } catch (err) {
+        console.error("Failed to fetch posts:", err);
+      } finally {
+        setLoadingPosts(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
   return (
     <div className="bg-white overflow-x-hidden">
       <Head>
@@ -54,8 +72,12 @@ const HomePage: NextPage<HomePageProps> = ({ posts, categories, series }) => {
       <main className="md:p-4 container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
             <div className="lg:col-span-3 flex flex-col gap-6">
-            <PostsSection posts={posts.slice(0, 8)} />
-            {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
+            {loadingPosts ? (
+              <div className="text-center py-10 text-gray-500">Loading posts...</div>
+            ) : (
+              <PostsSection posts={posts.slice(0, 8)} />
+            )}
+            <AdBanner text="Google Ads Section" className="h-88" />
             <MidCards 
               categories={categories}
               posts={posts}

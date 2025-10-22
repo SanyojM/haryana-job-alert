@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'; // Import the router
 import { useAuth } from '@/context/AuthContext';
 import { api } from '@/lib/api';
 import { MobileLoginCard } from '../auth/LoginCard';
+import { AuthDialog } from '../auth/AuthDialog';
 
 
 // Define the types for the props this component will accept
@@ -61,6 +62,7 @@ export default function TestHeader({
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   useEffect(() => {
     const checkEnrollment = async () => {
@@ -81,7 +83,7 @@ export default function TestHeader({
   const handlePurchase = async () => {
     const authToken = token || undefined;
     if (!isLoggedIn) {
-      alert('Please login to purchase this test series.');
+      setShowAuthDialog(true);
       return;
     }
     setIsLoading(true);
@@ -221,7 +223,7 @@ export default function TestHeader({
         </div>
 
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
-        <div className=' flex flex-col gap-4 w-full lg:w-[50%]'>
+        <div className='hidden lg:flex flex-col gap-4 w-full lg:w-[50%]'>
         {!isLoggedIn ? ( // Use the dynamic isLoggedIn state
           <div className="flex-shrink-0 w-full">
             <MobileLoginCard />
@@ -236,6 +238,8 @@ export default function TestHeader({
         {/* <AdBanner text={'Google Ads'} className='h-48 md:hidden'/> */}
         </div>
       </div>
+
+      <AuthDialog open={showAuthDialog} onOpenChange={setShowAuthDialog} />
     </section>
   );
 }
