@@ -106,7 +106,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
       let result;
 
       if (isEditMode) {
-        result = await api.put(endpoint, formData, authToken);
+        result = await api.putFormData(endpoint, formData, authToken);
       } else {
         result = await api.postFormData(endpoint, formData, authToken);
       }

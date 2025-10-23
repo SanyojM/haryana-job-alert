@@ -107,7 +107,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
 
     try {
       if (isEditMode) {
-        await api.put(`/posts/${initialData.id}`, formData, authToken);
+        await api.putFormData(`/posts/${initialData.id}`, formData, authToken);
       } else {
         await api.postFormData('/posts', formData, authToken);
       }
