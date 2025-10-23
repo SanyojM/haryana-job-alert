@@ -53,10 +53,19 @@ export class PostsController {
   }
 
   @Put(':id')
-  update(
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
     @Param('id', ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
     @Body() updatePostDto: UpdatePostDto,
   ) {
+   if (file) {
+      const bucket = 'thumbnails';
+      const path = 'posts'; // Or another path for updates if desired
+      const publicUrl = await this.supabaseService.uploadFile(file, bucket, path);
+      updatePostDto.thumbnail_url = publicUrl; // Add/overwrite the URL in the DTO
+    }
+
     return this.postsService.update(id, updatePostDto);
   }
 
