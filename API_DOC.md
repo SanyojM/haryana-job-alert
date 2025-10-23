@@ -839,9 +839,235 @@ Handles the text items for the homepage carousel.
 -   **Request Body:** None
 -   **Returns:** The deleted carousel item.
 
+---
+
 ## 🎓 Courses API
 
-This module is currently a placeholder.
+Handles online courses, their structure (topics, lessons), and related data.
 
--   **Route:** `/courses`
--   **Description:** No routes are currently defined for this module.
+**Note:** Routes involving file uploads (`thumbnailFile`, `featuredImageFile`) expect `multipart/form-data`. Other `POST`, `PUT`, `PATCH` routes expect `application/json`. Admin routes require a valid JWT Bearer Token for an admin user.
+
+### **Courses**
+
+#### Create a Course (Admin)
+
+-   **Route:** `POST /courses`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Creates a new course. Uploads thumbnail if provided.
+-   **Request Body:** `multipart/form-data`
+    -   `thumbnailFile` (file, optional): Course thumbnail image.
+    -   `title` (string): Course title.
+    -   `description` (string, optional): Course description.
+    -   `intro_video_url` (string, optional): YouTube watch URL.
+    -   `pricing_model` (string: `free` | `paid`): Pricing model.
+    -   `regular_price` (number, optional): Required if `pricing_model` is `paid`.
+    -   `sale_price` (number, optional): Must be less than `regular_price`.
+    -   `category_id` (number): ID of the course category.
+    -   `tagIds` (string, optional): Comma-separated string of course tag IDs (e.g., `"1,2,3"`).
+    -   `authorIds` (string): Comma-separated string of admin user IDs.
+    -   `total_duration_hhmm` (string, optional): Author-defined duration (e.g., `"02:30"`).
+    -   `status` (string: `draft` | `published`, optional): Default is `draft`.
+-   **Returns:** The newly created Course object.
+
+#### Get All Courses (Public/Admin)
+
+-   **Route:** `GET /courses`
+-   **Authentication:** None (for published). Admin JWT Required to view drafts.
+-   **Description:** Retrieves a list of courses. By default, returns only `published` courses. Admins can filter by status. Includes nested topics and lessons.
+-   **Query Parameters:**
+    -   `status` (string: `draft` | `published`, optional): Filters courses by status (Admin only for `draft`).
+-   **Returns:** An array of Course objects, each including `category`, `authors`, `tags`, `enrolled_users_count`, `total_duration_hhmm`, `lesson_count`, and nested `course_topics` with their `lessons`.
+
+#### Get Single Course by ID (Admin)
+
+-   **Route:** `GET /courses/id/:id`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Retrieves a single course by its numerical ID, including all details, topics, and lessons.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the course.
+-   **Returns:** A single Course object with full details.
+
+#### Get Single Course by Slug (Public)
+
+-   **Route:** `GET /courses/slug/:slug`
+-   **Authentication:** None.
+-   **Description:** Retrieves a single published course by its slug, including all details, topics, and lessons.
+-   **URL Parameters:**
+    -   `slug` (string): The URL slug of the course.
+-   **Returns:** A single Course object with full details.
+
+#### Update a Course (Admin)
+
+-   **Route:** `PUT /courses/:id`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Updates an existing course. Uploads a new thumbnail if provided.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the course to update.
+-   **Request Body:** `multipart/form-data`. Include only fields to change.
+    -   `thumbnailFile` (file, optional): New thumbnail image.
+    -   *(Other fields from Create Course DTO, all optional)*
+-   **Returns:** The updated Course object.
+
+#### Delete a Course (Admin)
+
+-   **Route:** `DELETE /courses/:id`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Deletes a course and all its associated topics and lessons.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the course to delete.
+-   **Returns:** The deleted Course object.
+
+---
+
+### **Topics (Sections within a Course)**
+
+#### Create a Topic (Admin)
+
+-   **Route:** `POST /courses/:courseId/topics`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Creates a new topic (section) within a specific course. The topic is automatically added to the end of the order.
+-   **URL Parameters:**
+    -   `courseId` (number): The ID of the course to add the topic to.
+-   **Request Body:** `application/json`
+    ```json
+    {
+      "title": "string",
+      "description": "string (optional)"
+    }
+    ```
+-   **Returns:** The newly created Topic object.
+
+#### Get Topics for a Course
+
+-   **Route:** `GET /courses/:courseId/topics`
+-   **Authentication:** None (publicly viewable if course is published) or Enrolled User JWT Required (depends on your access rules).
+-   **Description:** Retrieves all topics (and their nested lessons) for a specific course, ordered correctly.
+-   **URL Parameters:**
+    -   `courseId` (number): The ID of the course.
+-   **Returns:** An array of Topic objects, each including a nested array of `lessons`.
+
+#### Update a Topic (Admin)
+
+-   **Route:** `PUT /courses/topics/:topicId`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Updates an existing topic's details (title, description, order). Use the reorder endpoint for changing sequence.
+-   **URL Parameters:**
+    -   `topicId` (number): The ID of the topic to update.
+-   **Request Body:** `application/json`
+    ```json
+    {
+      "title": "string (optional)",
+      "description": "string (optional)",
+      "order": "number (optional)" // Use reorder endpoint for sequence changes
+    }
+    ```
+-   **Returns:** The updated Topic object.
+
+#### Delete a Topic (Admin)
+
+-   **Route:** `DELETE /courses/topics/:topicId`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Deletes a topic and all its associated lessons.
+-   **URL Parameters:**
+    -   `topicId` (number): The ID of the topic to delete.
+-   **Returns:** The deleted Topic object.
+
+#### Reorder Topics (Admin)
+
+-   **Route:** `PATCH /courses/:courseId/topics/reorder`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Updates the `order` field for all topics within a specific course based on the provided sequence of IDs.
+-   **URL Parameters:**
+    -   `courseId` (number): The ID of the course whose topics are being reordered.
+-   **Request Body:** `application/json`
+    ```json
+    {
+      "orderedTopicIds": [3, 1, 2] // Array of Topic IDs in the desired new order
+    }
+    ```
+-   **Returns:** A confirmation or the updated list (depends on service implementation, currently returns result of Prisma transaction).
+
+---
+
+### **Lessons (within a Topic)**
+
+#### Create a Lesson (Admin)
+
+-   **Route:** `POST /courses/topics/:topicId/lessons`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Creates a new lesson within a specific topic. Uploads featured image if provided. The lesson is automatically added to the end of the order.
+-   **URL Parameters:**
+    -   `topicId` (number): The ID of the topic to add the lesson to.
+-   **Request Body:** `multipart/form-data`
+    -   `featuredImageFile` (file, optional): Lesson featured image.
+    -   `title` (string): Lesson title.
+    -   `description` (string, optional): Lesson description.
+    -   `video_url` (string, optional): YouTube watch URL.
+    -   `video_duration_sec` (number, optional): Manual input for video duration in seconds.
+-   **Returns:** The newly created Lesson object.
+
+#### Update a Lesson (Admin)
+
+-   **Route:** `PUT /courses/lessons/:lessonId`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Updates an existing lesson's details. Uploads a new featured image if provided. Use the reorder endpoint for changing sequence.
+-   **URL Parameters:**
+    -   `lessonId` (number): The ID of the lesson to update.
+-   **Request Body:** `multipart/form-data`. Include only fields to change.
+    -   `featuredImageFile` (file, optional): New featured image.
+    -   *(Other fields from Create Lesson DTO, all optional)*
+-   **Returns:** The updated Lesson object.
+
+#### Delete a Lesson (Admin)
+
+-   **Route:** `DELETE /courses/lessons/:lessonId`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Deletes a lesson.
+-   **URL Parameters:**
+    -   `lessonId` (number): The ID of the lesson to delete.
+-   **Returns:** The deleted Lesson object.
+
+#### Reorder Lessons (Admin)
+
+-   **Route:** `PATCH /courses/topics/:topicId/lessons/reorder`
+-   **Authentication:** Admin JWT Required.
+-   **Description:** Updates the `order` field for all lessons within a specific topic based on the provided sequence of IDs.
+-   **URL Parameters:**
+    -   `topicId` (number): The ID of the topic whose lessons are being reordered.
+-   **Request Body:** `application/json`
+    ```json
+    {
+      "orderedLessonIds": [5, 4, 6] // Array of Lesson IDs in the desired new order
+    }
+    ```
+-   **Returns:** A confirmation or the updated list (depends on service implementation, currently returns result of Prisma transaction).
+
+---
+
+## 📂 Course Categories API
+
+Handles categories specific to courses.
+
+*(Self-explanatory CRUD routes similar to Post Categories/Tags)*
+
+-   `POST /course-categories` (Admin)
+-   `GET /course-categories` (Public/Admin)
+-   `GET /course-categories/:id` (Public/Admin)
+-   `PUT /course-categories/:id` (Admin)
+-   `DELETE /course-categories/:id` (Admin)
+
+---
+
+## 🏷️ Course Tags API
+
+Handles tags specific to courses.
+
+*(Self-explanatory CRUD routes similar to Post Categories/Tags)*
+
+-   `POST /course-tags` (Admin)
+-   `GET /course-tags` (Public/Admin)
+-   `GET /course-tags/:id` (Public/Admin)
+-   `PUT /course-tags/:id` (Admin)
+-   `DELETE /course-tags/:id` (Admin)
+
+---
