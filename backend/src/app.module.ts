@@ -20,6 +20,8 @@ import { SupabaseModule } from './supabase/supabase.module';
 import { FilesModule } from './files/files.module';
 import { FormsModule } from './forms/forms.module';
 import { CarouselModule } from './carousel/carousel.module';
+import { CourseCategoriesModule } from './course-categories/course-categories.module';
+import { CourseTagsModule } from './course-tags/course-tags.module';
 
 @Module({
   imports: [
@@ -41,7 +43,9 @@ import { CarouselModule } from './carousel/carousel.module';
     PaymentsModule,
     DeploymentModule,
     FilesModule,
-    FormsModule
+    FormsModule,
+    CourseCategoriesModule,
+    CourseTagsModule
   ],
   controllers: [AppController],
   providers: [AppService],
