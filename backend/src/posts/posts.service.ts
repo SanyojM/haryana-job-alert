@@ -66,9 +66,6 @@ export class PostsService {
     await this.findOne(id);
     const { tags, ...postData } = updatePostDto;
 
-    // Note: A full implementation for updating tags is more complex.
-    // It requires disconnecting old tags and connecting new ones in a transaction.
-    // We will tackle this advanced logic after confirming the create functionality works.
     return this.prisma.posts.update({
       where: { id },
       data: {
@@ -109,6 +106,11 @@ export class PostsService {
 
   async remove(id: number) {
     await this.findOne(id);
-    return this.prisma.posts.delete({ where: { id } });
+    return this.prisma.$transaction(async (tsx) => {
+      await tsx.post_tags.deleteMany({ where: { post_id: id } });
+
+      const deletedPost = await tsx.posts.delete({ where: { id } });
+      return deletedPost;
+    })
   }
 }
