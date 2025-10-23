@@ -10,21 +10,21 @@ import Image from 'next/image';
 import { MockTest } from '@/pages/mock-tests/[categorySlug]/[seriesSlug]';
 
 export type MockSeriesDetails = {
-  id: string;
-  title: string;
-  slug: string;
-  description?: string;
-  price: number | null;
-  created_at: string;
-  enrolled_users_count: number;
-  mock_series_tests: {
-      test: MockTest;
-      full_slug: string;
-  }[];
-  mock_categories: {
-    name: string;
+    id: string;
+    title: string;
     slug: string;
-  };
+    description?: string;
+    price: number | null;
+    created_at: string;
+    enrolled_users_count: number;
+    mock_series_tests: {
+        test: MockTest;
+        full_slug: string;
+    }[];
+    mock_categories: {
+        name: string;
+        slug: string;
+    };
 };
 
 interface MockTestsHomePageProps {
@@ -45,18 +45,18 @@ type SeriesCategory = {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { categorySlug, seriesSlug } = context.params!;
-  try {
-    const [categories, series] = await Promise.all([
-        api.get('/mock-series'),
-        api.get(`/mock-series/slug/${categorySlug}/${seriesSlug}`)
-    ]);
-    return { props: { categories, series } };
-  } catch (error) {
-    console.error(`Failed to fetch mock series with slug /${categorySlug}/${seriesSlug}:`, error);
-    console.error("Failed to fetch data for homepage:", error);
-    return { props: { categories: [], series: [] } };
-  }
+    const { categorySlug, seriesSlug } = context.params!;
+    try {
+        const [categories, series] = await Promise.all([
+            api.get('/mock-series'),
+            api.get(`/mock-series/slug/${categorySlug}/${seriesSlug}`)
+        ]);
+        return { props: { categories, series } };
+    } catch (error) {
+        console.error(`Failed to fetch mock series with slug /${categorySlug}/${seriesSlug}:`, error);
+        console.error("Failed to fetch data for homepage:", error);
+        return { props: { categories: [], series: [] } };
+    }
 };
 
 const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series }) => {
@@ -91,7 +91,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
     const getTestCount = (mockSeries: MockSeries) => {
         return mockSeries.mock_series_tests?.length || 0;
     };
-   
+
     const getUserCount = (mockSeries: MockSeries) => {
         return mockSeries.enrolled_users_count || 0;
     };
@@ -109,6 +109,10 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
     const formatPrice = (price: number | null) => {
         return price === null || price === 0 ? 'Free' : `₹${price}`;
     };
+
+    const getLogo = (mockSeries: MockSeries) => {
+      return mockSeries.thumbnail_url || ''
+    }
 
     return (
         <section className="bg-white py-12">
@@ -166,6 +170,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
                             const detailUrl = `/mock-tests/${categorySlug}/${s.slug}`;
                             const logoText = getLogoText(s.mock_categories?.name);
                             const userCount = getUserCount(s);
+                            const logo = getLogo(s);
 
                             return (
                                 <div
@@ -176,7 +181,11 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
                                     <div className="flex justify-between items-start mb-4">
                                         {/* Logo */}
                                         <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-                                            <span className="text-slate-700 font-bold text-lg">{logoText}</span>
+                                            {logo ?
+                                                <Image src={logo} width={24} height={24} alt='logo' />
+                                                :
+                                                <span className="text-slate-700 font-bold text-lg">{logoText}</span>
+                                            }
                                         </div>
                                         {/* User Count Pill */}
                                         <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
@@ -186,7 +195,7 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
                                     </div>
 
                                     {/* --- Title --- */}
-                                    <h3 className="font-bold text-gray-800 text-md leading-tight mb-3 h-[40px]">
+                                    <h3 className="font-bold text-gray-800 text-md leading-tight mb-3">
                                         {s.title}
                                     </h3>
 

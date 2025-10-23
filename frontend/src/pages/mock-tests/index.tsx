@@ -14,6 +14,7 @@ export type MockSeries = {
   description: string | null;
   price: number | null;
   enrolled_users_count: number;
+  thumbnail_url: string
   mock_categories: {
     name: string;
     slug: string;
@@ -76,6 +77,10 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
     return price === null || price === 0 ? 'Free' : `₹${price}`;
   };
 
+  const getLogo = (mockSeries: MockSeries) => {
+      return mockSeries.thumbnail_url || ''
+    }
+
   return (
     <div className="bg-white min-h-screen">
       <Header />
@@ -101,6 +106,7 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
               const detailUrl = `/mock-tests/${categorySlug}/${s.slug}`;
               const logoText = getLogoText(s.mock_categories?.name);
               const userCount = getUserCount(s);
+              const logo = getLogo(s);
 
               return (
                 <div
@@ -109,7 +115,11 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-                      <span className="text-slate-700 font-bold text-lg">{logoText}</span>
+                      {logo ?
+                        <Image src={logo} width={24} height={24} alt='logo' />
+                        :
+                        <span className="text-slate-700 font-bold text-lg">{logoText}</span>
+                      }
                     </div>
                     <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
                       <Image src="/bolt.png" width={12} height={12} alt='bolt' />

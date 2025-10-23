@@ -167,7 +167,7 @@ export default function CurrentAffairsSection() {
                                     <Image
                                         src={post.thumbnail_url || PLACEHOLDER_IMAGE}
                                         alt={post.title}
-                                        className="w-full h-48 object-cover rounded-2xl"
+                                        className="w-full h-48 object-contain rounded-2xl"
                                         width={600}
                                         height={400}
                                         unoptimized
