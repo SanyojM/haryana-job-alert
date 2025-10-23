@@ -214,7 +214,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
 
                   <div className="space-y-2">
                     <Link href={detailUrl}>
-                      <button className="w-full bg-gradient-to-r from-indigo-800 to-indigo-500 hover:from-indigo-700 hover:to-indigo-400 text-white md:text-center rounded-lg px-1 md:px-4 py-2.5 font-semibold text-sm inline-flex items-center justify-center gap-2 transition-all">
+                      <button className="shine w-full bg-gradient-to-r from-indigo-800 to-indigo-500 hover:from-indigo-700 hover:to-indigo-400 text-white md:text-center rounded-lg px-1 md:px-4 py-2.5 font-semibold text-sm inline-flex items-center justify-center gap-2 transition-all">
                         <span className='text-xs md:text-sm text-wrap'>View test series</span>
                         <ArrowUpRight className="w-3 h-3" />
                       </button>

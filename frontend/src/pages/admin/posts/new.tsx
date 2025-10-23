@@ -1,6 +1,6 @@
+import { CreatePostForm } from "@/components/admin/posts/CreatePostForm";
 import { api } from "@/lib/api";
 import { GetServerSideProps, NextPage } from "next";
-import { CreatePostForm } from "@/components/admin/posts/CreatePostForm";
 
 export type PostTemplate = {
   id: string;

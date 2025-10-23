@@ -17,7 +17,7 @@ export default function Sidebar({ className }: SidebarProps) {
             className  // Your conditional classes
         )}>
             <HaryanaYojnaSection />
-            <AdBanner text="Google Ad Section" className="h-88" />
+            {/* <AdBanner text="Google Ad Section" className="h-88" /> */}
             <CourseSection />
             {/* <AdBanner text="Google Ad Section" className="h-64" /> */}
             {/* <AdBanner text="Google Ad Section" className="h-220" /> */}

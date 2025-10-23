@@ -136,7 +136,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
       </Head>
 
       <Header />
-      <main className="max-w-6xl mx-auto mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4">
+      <main className="max-w-6xl mx-auto md:mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4">
         <div className="lg:col-span-3">
           <Breadcrumb className="mb-6">
             <BreadcrumbList>
@@ -158,7 +158,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
 
           <div className="grid grid-cols-2 mb-6">
             <div className="flex items-center">
-              <div className="flex gap-4 w-full md:w-auto md:flex-shrink-0 justify-end md:justify-start">
+              <div className="flex gap-4 w-full md:w-auto md:flex-shrink-0">
                 <div className="md:flex-1 ml-4 md:ml-0">
                   <DropdownMenu>
 
@@ -252,8 +252,24 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                   const logoText = getLogoText(post.title);
                   return (
                     <div key={post.id} className="bg-white rounded-lg shadow-xl border-gray-400 overflow-hidden relative">
-                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 p-4">
-                        <div>
+                      <div className="md:hidden">
+                        {post.thumbnail_url ? (
+                        <div className="w-full h-48 relative">
+                          <Image
+                            src={post.thumbnail_url}
+                            alt={post.title}
+                            layout="fill"
+                            objectFit="contain"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-48 flex items-center justify-center bg-gray-200 text-gray-700">
+                          <span className="font-bold text-6xl leading-none">{logoText}</span>
+                        </div>
+                      )}
+                      </div>
+                      <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 p-4 w-full h-full">
+                        <div className="hidden md:block">
                           {post.thumbnail_url ? (
                             <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
                               <Image
@@ -261,15 +277,15 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                                 alt={post.title}
                                 width={150}
                                 height={100}
-                                className="rounded-lg object-cover w-full h-24 sm:w-24"
+                                className="rounded-lg object-cover w-full h-auto md:h-24 md:w-24"
                               />
                             </div>
                           ) : (
-                            <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6 flex items-center justify-center 
-                                        w-24 h-24 sm:w-24 sm:h-24 rounded-lg bg-gray-200 text-gray-700 
+                              <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6 flex items-center justify-center 
+                                        w-24 h-24 md:w-24 md:h-24 rounded-lg bg-gray-200 text-gray-700 
                                         font-bold text-4xl leading-none">
-                              {logoText}
-                            </div>
+                            {logoText}
+                          </div>
                           )}
                         </div>
                         <div className="flex-grow">
@@ -301,15 +317,15 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                             {/* <div className="flex items-center gap-1.5"><FileText size={14} /> {post.total_marks} Marks</div> */}
                           </div>
                         </div>
-                        <div>
-                        <Link
-                          href={`/posts/${post.slug}`}
-                          className='bg-gradient-to-r from-red-600 to-gray-800 text-white md:px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 flex items-center justify-center gap-2 group mt-auto text-sm md:text-md'
+                        <div className="w-full md:w-auto flex-shrink-0">
+                          <Link
+                            href={`/posts/${post.slug}`}
+                            className='shine bg-gradient-to-r from-red-600 to-gray-800 text-white md:px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 flex items-center justify-center gap-2 group mt-auto text-sm md:text-md'
                           >
-                          Learn More
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                          </div>
+                            Learn More
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   );
@@ -319,7 +335,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
           </div>
         </div>
         <div className="lg:col-span-1">
-          <AdBanner text="Google Ads Section" className="h-88" />
+          {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
           <div className="mt-12 ml-12">
             <Sidebar />
           </div>

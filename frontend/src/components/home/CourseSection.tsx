@@ -122,7 +122,7 @@ export default function CourseSection() {
                                 <div className="mt-auto flex items-center gap-3">
                                     <Link
                                         href={`/courses/${course.id}`}
-                                        className="flex-grow bg-gradient-to-r from-red-600 to-gray-800 text-white text-center rounded-lg px-4 py-3 font-semibold text-xs md:text-sm inline-flex items-center justify-center hover:opacity-90 transition-opacity"
+                                        className="shine flex-grow bg-gradient-to-r from-red-600 to-gray-800 text-white text-center rounded-lg px-4 py-3 font-semibold text-xs md:text-sm inline-flex items-center justify-center hover:opacity-90 transition-opacity"
                                     >
                                         View Course
                                     </Link>
@@ -141,7 +141,7 @@ export default function CourseSection() {
                     </button>
                 </div>
                 <div className='mt-10 md:hidden'>
-                    <AdBanner text="Google Ads Section" className="h-32" />
+                    {/* <AdBanner text="Google Ads Section" className="h-32" /> */}
                 </div>
             </div>
         </section>

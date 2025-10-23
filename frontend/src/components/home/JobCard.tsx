@@ -75,7 +75,7 @@ export default function JobSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <JobCard data={resultsData} />
           <JobCard data={admitCardsData} />
-          <AdBanner text="Google Ads Section" className="h-24 md:hidden" />
+          {/* <AdBanner text="Google Ads Section" className="h-24 md:hidden" /> */}
           <JobCard data={latestJobsData} />
         </div>
       </div>

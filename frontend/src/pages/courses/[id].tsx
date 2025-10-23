@@ -55,7 +55,7 @@ export default function CoursePage({ id }: CoursePageProps) {
     const courseData = getCourseData(id);
 
     return (
-        <div className="bg-gray-100">
+        <div className="bg-white">
             <Header />
             <div className="mt-6">
                 <CourseHeader
@@ -87,7 +87,7 @@ export default function CoursePage({ id }: CoursePageProps) {
                         }} />
                     </main>
                     <aside className="hidden xl:block mt-36">
-                        <AdBanner text={"Google Ads Section"} className="h-88 w-full"/>
+                        {/* <AdBanner text={"Google Ads Section"} className="h-88 w-full"/> */}
                     </aside>
 
                 </div>

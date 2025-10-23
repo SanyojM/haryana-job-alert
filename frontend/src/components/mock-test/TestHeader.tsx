@@ -173,7 +173,7 @@ export default function TestHeader({
             <div className="w-fit flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-700 font-medium mb-6 border-b-1 pb-6 px-2 border-gray-400">
               <span className="flex items-center gap-1.5">{totalTests} Total Tests</span>
               <span className='text-gray-400'>|</span>
-              <span className="bg-gradient-to-r from-green-950 to-green-600 text-white px-3 py-1 rounded-md">{freeTests} FREE Test</span>
+              <span className="shine bg-gradient-to-r from-green-950 to-green-600 text-white px-3 py-1 rounded-md">{freeTests} FREE Test</span>
               <span className='text-gray-400'>|</span>
               <div className="flex items-center gap-1.5"><Users size={16} /> {users} Users</div>
               <span className='text-gray-400'>|</span>
@@ -208,7 +208,7 @@ export default function TestHeader({
             <Button
               onClick={handlePurchase}
               disabled={isLoading}
-              className="md:max-w-lg w-full bg-gradient-to-r from-green-600 to-green-800 text-white font-bold py-3 px-12 rounded-lg hover:opacity-90 transition-opacity text-lg"
+              className="shine md:max-w-lg w-full bg-gradient-to-r from-green-600 to-green-800 text-white font-bold py-3 px-12 rounded-lg hover:opacity-90 transition-opacity text-lg"
             >
               {isLoading ? 'Processing...' : `Buy Now for ₹${price}`}
             </Button>
@@ -219,7 +219,7 @@ export default function TestHeader({
                 </div>
             )}
           </div>
-          <AdBanner text={'Google Ads'} className='h-48 mt-12 w-full md:w-[80%] md:ml-18'/>
+          {/* <AdBanner text={'Google Ads'} className='h-48 mt-12 w-full md:w-[80%] md:ml-18'/> */}
         </div>
 
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
@@ -235,7 +235,7 @@ export default function TestHeader({
             </div>
           </div>
         )}
-        <AdBanner text={'Google Ads'} className='h-48 md:hidden'/>
+        {/* <AdBanner text={'Google Ads'} className='h-48 md:hidden'/> */}
         </div>
       </div>
 

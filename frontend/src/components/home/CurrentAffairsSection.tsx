@@ -162,7 +162,7 @@ export default function CurrentAffairsSection() {
                     <>
                         {/* 11. Update render logic to use dynamic data */}
                         <div className="grid grid-cols-2 lg:grid-cols-3 md:gap-6 gap-3">
-                            {filteredArticles.slice(0, 3).map((post) => (
+                            {filteredArticles.slice(0, 6).map((post) => (
                                 <div key={post.id} className="bg-white p-2 rounded-2xl shadow-sm overflow-hidden flex flex-col mb-8">
                                     <Image
                                         src={post.thumbnail_url || PLACEHOLDER_IMAGE}
@@ -180,42 +180,10 @@ export default function CurrentAffairsSection() {
                                             href={getArticleLink(post)}
                                             target={post.external_url ? "_blank" : "_self"}
                                             rel={post.external_url ? "noopener noreferrer" : ""}
-                                            className="w-full bg-gradient-to-r from-emerald-900 to-[#237856] text-white text-center rounded-lg px-4 py-2.5 font-semibold text-xs md:text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                                            className="shine w-full bg-gradient-to-r from-emerald-900 to-[#237856] text-white text-center rounded-lg px-4 py-2.5 font-semibold text-xs md:text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
                                         >
                                             <span>Learn More</span>
                                             <ArrowUpRight className="w-4 h-4" />
-                                        </Link>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className='mt-10 mb-10 md:hidden'>
-                            <AdBanner text="Google Ads Section" className="h-32" />
-                        </div>
-                        <div className="grid grid-cols-2 lg:grid-cols-3 md:gap-6 gap-3">
-                            {filteredArticles.slice(3, 6).map((post) => (
-                                <div key={post.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col">
-                                    <Image
-                                        src={post.thumbnail_url || PLACEHOLDER_IMAGE}
-                                        alt={post.title}
-                                        className="w-full h-48 object-cover rounded-2xl"
-                                        width={600}
-                                        height={400}
-                                        unoptimized
-                                    />
-                                    <div className="py-5 px-2 flex flex-col flex-grow">
-                                        <h3 className="md:font-bold font-medium md:text-lg text-sm text-gray-800 leading-tight flex-grow mb-4 line-clamp-3">
-                                            {post.title}
-                                        </h3>
-                                        <Link href={getArticleLink(post)} passHref>
-                                          <a 
-                                            target={post.external_url ? "_blank" : "_self"} 
-                                            rel={post.external_url ? "noopener noreferrer" : ""}
-                                            className="w-full bg-gradient-to-r from-emerald-900 to-[#237856] text-white text-center rounded-lg px-4 py-2.5 font-semibold text-xs md:text-sm inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
-                                          >
-                                              <span>Learn More</span>
-                                              <ArrowUpRight className="w-4 h-4" />
-                                          </a>
                                         </Link>
                                     </div>
                                 </div>
@@ -230,7 +198,7 @@ export default function CurrentAffairsSection() {
                     </button>
                 </div>
                 <div className='mt-10 mb-10 md:hidden'>
-                    <AdBanner text="Google Ads Section" className="h-32" />
+                    {/* <AdBanner text="Google Ads Section" className="h-32" /> */}
                 </div>
             </div>
         </section>

@@ -52,7 +52,7 @@ export default function CourseContentAccordion({ content }: CourseContentAccordi
   };
 
   return (
-    <section className="bg-gray-100 mt-12">
+    <section className="bg-white mt-12">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-800">Course Content</h2>
@@ -67,7 +67,7 @@ export default function CourseContentAccordion({ content }: CourseContentAccordi
           {areAllExpanded ? 'Collapse all sections' : 'Expand all sections'}
         </button>
       </div>
-      <div>
+      <div className='rounded-xl shadow-lg'>
         {content.sections.map((section, index) => {
           const isOpen = openSections.includes(index);
           return (
