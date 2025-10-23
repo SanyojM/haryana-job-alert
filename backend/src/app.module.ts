@@ -45,7 +45,8 @@ import { CourseTagsModule } from './course-tags/course-tags.module';
     FilesModule,
     FormsModule,
     CourseCategoriesModule,
-    CourseTagsModule
+    CourseTagsModule,
+    CoursesModule
   ],
   controllers: [AppController],
   providers: [AppService],

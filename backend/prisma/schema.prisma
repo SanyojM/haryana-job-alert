@@ -94,7 +94,7 @@ model course_lessons {
   title              String
   description        String?       @db.Text
   featured_image_url String?
-  video_url          String        // YouTube embed URL
+  video_url          String?       // YouTube embed URL
   video_duration_sec Int?          // Author manual input (in seconds)
   order              Int
   created_at         DateTime?     @default(now()) @db.Timestamp(6)
