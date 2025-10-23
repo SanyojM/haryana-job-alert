@@ -77,10 +77,20 @@ export class MockSeriesController {
   }
 
   @Put(':id')
-  update(
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
     @Param('id', ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
     @Body() updateMockSeriesDto: UpdateMockSeriesDto,
   ) {
+    
+    if (file) {
+      const bucket = 'thumbnails';
+      const path = 'mock-series'; // Or another path for updates if desired
+      const publicUrl = await this.supabaseService.uploadFile(file, bucket, path);
+      updateMockSeriesDto.thumbnail_url = publicUrl; // Add/overwrite the URL in the DTO
+    }
+
     return this.mockSeriesService.update(id, updateMockSeriesDto);
   }
 
