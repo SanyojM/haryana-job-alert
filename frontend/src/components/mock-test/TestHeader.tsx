@@ -183,7 +183,7 @@ export default function TestHeader({
             </div>
 
             <div>
-              <p>{}</p>
+              <p className='text-sm'>{description}</p>
             </div>
             {/* Features List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-gray-800 font-medium mb-12">
@@ -223,7 +223,7 @@ export default function TestHeader({
         </div>
 
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
-        <div className='hidden lg:flex flex-col gap-4 w-full lg:w-[50%]'>
+        <div className='hidden lg:flex flex-col gap-4 w-full lg:w-[50%] ml-24'>
         {!isLoggedIn ? ( // Use the dynamic isLoggedIn state
           <div className="flex-shrink-0 w-full">
             <MobileLoginCard />
