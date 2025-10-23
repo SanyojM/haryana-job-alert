@@ -178,6 +178,10 @@ export class MockSeriesService {
   }
 
   async update(id: number, updateMockSeriesDto: UpdateMockSeriesDto) {
+    console.log('--- MockSeriesService Update ---');
+    console.log('Received DTO:', JSON.stringify(updateMockSeriesDto, null, 2));
+    // --- END DEBUG LOG ---
+
     const { tagIds, title, ...seriesData } = updateMockSeriesDto;
 
     return this.prisma.$transaction(async (tx) => {

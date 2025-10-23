@@ -63,7 +63,11 @@ export class PostsService {
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
-    await this.findOne(id);
+    console.log('--- PostsService Update ---');
+    console.log('Received DTO:', JSON.stringify(updatePostDto, null, 2));
+    // --- END DEBUG LOG ---
+
+    await this.findOne(id); // Ensure post exists
     const { tags, ...postData } = updatePostDto;
 
     // Note: A full implementation for updating tags is more complex.
