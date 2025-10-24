@@ -3,13 +3,12 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { api } from '@/lib/api';
 import { Pencil, Trash2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from '@/components/ui/textarea';
-import { useAuth } from '@/context/AuthContext'; // We'll need the token for authenticated requests
+import { Button } from '@heroui/button';
+import { Card, CardHeader, CardBody } from '@heroui/card'; // CardFooter was unused
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@heroui/modal';
+import { Input } from '@heroui/input';
+import { Textarea } from '@heroui/input';
+import { useAuth } from '@/context/AuthContext';
 import { Post } from '../posts';
 
 // Define the type for a single category
@@ -26,7 +25,6 @@ interface CategoriesPageProps {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    // Note: In a real app, you'd get the token from the request cookies on the server
     const categories = await api.get('/categories');
     return { props: { initialCategories: categories } };
   } catch (error) {
@@ -36,14 +34,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) => {
-  const { token } = useAuth(); // Get the auth token from our context
+  const { token } = useAuth();
   const [categories, setCategories] = useState<Category[]>(initialCategories);
 
-  // State for the "Add New" form
+  // State for "Add New" form
   const [newName, setNewName] = useState('');
   const [newDescription, setNewDescription] = useState('');
 
-  // State for the "Edit" dialog
+  // State for "Edit" dialog
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -52,7 +50,6 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
 
   const authToken = token ?? undefined;
 
-  // Handler for creating a new category
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -62,7 +59,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
         '/categories',
         {
           name: newName,
-          description: newDescription?.trim() || undefined
+          description: newDescription?.trim() || undefined,
         },
         authToken
       );
@@ -80,10 +77,8 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
     }
   };
 
-  // Handler for updating an existing category
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const authToken = token ?? undefined;
     if (!editingCategory) return;
 
     setIsLoading(true);
@@ -93,13 +88,15 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
         `/categories/${editingCategory.id}`,
         {
           name: editingCategory.name,
-          description: editingCategory.description?.trim() || undefined
+          description: editingCategory.description?.trim() || undefined,
         },
         authToken
       );
 
-      setCategories(prev => prev.map(c => c.id === updatedCategory.id ? updatedCategory : c));
-      setIsEditDialogOpen(false); // This will now correctly close the single dialog
+      setCategories((prev) =>
+        prev.map((c) => (c.id === updatedCategory.id ? updatedCategory : c))
+      );
+      setIsEditDialogOpen(false);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -117,7 +114,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
     }
     try {
       await api.delete(`/categories/${categoryId}`, authToken);
-      setCategories(prev => prev.filter(c => c.id !== categoryId));
+      setCategories((prev) => prev.filter((c) => c.id !== categoryId));
     } catch (err: unknown) {
       if (err instanceof Error) {
         alert(`Failed to delete category: ${err.message}`);
@@ -136,81 +133,150 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold tracking-tight mb-6">Manage Categories</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
         {/* ADD NEW CATEGORY FORM */}
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
-            <Card>
+            <Card className="bg-white rounded-2xl p-3 border border-gray-400">
               <CardHeader>
-                <CardTitle>Add New Category</CardTitle>
+                <h1 className="font-semibold">Add New Category</h1>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardBody className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="newName">Name</Label>
-                  <Input id="newName" value={newName} onChange={(e) => setNewName(e.target.value)} required />
+                  <Input
+                    label="Name"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    required
+                    variant="bordered"
+                    classNames={{ inputWrapper: 'bg-[#F9F8FB]' }}
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="newDescription">Description</Label>
-                  <Textarea id="newDescription" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
+                  <Textarea
+                    label="Description"
+                    id="newDescription"
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    variant="bordered"
+                    classNames={{ inputWrapper: 'bg-[#F9F8FB]' }}
+                  />
                 </div>
                 {error && <p className="text-sm text-red-600">{error}</p>}
-                <Button type="submit" disabled={isLoading} className="w-full">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-[#8A79AB] text-white rounded-md"
+                >
                   {isLoading ? 'Saving...' : 'Save Category'}
                 </Button>
-              </CardContent>
+              </CardBody>
             </Card>
           </form>
         </div>
 
         {/* EXISTING CATEGORIES LIST */}
         <div className="lg:col-span-2">
-          <Card>
-            <CardHeader><CardTitle>Existing Categories</CardTitle></CardHeader>
-            <CardContent>
+          <Card className="bg-white rounded-2xl p-3 border border-gray-400">
+            <CardHeader>
+              <h1 className="font-semibold">Existing Categories</h1>
+            </CardHeader>
+            <CardBody>
               <ul className="space-y-3">
                 {categories.map((category) => (
-                  <li key={category.id} className="p-3 bg-slate-50 border rounded-md flex justify-between items-center">
+                  <li
+                    key={category.id}
+                    className="p-3 bg-slate-50 border rounded-md flex justify-between items-center"
+                  >
                     <div>
                       <p className="font-medium text-slate-900">{category.name}</p>
-                      <p className="text-sm text-slate-500">{category.description || ''}</p>
+                      <p className="text-sm text-slate-500">
+                        {category.description || ''}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => openEditDialog(category)}>
+                      <Button
+                        isIconOnly
+                        variant="ghost"
+                        onPress={() => openEditDialog(category)}
+                        aria-label="Edit category"
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDelete(category.id)}>
+                      <Button
+                        isIconOnly
+                        variant="ghost"
+                        className="text-red-500 hover:text-red-600"
+                        onPress={() => handleDelete(category.id)}
+                        aria-label="Delete category"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </li>
                 ))}
               </ul>
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
       </div>
 
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Edit Category</DialogTitle></DialogHeader>
+      <Modal
+        isOpen={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        className="bg-white p-4 rounded-2xl"
+      >
+        <ModalContent>
+          <ModalHeader>Edit Category</ModalHeader>
           {editingCategory && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="editName">Name</Label>
-                <Input id="editName" value={editingCategory.name} onChange={(e) => setEditingCategory({...editingCategory, name: e.target.value})} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="editDescription">Description</Label>
-                <Textarea id="editDescription" value={editingCategory.description || ''} onChange={(e) => setEditingCategory({...editingCategory, description: e.target.value})} />
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="secondary" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
-              </DialogFooter>
+              <ModalBody>
+                <div className="space-y-2">
+                  <Input
+                    value={editingCategory.name}
+                    onChange={(e) =>
+                      setEditingCategory({ ...editingCategory, name: e.target.value })
+                    }
+                    required
+                    variant="bordered"
+                    classNames={{ inputWrapper: 'bg-[#F9F8FB]' }}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Textarea
+                    label="Description"
+                    placeholder="Enter your description"
+                    value={editingCategory.description || ''}
+                    onChange={(e) =>
+                      setEditingCategory({
+                        ...editingCategory,
+                        description: e.target.value,
+                      })
+                    }
+                    variant="bordered"
+                    classNames={{ inputWrapper: 'bg-[#F9F8FB]' }}
+                  />
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onPress={() => setIsEditDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-[#8A79AB] text-white rounded-md"
+                >
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </ModalFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
