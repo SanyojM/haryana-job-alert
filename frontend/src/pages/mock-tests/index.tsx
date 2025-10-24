@@ -114,16 +114,16 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
                   className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm p-5 flex flex-col hover:shadow-lg transition-shadow"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center">
                       {logo ?
-                        <Image src={logo} width={24} height={24} alt='logo' />
+                        <Image src={logo} width={128} height={128} alt='logo' className='w-12 h-12 rounded-full object-cover'/>
                         :
-                        <span className="text-slate-700 font-bold text-lg">{logoText}</span>
+                        <span className="rounded-full bg-gradient-to-br from-slate-200 to-slate-300  px-4 py-2 text-slate-700 font-bold text-lg">{logoText}</span>
                       }
                     </div>
-                    <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
-                      <Image src="/bolt.png" width={12} height={12} alt='bolt' />
-                      <span className='text-[10px]'>{userCount}</span>
+                    <div className="flex items-center gap-1 text-md font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
+                      <Image src="/bolt.png" width={18} height={18} alt='bolt' />
+                      <span className='text-[12px]'>{userCount}</span>
                     </div>
                   </div>
 
