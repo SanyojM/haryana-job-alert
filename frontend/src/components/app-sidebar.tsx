@@ -1,197 +1,45 @@
-import * as React from "react"
-import { GalleryVerticalEnd, Minus, Plus } from "lucide-react"
+"use client";
 
-import { SearchForm } from "@/components/search-form"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarRail,
-} from "@/components/ui/sidebar"
-import { usePathname } from "next/navigation"
-import Link from "next/link"
+import React from "react";
+import { LogOut, Plus } from "lucide-react";
+import SidebarMenus from "./sidebar-menus";
+import { menus } from "@/config/menus";
+import { Button } from "@heroui/react";
+import { useAuth } from "@/context/AuthContext";
 
-const data = {
-  navMain: [
-    {
-      title: "Getting Started",
-      items: [
-        {
-          title: "Dashboard",
-          url: "/admin",
-        },
-        {
-          title: "Categories",
-          url: "/admin/getting-started/categories",
-        },
-        {
-          title: "Online Forms",
-          url: "/admin/getting-started/online-forms",
-        },
-        {
-          title: "Offline Forms",
-          url: "/admin/getting-started/offline-forms",
-        },
-        {
-          title: "Tags",
-          url: "/admin/getting-started/tags",
-        },
-        {
-          title: "Users",
-          url: "/admin/getting-started/users",
-        },
-        {
-          title: "Carousel",
-          url: "/admin/getting-started/carousel",
-        }
-      ],
-    },
-    {
-      title: "Content",
-      items: [
-        {
-          title: "Post Templates",
-          url: "/admin/posts/post-templates",
-        },
-        {
-          title: "All Posts",
-          url: "/admin/posts",
-        },
-        {
-          title: "Add New Post",
-          url: "/admin/posts/new",
-        },
-      ],
-    },
-    {
-      title: "Mock Tests",
-      items: [
-        {
-          title: "Categories",
-          url: "/admin/mock-tests/mock-categories",
-        },
-        {
-          title: "Tags",
-          url: "/admin/mock-tests/mock-tags",
-        },
-        {
-          title: "Test Series",
-          url: "/admin/mock-tests/mock-test-series",
-        },
-        {
-          title: "Mock Tests",
-          url: "/admin/mock-tests",
-        },
-      ],
-    },
-    {
-      title: "Courses",
-      items: [
-        {
-          title: "All Courses",
-          url: "/admin/courses",
-        },
-        {
-          title: "Add New Course",
-          url: "/admin/courses/new",
-        },
-        {
-          title: "Update Course",
-          url: "/admin/courses/update",
-        },
-        {
-          title: "Categories",
-          url: "/admin/course-categories",
-        },
-        {
-          title: "Tags",
-          url: "/admin/course-tags",
-        },
-        {
-          title: "Reviews",
-          url: "/admin/reviews",
-        },
-      ],
-    },
-  ],
-}
+export default function Sidebar() {
+const [open, setOpen] = React.useState(true);
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const currentPath = usePathname()
   return (
-    <Sidebar {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <GalleryVerticalEnd className="size-4" />
-                </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-medium">Haryana Job Alerts</span>
-                  <span className="">Powered by Softricity</span>
-                </div>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <SearchForm />
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            {data.navMain.map((item) => (
-                <Collapsible
-                  key={item.title}
-                  defaultOpen={item.items?.some((sub) => currentPath === sub.url)}
-                  className="group/collapsible"
-                >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                  <SidebarMenuButton>
-                    {item.title}{" "}
-                    <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
-                    <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
-                  </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  {item.items?.length ? (
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                    {item.items.map((sub) => (
-                      <SidebarMenuSubItem key={sub.title}>
-                      <SidebarMenuSubButton
-                        asChild
-                        isActive={currentPath === sub.url}
-                      >
-                        <Link href={sub.url}>{sub.title}</Link>
-                      </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                  ) : null}
-                </SidebarMenuItem>
-                </Collapsible>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarRail />
-    </Sidebar>
-  )
+    <>
+      {/* Desktop Sidebar */}
+      <div
+        className={`hidden lg:flex flex-col justify-between overflow-y-hidden border-r border-gray-300 h-screen 
+        ${open ? "min-w-72" : "w-20"} transition-width duration-300`}
+      >
+        <div>
+          {/* Header */}
+          <div className="flex justify-between items-center mt-4 mb-2 px-3">
+            {open && (
+              <div className="flex items-center">
+                <img src="/softricity.png" alt="Logo" className="h-14" />
+              </div>
+            )}
+            <button
+              type="button"
+              title="Toggle Sidebar"
+              onClick={() => setOpen(!open)}
+              className="min-w-14 min-h-14 flex justify-center items-center p-2 rounded-2xl hover:bg-gray-200 transition-colors"
+            >
+              <LogOut
+                className={`rotate-${open ? "180" : "0"} transition-transform duration-300`}
+              />
+            </button>
+          </div>
+          {/* Menus */}
+          <SidebarMenus menus={menus} open={open} />
+        </div>
+      </div>
+    </>
+  );
 }
-
-
