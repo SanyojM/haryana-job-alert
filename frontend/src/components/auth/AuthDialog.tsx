@@ -176,7 +176,7 @@ export function AuthDialog({
                 </p>
                 <img
                   src="/softricity.png"
-                  className="w-25 h-6 object-cover"
+                  className="w-25 h-7 object-cover"
                   alt=""
                 />
               </Link>

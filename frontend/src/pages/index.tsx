@@ -77,7 +77,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, series }) => {
             ) : (
               <PostsSection posts={posts.slice(0, 8)} />
             )}
-            <AdBanner text="Google Ads Section" className="h-88" />
+            {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
             <MidCards 
               categories={categories}
               posts={posts}

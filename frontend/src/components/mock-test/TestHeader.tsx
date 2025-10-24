@@ -135,14 +135,14 @@ export default function TestHeader({
   };
 
   return (
-    <section className="bg-white p-6 mb-10">
+    <section className="bg-white py-4 mb-10">
       <div className="flex flex-col lg:flex-row gap-8 justify-between">
         
         {/* Left Side: Main Content */}
         <div className='w-full'>
           {/* Breadcrumbs */}
           <nav aria-label="Breadcrumb" className="text-sm text-gray-500 mb-12 hidden md:block">
-            <ol className="flex items-center space-x-2">
+            <ol className="flex items-center space-x-2 text-nowrap">
               <li><Link href="/" className="hover:text-indigo-600">Home</Link></li>
               <li><span className="text-gray-400"><ChevronRight /></span></li>
               <li><Link href="/mock-tests" className="hover:text-indigo-600">Mock Tests</Link></li>
@@ -160,7 +160,7 @@ export default function TestHeader({
               <Image src="https://placehold.co/60x60/e2e8f0/334155?text=SSC" width={60} height={60} alt="Test Logo" className="w-14 h-14 rounded-full hidden lg:block" unoptimized />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-                <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                <div className="flex items-center gap-2 text-xs text-gray-500 mt-15">
                   <Clock size={14} />
                   <span>Last update on {lastUpdated}</span>
                 </div>
@@ -183,7 +183,12 @@ export default function TestHeader({
             </div>
 
             <div>
-              <p className='text-sm'>{description}</p>
+              <p className='text-sm list-disc grid grid-cols-3'>{description.split("\n").map((line, index) => (
+                <li key={index} className="flex items-center gap-2">
+                    <span className="text-indigo-500 text-lg leading-none">•</span>
+                    <span className="line-clamp-1">{line}</span>
+                </li>
+              ))}</p>
             </div>
             {/* Features List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-gray-800 font-medium mb-12">
@@ -223,9 +228,9 @@ export default function TestHeader({
         </div>
 
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
-        <div className='hidden lg:flex flex-col gap-4 w-full lg:w-[50%] ml-24'>
+        <div className='hidden lg:flex flex-col gap-4 w-full lg:w-[50%]'>
         {!isLoggedIn ? ( // Use the dynamic isLoggedIn state
-          <div className="flex-shrink-0 w-full">
+          <div className="min-w-full ">
             <MobileLoginCard />
           </div>
         ):(

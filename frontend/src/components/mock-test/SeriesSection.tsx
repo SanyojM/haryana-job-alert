@@ -180,17 +180,17 @@ const SeriesSection: NextPage<MockTestsHomePageProps> = ({ categories, series })
                                     {/* --- Card Header --- */}
                                     <div className="flex justify-between items-start mb-4">
                                         {/* Logo */}
-                                        <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
                                             {logo ?
-                                                <Image src={logo} width={24} height={24} alt='logo' />
+                                                <img src={logo} className='w-10 h-10 object-cover' alt='logo' />
                                                 :
+                                        <div className="w-10 h-10 rounded-md bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
                                                 <span className="text-slate-700 font-bold text-lg">{logoText}</span>
-                                            }
                                         </div>
+                                            }
                                         {/* User Count Pill */}
                                         <div className="flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
                                             <Image src="/bolt.png" width={12} height={12} alt='bolt' />
-                                            <span className='text-[7px]'>{userCount}</span>
+                                            <span className='text-xs'>{userCount}</span>
                                         </div>
                                     </div>
 

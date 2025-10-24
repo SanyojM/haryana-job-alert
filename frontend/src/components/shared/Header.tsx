@@ -114,10 +114,10 @@ export default function Header() {
 
         <div>
           <div
-            className="relative bg-center bg-cover h-25 sm:h-45 w-full"
+            className="relative bg-center bg-cover h-25 sm:h-35 w-full"
             style={{ backgroundImage: "url('/header.jpg')" }}
           >
-            <div className="absolute top-5 sm:top-12 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
+            <div className="absolute top-4 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-2xl sm:text-4xl font-bold text-white z-10 flex items-center">
                 <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
                 <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
@@ -125,7 +125,7 @@ export default function Header() {
               <img src="/header-arrow.jpg" alt="" className="h-4 w-30 sm:w-40 object-cover -mt-3 -mr-10 sm:mr-0" />
             </div>
 
-            <div className="absolute lg:block playfair text-xl !font-light hidden top-25 text-white left-[60vw] z-20">
+            <div className="absolute lg:block playfair text-xl !font-light hidden top-14 text-white left-[65vw] z-20">
               theharyana<span className="text-[#fdf500]">jobalerts</span>.com
             </div>
           </div>

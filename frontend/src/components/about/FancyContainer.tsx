@@ -54,14 +54,14 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
                   I started this platform because at my time, I didn't have the right knowledge and guideance about jobs and career. Now, You can use this platform to get your Dream JOB
               </p>
               </div>
-              <div className="flex flex-col md:flex-row sm:flex-row items-start sm:items-center space-y-5 sm:space-y-0 mt-5 md:mt-20 sm:mt-20 flex-wrap">
+              <div className="flex flex-col-reverse md:flex-row sm:flex-row items-start sm:items-center space-y-5 sm:space-y-0 mt-5 md:mt-20 sm:mt-20 flex-wrap">
                   <button className="bg-white rounded-xl shadow-md px-1 py-1 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg cursor-pointer hover:scale-105 duration-300 transition-transform hover:bg-gradient-to-r hover:from-[#222627] hover:to-[#414245] hover:text-white mr-4">
                       <span className='text-sm pl-3'>Get in Touch</span>
                       <span className="ml-4 w-10 h-10 rounded-md bg-green-400 object-cover flex items-center justify-center">
                           <img src="/arrow.png" width={48} height={48} alt='arrow' className='rounded-md' />
                       </span>
                   </button>
-                  <div className="flex items-center">
+                  <div className="flex items-center my-6 sm:my-0">
                     <div className="flex -space-x-3">
                         <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 1" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
                         <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 2" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
@@ -76,13 +76,13 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
                             <Star size={16} fill="currentColor" />
                             <Star size={16} fill="currentColor" />
                         </div>
-                        <p className="text-xs font-medium">Join our community</p>
+                        <p className="text-xs font-medium">Join us now</p>
                     </div>
                 </div>
 
               </div>
           </div>
-          <img src="/aj.png" alt="" className="absolute right-12 sm:right-14 -bottom-37 sm:-bottom-7.5 w-[150px] md:w-[330px] sm:w-[330px] h-[200px] sm:h-[450px] object-cover self-end" />
+          <img src="/aj.png" alt="" className="absolute right-12 sm:right-14 -bottom-25 sm:-bottom-7.5 w-[150px] md:w-[330px] sm:w-[330px] h-[200px] sm:h-[450px] object-cover self-end" />
         </div>
       </div>
 
@@ -131,14 +131,14 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
                   India's Premier Online Government Job Coaching Platform! We've been helping Students prepare for Government Jobs for 12 years. We offer both Online and Offline coaching.
               </p>
               </div>
-              <div className="flex flex-col md:flex-row sm:flex-row items-start sm:items-center space-y-5 sm:space-y-0 mt-5 md:mt-20 sm:mt-20 flex-wrap">
+              <div className="flex flex-col-reverse md:flex-row sm:flex-row items-start sm:items-center space-y-5 sm:space-y-0 mt-5 md:mt-20 sm:mt-20 flex-wrap">
                   <button className="bg-white rounded-xl shadow-md px-1 py-1 flex items-center justify-between font-semibold text-gray-800 hover:shadow-lg cursor-pointer hover:scale-105 duration-300 transition-transform hover:bg-gradient-to-r hover:from-[#222627] hover:to-[#414245] hover:text-white mr-4">
                       <span className='text-sm pl-3'>Get in Touch</span>
                       <span className="ml-4 w-10 h-10 rounded-md bg-green-400 object-cover flex items-center justify-center">
                           <img src="/arrow.png" width={48} height={48} alt='arrow' className='rounded-md' />
                       </span>
                   </button>
-                  <div className="flex items-center">
+                  <div className="flex items-center my-6 sm:my-0">
                     <div className="flex -space-x-3">
                         <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 1" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
                         <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 2" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
@@ -153,13 +153,13 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
                             <Star size={16} fill="currentColor" />
                             <Star size={16} fill="currentColor" />
                         </div>
-                        <p className="text-xs font-medium">Join our community</p>
+                        <p className="text-xs font-medium">Join us now</p>
                     </div>
                 </div>
 
               </div>
           </div>
-          <img src="/js.png" alt="" className="w-[150px] md:w-[330px] sm:w-[330px] h-[150px] sm:h-[310px] object-cover self-end" />
+          <img src="/js.png" alt="" className="w-[150px] md:w-[330px] sm:w-[330px] h-[150px] sm:h-[310px] -mt-12 sm:mt-0 object-cover self-end" />
         </div>
       </div>
     </div>
