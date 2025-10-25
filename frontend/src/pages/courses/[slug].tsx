@@ -303,26 +303,27 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
 
                     <aside className="space-y-8 col-span-1 hidden xl:block sticky top-24">
                         <CourseEnrollmentCard
-                            // --- MODIFICATION START: Pass Enroll button logic ---
-                            courseId={Number(course.id)} // Pass necessary props
+                            // --- CORRECTED PROPS ---
+                            courseId={Number(course.id)}                // Pass ID as a number
+                            slug={course.slug}                            // <-- ADDED: Pass the slug for navigation
                             isEnrolled={isEnrolled}
                             pricingModel={course.pricing_model}
                             price={course.sale_price ?? course.regular_price}
                             regularPrice={course.regular_price}
-                            onEnrollOrPurchase={handleEnrollOrPurchase} // Pass handler function
+                            onEnrollOrPurchase={handleEnrollOrPurchase}
                             isLoading={isProcessingEnrollment || isAuthLoading}
                             error={error}
-                            // --- MODIFICATION END ---
-                            title={course.title} // Pass title for card display
+                            title={course.title}
                             thumbnailUrl={course.thumbnail_url || "https://via.placeholder.com/400x225"}
                             instructorName={firstAuthor?.full_name || 'HJA Team'}
                             courseDuration={formatDuration(null, course.total_duration_hhmm)}
-                            description={course.description || ""}
-                            articlesAttached={0} // Replace with actual data if available
-                            downloadableResources={0} // Replace with actual data if available
-                            freeCourse={course.pricing_model === 'free'} // Duplicate prop? Use pricing_model
-                            mockTests={0} // Replace with actual data if available
-                            // Removed description from here as it's less relevant for enrollment card
+                            articlesAttached={0}
+                            downloadableResources={0}
+                            mockTests={0}
+                            freeCourse={course.pricing_model === 'free'}
+                            description={course.description || ''}
+
+                            // --- REMOVED description and freeCourse props ---
                         />
                         {/* Ad Banner can be placed here if needed */}
                     </aside>

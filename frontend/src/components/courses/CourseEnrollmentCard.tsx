@@ -21,11 +21,12 @@ type CourseEnrollmentCardProps = {
   onEnrollOrPurchase: () => void;
   isLoading: boolean;
   error?: string | null;
+  slug: string;
 };
 
 export default function CourseEnrollmentCard({
   courseId,
-  title,
+slug,
   isEnrolled,
   thumbnailUrl,
   instructorName,
