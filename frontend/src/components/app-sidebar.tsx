@@ -59,7 +59,7 @@ const data = {
       ],
     },
     {
-      title: "Content",
+      title: "Blog Content",
       items: [
         {
           title: "Post Templates",
@@ -79,11 +79,11 @@ const data = {
       title: "Mock Tests",
       items: [
         {
-          title: "Categories",
+          title: "Mock Categories",
           url: "/admin/mock-tests/mock-categories",
         },
         {
-          title: "Tags",
+          title: "MockTags",
           url: "/admin/mock-tests/mock-tags",
         },
         {
@@ -107,22 +107,16 @@ const data = {
           title: "Add New Course",
           url: "/admin/courses/new",
         },
+        // Removed "Update Course" - Editing is via All Courses list
         {
-          title: "Update Course",
-          url: "/admin/courses/update",
-        },
-        {
-          title: "Categories",
+          title: "Course Categories", // Clarified name
           url: "/admin/course-categories",
         },
         {
-          title: "Tags",
+          title: "Course Tags", // Clarified name
           url: "/admin/course-tags",
         },
-        {
-          title: "Reviews",
-          url: "/admin/reviews",
-        },
+        // Removed "Reviews" - No page created for this yet
       ],
     },
   ],

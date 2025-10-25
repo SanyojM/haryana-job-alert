@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ConflictException
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -15,6 +16,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { CourseStatus, Prisma } from '@prisma/client';
 import { ReorderTopicsDto } from './dto/reorder-topics.dto';
 import { ReorderLessonsDto } from './dto/reorder-lessons.dto';
+import { enrollment_status, CoursePricingModel } from '../../generated/prisma';
 
 // Helper function to convert HH:MM to seconds
 const timeToSeconds = (time?: string | null): number | null => {
@@ -53,6 +55,69 @@ export class CoursesService {
   // ======================================
   // Course CRUD Operations
   // ======================================
+
+  async enrollFreeCourse(courseId: number, userId: number) {
+    // 1. Fetch the course and ensure it exists and is free
+    const course = await this.prisma.courses.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      throw new NotFoundException(`Course with ID ${courseId} not found`);
+    }
+
+    if (course.pricing_model !== CoursePricingModel.free) {
+      throw new BadRequestException(`Course with ID ${courseId} is not free.`);
+    }
+
+    // 2. Check if the user is already enrolled
+    const existingEnrollment = await this.prisma.enrollments.findFirst({
+      where: {
+        user_id: userId,
+        course_id: courseId,
+      },
+    });
+
+    if (existingEnrollment) {
+      // You could return the existing enrollment or throw an error
+      // Throwing an error might be clearer if the button should be disabled
+      throw new ConflictException('User is already enrolled in this course.');
+      // Alternatively: return existingEnrollment;
+    }
+
+    // 3. Create the enrollment record
+    const newEnrollment = await this.prisma.enrollments.create({
+      data: {
+        user_id: userId,
+        course_id: courseId,
+        status: enrollment_status.active, // Set status to active for free courses
+        started_at: new Date(),
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Successfully enrolled in the free course.',
+      enrollment: newEnrollment, // Optionally return the enrollment record
+    };
+  }
+
+  async checkEnrollment(courseId: number, userId: number): Promise<{ enrolled: boolean }> {
+    // First, check if the course exists to provide a better error if not
+    await this.findCourseByIdOrSlug(courseId);
+
+    // Check for an active enrollment record for this user and course
+    const enrollment = await this.prisma.enrollments.findFirst({
+      where: {
+        user_id: userId,
+        course_id: courseId,
+        status: enrollment_status.active, // Or check based on payment status if using payments directly
+      },
+    });
+
+    // Return true if an active enrollment exists, false otherwise
+    return { enrolled: !!enrollment };
+  }
 
   async createCourse(createCourseDto: CreateCourseDto) {
     const {
@@ -115,9 +180,10 @@ export class CoursesService {
   }
 
   async findAllCourses(status?: CourseStatus) {
+    
     const courses = await this.prisma.courses.findMany({
       where: {
-        status: status ?? 'published', // Default to published if no status provided
+        status: status ?? undefined, // Default to published if no status provided
       },
       include: {
         category: true,

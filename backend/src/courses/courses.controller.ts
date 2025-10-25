@@ -13,7 +13,11 @@ import {
   UploadedFile,
   BadRequestException,
   Query, // Import Query decorator
+  Req,
+  HttpCode,
+  HttpStatus
 } from '@nestjs/common';
+import type { Request } from 'express'; // <-- Import Request type
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -41,6 +45,21 @@ export class CoursesController {
   // Course Routes
   // ======================================
 
+  @UseGuards(JwtAuthGuard) // Protect with JWT authentication
+  @Get(':id/check-enrollment')
+  checkEnrollment(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request, // Inject the request object
+  ) {
+    // The user object is attached to the request by JwtAuthGuard/JwtStrategy
+    const user = req.user as any;
+    // Ensure user object and ID exist before proceeding
+    if (!user || !user.id) {
+        throw new BadRequestException('User information not found in request.');
+    }
+    return this.coursesService.checkEnrollment(id, user.id);
+  }
+
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
@@ -60,6 +79,21 @@ export class CoursesController {
       createCourseDto.thumbnail_url = publicUrl;
     }
     return this.coursesService.createCourse(createCourseDto);
+  }
+
+  @Post(':id/enroll')
+  @UseGuards(JwtAuthGuard) // Protect with JWT authentication
+  @HttpCode(HttpStatus.OK) // Return 200 OK on success instead of 201 Created
+  async enrollFreeCourse(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request, // Inject the request object
+  ) {
+    const user = req.user as any;
+    if (!user || !user.id) {
+      throw new BadRequestException('User information not found in request.');
+    }
+    // No request body needed, just course ID from URL and user ID from token
+    return this.coursesService.enrollFreeCourse(id, user.id);
   }
 
   @Get() // Public route to get published courses

@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import Razorpay from 'razorpay';
 import * as crypto from 'crypto';
+import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -18,34 +19,72 @@ export class PaymentsService {
     });
   }
 
-  async createOrder(mockSeriesId: number, userId: number) {
-    const series = await this.prisma.mock_series.findUnique({
-      where: { id: mockSeriesId },
-    });
+  async createOrder(createOrderDto: CreateOrderDto, userId: number) {
+    const { mock_series_id, course_id } = createOrderDto;
 
-    // FIX: Convert series.price to a number before comparison
-    if (!series || !series.price || Number(series.price) <= 0) {
-      throw new NotFoundException('Paid series not found or has no price.');
+    let item: any; // To hold either mock_series or course
+    let amount: number;
+    let title: string;
+    let type: 'mock_series' | 'course';
+
+    if (mock_series_id) {
+      item = await this.prisma.mock_series.findUnique({
+        where: { id: mock_series_id },
+      });
+      if (!item || !item.price || Number(item.price) <= 0) {
+        throw new NotFoundException('Paid mock series not found or has no price.');
+      }
+      amount = Number(item.price);
+      title = item.title;
+      type = 'mock_series';
+    } else if (course_id) {
+      item = await this.prisma.courses.findUnique({
+        where: { id: course_id },
+      });
+      // Use regular_price for courses, adjust if using sale_price logic
+      if (!item || item.pricing_model !== 'paid' || !item.regular_price || Number(item.regular_price) <= 0) {
+        throw new NotFoundException('Paid course not found or has no price.');
+      }
+      const regularPriceNum = Number(item.regular_price);
+      const salePriceNum = item.sale_price ? Number(item.sale_price) : null;
+
+      // Use sale price if it exists, is greater than 0, and less than regular price
+      if (salePriceNum !== null && salePriceNum > 0 && salePriceNum < regularPriceNum) {
+        amount = salePriceNum;
+      } else {
+        amount = regularPriceNum;
+      } // Or implement sale_price logic
+      title = item.title;
+      type = 'course';
+    } else {
+      throw new BadRequestException('Either mock_series_id or course_id must be provided.');
     }
 
-    const amountInPaise = Number(series.price) * 100;
+    if (amount <= 0) {
+        throw new BadRequestException('Calculated item price is invalid.');
+    }
+
+    const amountInPaise = amount * 100;
+    const itemId = mock_series_id ?? course_id; // Get the actual ID provided
 
     const options = {
       amount: amountInPaise,
       currency: 'INR',
-      receipt: `receipt_series_${mockSeriesId}_user_${userId}`,
+      receipt: `receipt_${type}_${itemId}_user_${userId}`, // Dynamic receipt
     };
 
     const order = await this.razorpay.orders.create(options);
 
+    // Save payment record with correct ID
     await this.prisma.payments.create({
       data: {
-        amount: series.price,
+        amount: amount,
         payment_method: 'razorpay',
         status: 'pending',
         transaction_id: order.id,
         user_id: userId,
-        mock_series_id: mockSeriesId,
+        mock_series_id: mock_series_id, // Will be null if courseId is provided
+        course_id: course_id,       // Will be null if mockSeriesId is provided
       },
     });
 
@@ -53,7 +92,8 @@ export class PaymentsService {
       order_id: order.id,
       amount: order.amount,
       currency: order.currency,
-      series_title: series.title,
+      item_title: title, // Renamed for clarity
+      item_type: type,
     };
   }
 
