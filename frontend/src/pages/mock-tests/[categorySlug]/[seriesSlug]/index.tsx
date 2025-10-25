@@ -88,6 +88,7 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories })
           seriesName={series.title}
           title={series.title}
           price={series.price}
+          logo={(series as any).thumbnail_url || ''}
           lastUpdated={formattedDate}
           totalTests={testsInSeries.length}
           freeTests={testsInSeries.filter(t => t.is_free).length}

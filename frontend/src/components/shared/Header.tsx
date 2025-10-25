@@ -19,6 +19,12 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -289,10 +295,10 @@ export default function Header() {
                   )}
                 </button>
                 {isLoggedIn ? (
-                  <HoverCard openDelay={0} closeDelay={200}>
-                    <HoverCardTrigger asChild>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
                       <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 p-2">
-                        <Avatar className="min-h-6 min-w-6 w-5 h-5 bg-blue-500">
+                        <Avatar className="min-h-6 min-w-6 w-8 h-8 bg-blue-500">
                           <AvatarImage
                             src={user?.avatar_url || "/user.png"}
                             alt={user.full_name || "User"}
@@ -304,44 +310,46 @@ export default function Header() {
                           </AvatarFallback>
                         </Avatar>
                       </button>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      className="w-60 p-2 bg-gray-100 rounded-3xl mt-6 mr-14"
-                      side="bottom"
-                    >
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-60 p-2 bg-gray-100 rounded-3xl mt-5 mr-4">
                       <div className="flex flex-col space-y-1 border-2 border-gray-200 rounded-2xl bg-white">
                         <div className="font-bold p-3 pb-0.5">
                           {user.full_name || "User"}
                         </div>
-                        <div className="text-sm text-gray-600 pl-3">
+                        <div className="text-sm text-gray-600 pl-3 truncate">
                           {user.email || "No Email"}
                         </div>
                         <hr className="my-1" />
-                        <Link
-                          href="/dashboard"
-                          className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700 whitespace-nowrap"
-                        >
-                          <House className="w-4 h-4" />
-                          <span>Dashboard</span>
-                        </Link>
-                        <Link
-                          href="/dashboard/profile/edit"
-                          className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700 whitespace-nowrap"
-                        >
-                          <User className="w-4 h-4" />
-                          <span>Profile</span>
-                        </Link>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/dashboard"
+                            className="flex items-center gap-3"
+                          >
+                            <House className="w-4 h-4" />
+                            <span>Dashboard</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/dashboard/profile/edit"
+                            className="flex items-center gap-3"
+                          >
+                            <User className="w-4 h-4" />
+                            <span>Profile</span>
+                          </Link>
+                        </DropdownMenuItem>
                         <hr className="my-1" />
-                        <button
-                          onClick={() => logout()} // Call your logout function
-                          className="flex items-center gap-3 p-2 rounded-md hover:bg-red-50 text-sm font-medium text-red-600 w-full whitespace-nowrap"
+                        <DropdownMenuItem
+                          variant="destructive"
+                          onClick={() => logout()}
+                          className="flex items-center gap-3"
                         >
                           <LogOut className="w-4 h-4" />
                           <span>Logout</span>
-                        </button>
+                        </DropdownMenuItem>
                       </div>
-                    </HoverCardContent>
-                  </HoverCard>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 ) : (
                   // --- LOGGED-OUT STATE ---
                   // Show original image, open auth dialog on click
