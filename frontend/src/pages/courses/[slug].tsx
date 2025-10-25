@@ -304,7 +304,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                     <aside className="space-y-8 col-span-1 hidden xl:block sticky top-24">
                         <CourseEnrollmentCard
                             // --- CORRECTED PROPS ---
-                            courseId={Number(course.id)}                // Pass ID as a number
+                            // courseId={Number(course.id)}                // Pass ID as a number
                             slug={course.slug}                            // <-- ADDED: Pass the slug for navigation
                             isEnrolled={isEnrolled}
                             pricingModel={course.pricing_model}
@@ -320,9 +320,6 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                             articlesAttached={0}
                             downloadableResources={0}
                             mockTests={0}
-                            freeCourse={course.pricing_model === 'free'}
-                            description={course.description || ''}
-
                             // --- REMOVED description and freeCourse props ---
                         />
                         {/* Ad Banner can be placed here if needed */}
