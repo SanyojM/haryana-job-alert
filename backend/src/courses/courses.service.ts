@@ -16,7 +16,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { CourseStatus, Prisma } from '@prisma/client';
 import { ReorderTopicsDto } from './dto/reorder-topics.dto';
 import { ReorderLessonsDto } from './dto/reorder-lessons.dto';
-import { enrollment_status, CoursePricingModel } from '../../generated/prisma';
+import { enrollment_status, CoursePricingModel, payment_status } from '../../generated/prisma';
 
 // Helper function to convert HH:MM to seconds
 const timeToSeconds = (time?: string | null): number | null => {
@@ -103,20 +103,43 @@ export class CoursesService {
   }
 
   async checkEnrollment(courseId: number, userId: number): Promise<{ enrolled: boolean }> {
-    // First, check if the course exists to provide a better error if not
-    await this.findCourseByIdOrSlug(courseId);
-
-    // Check for an active enrollment record for this user and course
-    const enrollment = await this.prisma.enrollments.findFirst({
-      where: {
-        user_id: userId,
-        course_id: courseId,
-        status: enrollment_status.active, // Or check based on payment status if using payments directly
-      },
+    // 1. Fetch the course to check its pricing model
+    const course = await this.prisma.courses.findUnique({
+      where: { id: courseId },
+      select: { pricing_model: true }, // Only need the pricing model
     });
 
-    // Return true if an active enrollment exists, false otherwise
-    return { enrolled: !!enrollment };
+    if (!course) {
+      // Throw NotFoundException if course doesn't exist
+      throw new NotFoundException(`Course with ID ${courseId} not found`);
+    }
+
+    // 2. Check based on pricing model
+    let isEnrolled = false;
+    if (course.pricing_model === CoursePricingModel.free) {
+      // For FREE courses, check the enrollments table
+      const enrollment = await this.prisma.enrollments.findFirst({
+        where: {
+          user_id: userId,
+          course_id: courseId,
+          status: enrollment_status.active,
+        },
+      });
+      isEnrolled = !!enrollment;
+    } else {
+      // For PAID courses, check the payments table
+      const payment = await this.prisma.payments.findFirst({
+        where: {
+          user_id: userId,
+          course_id: courseId,
+          status: payment_status.success, // Look for a successful payment
+        },
+      });
+      isEnrolled = !!payment;
+    }
+
+    // 3. Return the result
+    return { enrolled: isEnrolled };
   }
 
   async createCourse(createCourseDto: CreateCourseDto) {
