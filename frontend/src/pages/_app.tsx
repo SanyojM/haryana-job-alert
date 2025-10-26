@@ -1,4 +1,5 @@
 import '@/styles/globals.css';
+import '@/styles/main.css';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
@@ -53,6 +54,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
+    <HeroUIProvider>
     <AuthProvider>
       {loading && (
         <div className="max-h-screen min-h-screen max-w-screen min-w-screen fixed top-0 right-0 bg-white/60 flex justify-center items-center z-[999]">
@@ -63,18 +65,15 @@ export default function App({ Component, pageProps }: AppProps) {
       )}
       {router.pathname.startsWith('/admin') ? (
         <AdminAuthGuard>
-          <HeroUIProvider>
           <Component {...pageProps} />
-          </HeroUIProvider>
         </AdminAuthGuard>
       ) : (
         <>
-        <HeroUIProvider>
         <FloatingSocials />
         <Component {...pageProps} />
-        </HeroUIProvider>
         </>
       )}
     </AuthProvider>
+    </HeroUIProvider>
   );
 }

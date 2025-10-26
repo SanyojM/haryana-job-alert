@@ -15,7 +15,7 @@ export default function SidebarMenus({
   const currentMenu = usePathname();
 
   return (
-    <div className="flex flex-col gap-2 px-3 h-[76vh] overflow-y-auto">
+    <div className="flex flex-col gap-2 px-3 h-[90vh] overflow-y-auto">
       {menus.map((menu, index) =>
         menu.type === "link" ? (
           <Tooltip
@@ -28,7 +28,7 @@ export default function SidebarMenus({
           >
             <Link
               href={menu.link ?? ""}
-              className={`flex items-center gap-4 px-3 py-3 rounded-xl text-black transition-colors 
+              className={`flex items-center gap-4 p-2 rounded-lg text-black transition-colors 
                 ${!open && "justify-center"} 
                 ${
                   currentMenu === menu.link
@@ -37,13 +37,13 @@ export default function SidebarMenus({
                 }`}
             >
               {menu.icon}
-              {open && <span>{menu.title}</span>}
+              {open && <span className="text-sm">{menu.title}</span>}
             </Link>
           </Tooltip>
         ) : (
           <div key={index} className="flex items-center">
             <span
-              className={`text-gray-400 text-sm font-bold ml-1 ${
+              className={`text-gray-400 text-xs font-bold ml-1 ${
                 !open && "hidden"
               }`}
             >
