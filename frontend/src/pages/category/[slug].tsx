@@ -15,7 +15,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ArrowDownUp, ArrowRight, CalendarDays, ListFilter, Search } from "lucide-react";
+import { ArrowDownUp, ArrowRight, CalendarDays, Eye, ListFilter, Search } from "lucide-react";
 import AdBanner from "@/components/shared/AdBanner";
 import Image from "next/image";
 import { useMemo, useState } from "react";
@@ -154,7 +154,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
             </BreadcrumbList>
           </Breadcrumb>
           
-          <hr className="mb-4"/>
+          {/* <hr className="mb-4"/> */}
 
           <div className="grid grid-cols-2 mb-6">
             <div className="flex items-center">
@@ -251,48 +251,13 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                 {processedPosts.map((post, index) => {
                   const logoText = getLogoText(post.title);
                   return (
-                    <div key={post.id} className="bg-white rounded-lg shadow-xl border-gray-400 overflow-hidden relative">
-                      <div className="md:hidden">
-                        {post.thumbnail_url ? (
-                        <div className="w-full h-48 relative">
-                          <Image
-                            src={post.thumbnail_url}
-                            alt={post.title}
-                            layout="fill"
-                            objectFit="contain"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-full h-48 flex items-center justify-center bg-gray-200 text-gray-700">
-                          <span className="font-bold text-6xl leading-none">{logoText}</span>
-                        </div>
-                      )}
-                      </div>
-                      <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 p-4 w-full h-full">
-                        <div className="hidden md:block">
-                          {post.thumbnail_url ? (
-                            <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
-                              <Image
-                                src={post.thumbnail_url}
-                                alt={post.title}
-                                width={150}
-                                height={100}
-                                className="rounded-lg object-cover w-full h-auto md:h-24 md:w-24"
-                              />
-                            </div>
-                          ) : (
-                              <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6 flex items-center justify-center 
-                                        w-24 h-24 md:w-24 md:h-24 rounded-lg bg-gray-200 text-gray-700 
-                                        font-bold text-4xl leading-none">
-                            {logoText}
-                          </div>
-                          )}
-                        </div>
+                    <div key={post.id} className="bg-white group transition-all duration-200 rounded-lg shadow-xl border-gray-400 overflow-hidden relative">
+                      <div className="flex flex-row justify-between items-end md:items-center gap-4 px-4 py-2 w-full h-full">
                         <div className="flex-grow">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-bold text-gray-800">{post.title}</h3>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-all duration-200">{post.title}</h3>
                           </div>
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500 mb-3">
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500 mb-1">
                             {post.post_tags && post.post_tags.length > 0 && (
                               <div className="flex flex-wrap mt-2">
                                 {post.post_tags.slice(0, 2).map((pt) => (
@@ -317,7 +282,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                             {/* <div className="flex items-center gap-1.5"><FileText size={14} /> {post.total_marks} Marks</div> */}
                           </div>
                         </div>
-                        <div className="w-full md:w-auto flex-shrink-0">
+                        <div className="hidden sm:block w-auto flex-shrink-0">
                           <Link
                             href={`/posts/${post.slug}`}
                             className='shine bg-gradient-to-r from-red-600 to-gray-800 text-white md:px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 flex items-center justify-center gap-2 group mt-auto text-sm md:text-md'
@@ -325,6 +290,15 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                             Learn More
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                           </Link>
+                        </div>
+                        <div className="inline sm:hidden mb-4">
+                          <Link
+                            href={`/posts/${post.slug}`}
+                            className='bg-gradient-to-r from-green-600 to-gray-800 text-white font-semibold text-center flex items-center justify-center min-w-7 min-h-7 w-7 h-7 p-1 rounded'
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Link>
+
                         </div>
                       </div>
                     </div>

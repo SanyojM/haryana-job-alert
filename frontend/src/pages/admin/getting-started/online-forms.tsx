@@ -1,30 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@heroui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Trash2, GripVertical, Edit, ExternalLink, Users, Eye } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import {Alert, Button, Card, CardHeader, CardBody, CardFooter, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Switch, Table, TableHeader, TableBody, TableColumn, TableRow, TableCell} from "@heroui/react";
 import { api } from '@/lib/api';
+import { Label } from '@/components/ui/label';
 
 interface FormField {
   key: string;
@@ -303,26 +283,29 @@ const AdminFormsManagement: React.FC = () => {
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Forms Management</h1>
-        <Button onClick={handleCreateNew}>
+        <Button onClick={handleCreateNew} className='bg-[#8A79AB] text-white rounded-md'>
           <Plus className="w-4 h-4 mr-2" />
           Create New Form
         </Button>
       </div>
 
       {message.text && (
-        <Alert className={`mb-4 ${message.type === 'error' ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50'}`}>
-          <AlertDescription>{message.text}</AlertDescription>
+        <Alert
+          className="mb-4"
+          color={message.type === 'error' ? 'danger' : 'success'}
+        >
+          {message.text}
         </Alert>
       )}
 
-      <Card>
+      <Card className='bg-white p-4 rounded-2xl border border-gray-300 shadow-sm'>
         <CardHeader>
-          <CardTitle>All Forms ({forms.length})</CardTitle>
-          <CardDescription>
+          <h1>All Forms ({forms.length})</h1>
+          <p>
             Manage all your forms, view submissions, and update form details
-          </CardDescription>
+          </p>
         </CardHeader>
-        <CardContent>
+        <CardBody>
           {loading && forms.length === 0 ? (
             <div className="text-center py-8 text-gray-500">Loading forms...</div>
           ) : forms.length === 0 ? (
@@ -331,17 +314,15 @@ const AdminFormsManagement: React.FC = () => {
             </div>
           ) : (
             <div className="border rounded-lg overflow-hidden">
-              <Table>
+              <Table isStriped={true}>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Slug</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Fields</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Submissions</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
+                    <TableColumn>Title</TableColumn>
+                    <TableColumn>Slug</TableColumn>
+                    <TableColumn>Status</TableColumn>
+                    <TableColumn>Fields</TableColumn>
+                    <TableColumn>Price</TableColumn>
+                    <TableColumn>Submissions</TableColumn>
+                    <TableColumn className="text-right">Actions</TableColumn>
                 </TableHeader>
                 <TableBody>
                   {forms.map((form) => (
@@ -415,25 +396,26 @@ const AdminFormsManagement: React.FC = () => {
               </Table>
             </div>
           )}
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* Form Create/Edit Dialog */}
-      <Dialog open={formDialogOpen} onOpenChange={setFormDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingForm ? 'Edit Form' : 'Create New Form'}</DialogTitle>
-            <DialogDescription>
+      <Modal isOpen={formDialogOpen} onOpenChange={setFormDialogOpen} className='shadow-sm bg-white p-4 rounded-2xl border border-gray-300' size='lg'>
+        <ModalContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <ModalHeader className='flex flex-col'>
+            <h1>{editingForm ? 'Edit Form' : 'Create New Form'}</h1>
+            <p className='text-xs font-medium'>
               {editingForm ? 'Update the form details and fields' : 'Build a custom form with dynamic fields'}
-            </DialogDescription>
-          </DialogHeader>
+            </p>
+          </ModalHeader>
 
               <form onSubmit={handleSubmitForm} className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="title">Form Title *</Label>
                     <Input
                       id="title"
+                      label="Form Title *"
+                      labelPlacement='outside-top'
                       value={formData.title}
                       onChange={(e) => {
                         setFormData({
@@ -448,9 +430,10 @@ const AdminFormsManagement: React.FC = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="slug">Slug *</Label>
                     <Input
                       id="slug"
+                      label="Slug *"
+                      labelPlacement='outside-top'
                       value={formData.slug}
                       onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                       placeholder="registration-form"
@@ -472,11 +455,11 @@ const AdminFormsManagement: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="price">Price (INR)</Label>
                     <Input
                       id="price"
+                      // label="Price (INR)"
                       type="number"
-                      value={formData.price}
+                      value={String(formData.price)}
                       onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
                       placeholder="0"
                       min="0"
@@ -484,12 +467,7 @@ const AdminFormsManagement: React.FC = () => {
                   </div>
 
                   <div className="flex items-center space-x-2 mt-8">
-                    <Switch
-                      id="published"
-                      checked={formData.published}
-                      onCheckedChange={(checked) => setFormData({ ...formData, published: checked })}
-                    />
-                    <Label htmlFor="published">Published</Label>
+                    <Switch defaultSelected onValueChange={(checked) => setFormData({ ...formData, published: checked })}>Published</Switch>
                   </div>
                 </div>
 
@@ -520,11 +498,11 @@ const AdminFormsManagement: React.FC = () => {
                     </div>
                   )}
 
-                  <Card className="bg-blue-50">
+                  <Card className="bg-blue-50 shadow-sm">
                     <CardHeader>
-                      <CardTitle className="text-base">Add New Field</CardTitle>
+                      <h1 className="text-base">Add New Field</h1>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardBody className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label>Field Key</Label>
@@ -570,12 +548,7 @@ const AdminFormsManagement: React.FC = () => {
                         </div>
 
                         <div className="flex items-center space-x-2 mt-8">
-                          <Switch
-                            id="required"
-                            checked={newField.required}
-                            onCheckedChange={(checked) => setNewField({ ...newField, required: checked })}
-                          />
-                          <Label htmlFor="required">Required</Label>
+                          <Switch defaultSelected onValueChange={(checked) => setNewField({ ...newField, required: checked })}>Required</Switch>
                         </div>
                       </div>
 
@@ -594,26 +567,26 @@ const AdminFormsManagement: React.FC = () => {
                         <Plus className="w-4 h-4 mr-2" />
                         Add Field
                       </Button>
-                    </CardContent>
+                    </CardBody>
                   </Card>
                 </div>
 
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full bg-[#8A79AB] rounded-md text-white" disabled={loading}>
                   {loading ? (editingForm ? 'Updating...' : 'Creating...') : (editingForm ? 'Update Form' : 'Create Form')}
                 </Button>
               </form>
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
 
       {/* Submissions Dialog */}
-      <Dialog open={submissionsDialogOpen} onOpenChange={setSubmissionsDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Form Submissions - {selectedFormTitle}</DialogTitle>
-            <DialogDescription>
+      <Modal isOpen={submissionsDialogOpen} onOpenChange={setSubmissionsDialogOpen} className='shadow-sm bg-[#f8f7fa] border border-gray-300 rounded-2xl p-4' size='sm'>
+        <ModalContent className="max-w-xl max-h-[80vh] overflow-y-auto">
+          <ModalHeader className='flex flex-col'>
+            <h1>Form Submissions - {selectedFormTitle}</h1>
+            <p className='text-xs font-medium'>
               View all submissions for this form
-            </DialogDescription>
-          </DialogHeader>
+            </p>
+          </ModalHeader>
           
           {loading ? (
             <div className="text-center py-8">Loading submissions...</div>
@@ -624,8 +597,8 @@ const AdminFormsManagement: React.FC = () => {
           ) : (
             <div className="space-y-4 mt-4">
               {submissions.map((submission) => (
-                <Card key={submission.id}>
-                  <CardContent className="p-4">
+                <Card key={submission.id} className='bg-white p-2 rounded-xl border border-gray-200'>
+                  <CardBody className="p-4">
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <p className="font-semibold">{submission.user?.full_name}</p>
@@ -661,13 +634,13 @@ const AdminFormsManagement: React.FC = () => {
                         </div>
                       ))}
                     </div>
-                  </CardContent>
+                  </CardBody>
                 </Card>
               ))}
             </div>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

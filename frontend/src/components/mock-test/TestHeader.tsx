@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, Clock, Users, Globe, ChevronRight, Smartphone } from 'lucide-react';
+import { ChevronDown, Clock, Users, Globe, ChevronRight, Smartphone, CircleCheck, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import AdBanner from '../shared/AdBanner';
@@ -19,6 +19,7 @@ type TestHeaderProps = {
    seriesId: string;
    seriesName: string;
    description: string;
+  logo: string;
   title: string;
   price: number | null;
   level: string;
@@ -26,6 +27,7 @@ type TestHeaderProps = {
   totalTests: number;
   freeTests: number;
   users: number;
+  categories: any[];
   language: string;
   features: string[];
   seriesCategory: string;
@@ -36,12 +38,14 @@ export default function TestHeader({
   seriesName,
   description,
   title,
+  logo,
   price,
   level,
   lastUpdated,
   totalTests,
   freeTests,
   users,
+  categories,
   language,
   features,
   seriesCategory,
@@ -135,14 +139,14 @@ export default function TestHeader({
   };
 
   return (
-    <section className="bg-white p-6 mb-10">
+    <section className="bg-white py-4 mb-10">
       <div className="flex flex-col lg:flex-row gap-8 justify-between">
         
         {/* Left Side: Main Content */}
         <div className='w-full'>
           {/* Breadcrumbs */}
           <nav aria-label="Breadcrumb" className="text-sm text-gray-500 mb-12 hidden md:block">
-            <ol className="flex items-center space-x-2">
+            <ol className="flex items-center space-x-2 text-nowrap">
               <li><Link href="/" className="hover:text-indigo-600">Home</Link></li>
               <li><span className="text-gray-400"><ChevronRight /></span></li>
               <li><Link href="/mock-tests" className="hover:text-indigo-600">Mock Tests</Link></li>
@@ -157,10 +161,10 @@ export default function TestHeader({
           {/* Title Section */}
           <div className="flex flex-wrap items-start justify-start gap-12 mb-8">
             <div className="flex items-start gap-4">
-              <Image src="https://placehold.co/60x60/e2e8f0/334155?text=SSC" width={60} height={60} alt="Test Logo" className="w-14 h-14 rounded-full hidden lg:block" unoptimized />
+              <Image src={logo ? logo : "https://placehold.co/60x60/e2e8f0/334155?text=Mock"} width={60} height={60} alt="Test Logo" className="w-14 h-14 rounded-full -mt-3 hidden lg:block" unoptimized />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-                <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                <div className="flex items-center gap-2 text-xs text-gray-500 mt-15">
                   <Clock size={14} />
                   <span>Last update on {lastUpdated}</span>
                 </div>
@@ -183,7 +187,12 @@ export default function TestHeader({
             </div>
 
             <div>
-              <p className='text-sm'>{description}</p>
+              <p className='text-sm list-disc grid grid-cols-3'>{description.split("\n").map((line, index) => (
+                <li key={index} className="flex items-center gap-2">
+                    <span className="text-indigo-500 text-lg leading-none">•</span>
+                    <span className="line-clamp-1">{line}</span>
+                </li>
+              ))}</p>
             </div>
             {/* Features List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4 text-gray-800 font-medium mb-12">
@@ -223,15 +232,32 @@ export default function TestHeader({
         </div>
 
         {/* --- CONDITIONAL SIGN UP SECTION --- */}
-        <div className='hidden lg:flex flex-col gap-4 w-full lg:w-[50%] ml-24'>
+        <div className='hidden lg:flex flex-col gap-4 w-full lg:w-[50%]'>
         {!isLoggedIn ? ( // Use the dynamic isLoggedIn state
-          <div className="flex-shrink-0 w-full">
+          <div className="min-w-full ">
             <MobileLoginCard />
           </div>
         ):(
           <div className="flex-shrink-0 w-full">
-            <div className="bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] p-4 flex items-center justify-center rounded-2xl min-h-[550px] relative">
+            <div className="bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] p-4 flex flex-col items-center justify-center rounded-2xl min-h-[550px] relative">
               <img src="/ribbon.webp" alt="" className='absolute -left-7 -top-4 w-2/3' />
+              <h1 className="text-2xl text-white playfair mb-6">
+                Explore More Categories
+              </h1>
+              <div className="flex justify-center items-center gap-3 space-x-4 w-full h-full flex-wrap">
+
+              {categories.map((category) => (
+                <Link
+                key={category.id}
+                href={`/category/${category.id}`}
+                className="text-white relative hover:underline flex justify-center items-center text-sm"
+                >
+                  <CircleCheck className="h-4 w-4 mr-1 text-green-400" />
+                  {category.name}
+                  <ArrowUpRight className="h-4 w-4 ml-1 text-white" />
+                </Link>
+              ))}
+              </div>
             </div>
           </div>
         )}

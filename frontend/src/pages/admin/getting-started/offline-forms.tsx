@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {Alert, Button, Card, CardHeader, CardBody, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Switch, Table,
+  TableHeader,
+  TableBody,
+  TableColumn,
+  TableRow,
+  TableCell} from "@heroui/react";
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import { Plus, Trash2, Edit, ExternalLink, Download, Upload, Loader2 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { api } from '@/lib/api';
 
 interface DownloadableFile {
@@ -223,39 +209,38 @@ const AdminFilesManagement: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
+      <Card className='bg-white rounded-2xl border border-gray-300 p-4 shadow-sm'>
+        <CardHeader className='w-full'>
+          <div className="flex justify-between items-center w-full">
             <div>
-              <CardTitle>Files Management</CardTitle>
-              <CardDescription>Manage downloadable files and track purchases</CardDescription>
+              <h1 className='font-bold text-lg'>Files Management</h1>
+              <p className='text-sm text-gray-700'>Manage downloadable files and track purchases</p>
             </div>
-            <Button onClick={handleCreateFile} className="bg-blue-600 hover:bg-blue-700">
+            <Button onPress={handleCreateFile} className='bg-blue-600 hover:bg-blue-700 text-white rounded-lg'>
               <Plus className="w-4 h-4 mr-2" />
               Add New File
             </Button>
           </div>
         </CardHeader>
 
-        <CardContent>
+        <CardBody>
           {message.text && (
-            <Alert className={`mb-4 ${message.type === 'error' ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50'}`}>
-              <AlertDescription className={message.type === 'error' ? 'text-red-700' : 'text-green-700'}>
-                {message.text}
-              </AlertDescription>
+            <Alert
+              className="mb-4"
+              color={message.type === 'error' ? 'danger' : 'success'}
+            >
+              {message.text}
             </Alert>
           )}
 
-          <Table>
+          <Table isStriped={true}>
             <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Downloads</TableHead>
-                <TableHead>Published</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
+                <TableColumn>Title</TableColumn>
+                <TableColumn>Slug</TableColumn>
+                <TableColumn>Price</TableColumn>
+                <TableColumn>Downloads</TableColumn>
+                <TableColumn>Published</TableColumn>
+                <TableColumn>Actions</TableColumn>
             </TableHeader>
             <TableBody>
               {loading && files.length === 0 ? (
@@ -273,7 +258,7 @@ const AdminFilesManagement: React.FC = () => {
               ) : (
                 files.map((file) => (
                   <TableRow key={file.id}>
-                    <TableCell className="font-medium">{file.title}</TableCell>
+                    <TableCell className="font-medium text-sm">{file.title}</TableCell>
                     <TableCell className="text-sm text-gray-600">{file.slug}</TableCell>
                     <TableCell>₹{file.price}</TableCell>
                     <TableCell>{file.downloads_count}</TableCell>
@@ -284,16 +269,16 @@ const AdminFilesManagement: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={() => handleEditFile(file)}>
+                        <Button size="sm" onPress={() => handleEditFile(file)} className='bg-gray-100 rounded-md border border-gray-200'>
                           <Edit className="w-3 h-3" />
                         </Button>
-                        <Button size="sm" variant="outline" onClick={() => handleViewPurchases(file.id)}>
+                        <Button size="sm" onPress={() => handleViewPurchases(file.id)} className='bg-gray-100 rounded-md border border-gray-200'>
                           <Download className="w-3 h-3" />
                         </Button>
-                        <Button size="sm" variant="outline" onClick={() => window.open(`/offline-forms/${file.slug}`, '_blank')}>
+                        <Button size="sm" onPress={() => window.open(`/offline-forms/${file.slug}`, '_blank')} className='bg-gray-100 rounded-md border border-gray-200'>
                           <ExternalLink className="w-3 h-3" />
                         </Button>
-                        <Button size="sm" variant="destructive" onClick={() => handleDelete(file.id)}>
+                        <Button size="sm" onPress={() => handleDelete(file.id)} className="bg-[#DC6C6C] text-white rounded-md">
                           <Trash2 className="w-3 h-3" />
                         </Button>
                       </div>
@@ -303,20 +288,20 @@ const AdminFilesManagement: React.FC = () => {
               )}
             </TableBody>
           </Table>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* Create/Edit Dialog */}
-      <Dialog open={fileDialogOpen} onOpenChange={setFileDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingFile ? 'Edit File' : 'Create New File'}</DialogTitle>
-            <DialogDescription>
+      <Modal isOpen={fileDialogOpen} onOpenChange={setFileDialogOpen} className='shadow-sm bg-white p-6 border border-gray-400 rounded-xl'>
+        <ModalContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <ModalHeader className='flex flex-col'>
+            <h1>{editingFile ? 'Edit File' : 'Create New File'}</h1>
+            <p className='text-sm font-light text-gray-700'>
               {editingFile ? 'Update file details and settings' : 'Add a new downloadable file'}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-4">
+            </p>
+          </ModalHeader>
+          <ModalBody>
+          <div className="space-y-4">
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
@@ -356,11 +341,12 @@ const AdminFilesManagement: React.FC = () => {
             </div>
 
             <div>
-              <Label htmlFor="price">Price (₹)</Label>
               <Input
                 id="price"
                 type="number"
-                value={formData.price}
+                label="Price (₹)"
+                labelPlacement='outside-top'
+                value={String(formData.price)}
                 onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
                 placeholder="0"
               />
@@ -403,12 +389,11 @@ const AdminFilesManagement: React.FC = () => {
               <Switch
                 id="published"
                 checked={formData.is_published}
-                onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
+                onValueChange={(checked) => setFormData({ ...formData, is_published: checked })}
               />
               <Label htmlFor="published">Publish file</Label>
             </div>
           </div>
-
           <div className="flex justify-end gap-2 flex-col">
             {!formData.title && (
               <p className="text-xs text-red-600 text-right">* Title is required</p>
@@ -416,35 +401,36 @@ const AdminFilesManagement: React.FC = () => {
             {!formData.file_url && (
               <p className="text-xs text-red-600 text-right">* Please upload a file first</p>
             )}
+              </div>
+            </ModalBody>
+          <ModalFooter className='flex justify-start'>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setFileDialogOpen(false)}>Cancel</Button>
+              <Button onPress={() => setFileDialogOpen(false)} className='border border-gray-200 rounded-lg'>Cancel</Button>
               <Button 
-                onClick={handleSubmit} 
-                disabled={loading || !formData.title || !formData.file_url}
-                className="bg-blue-600 hover:bg-blue-700"
+                onPress={handleSubmit} 
+                isDisabled={loading || !formData.title || !formData.file_url}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (editingFile ? 'Update' : 'Create')}
               </Button>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* Purchases Dialog */}
-      <Dialog open={purchasesDialogOpen} onOpenChange={setPurchasesDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>File Purchases</DialogTitle>
-            <DialogDescription>List of users who purchased this file</DialogDescription>
-          </DialogHeader>
-
+      <Modal isOpen={purchasesDialogOpen} onOpenChange={setPurchasesDialogOpen} className='shadow-sm bg-white p-4 border border-gray-400 rounded-xl'>
+        <ModalContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <ModalHeader className='flex flex-col'>
+            <h1>File Purchases</h1>
+            <p className='text-sm text-gray-700 font-light'>List of users who purchased this file</p>
+          </ModalHeader>
+          <ModalBody>
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>User</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Purchased At</TableHead>
-              </TableRow>
+                <TableColumn>User</TableColumn>
+                <TableColumn>Email</TableColumn>
+                <TableColumn>Purchased At</TableColumn>
             </TableHeader>
             <TableBody>
               {purchases.length === 0 ? (
@@ -464,8 +450,9 @@ const AdminFilesManagement: React.FC = () => {
               )}
             </TableBody>
           </Table>
-        </DialogContent>
-      </Dialog>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { api } from '@/lib/api';
 import { useRouter } from 'next/router';
 
-interface User {
+export interface User {
   id: string;
   email: string;
   full_name: string;
