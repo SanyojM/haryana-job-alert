@@ -7,7 +7,7 @@ import { ReactNode, useEffect, useState } from 'react'; // Import useEffect
 import { HashLoader } from 'react-spinners'; // Loading spinner
 import Router from 'next/router';
 import FloatingSocials from '@/components/shared/FloatingSocials';
-import { Analytics } from "@vercel/analytics/next";
+import { HeroUIProvider } from '@heroui/react';
 
 // This component handles the protection logic
 const AdminAuthGuard = ({ children }: { children: ReactNode }) => {
@@ -63,12 +63,16 @@ export default function App({ Component, pageProps }: AppProps) {
       )}
       {router.pathname.startsWith('/admin') ? (
         <AdminAuthGuard>
+          <HeroUIProvider>
           <Component {...pageProps} />
+          </HeroUIProvider>
         </AdminAuthGuard>
       ) : (
         <>
+        <HeroUIProvider>
         <FloatingSocials />
         <Component {...pageProps} />
+        </HeroUIProvider>
         </>
       )}
     </AuthProvider>
