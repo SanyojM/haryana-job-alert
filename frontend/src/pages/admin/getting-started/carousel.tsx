@@ -4,12 +4,7 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Pencil, Trash2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { Button, Card, CardHeader, CardBody, CardFooter, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Switch} from "@heroui/react";
 
 type CarouselItem = {
   id: string;
@@ -114,25 +109,27 @@ const CarouselPage: NextPage = () => {
   return (
     <div className="container mx-auto py-6 space-y-8">
       {/* Add New Item Card */}
-      <Card>
+      <Card className='bg-white shadow-sm p-4 rounded-xl border border-gray-300'>
         <CardHeader>
-          <CardTitle>Add New Carousel Item</CardTitle>
+          <h1>Add New Carousel Item</h1>
         </CardHeader>
-        <CardContent>
+        <CardBody>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="text">Text</Label>
               <Input
                 id="text"
+                label="Text"
+                labelPlacement='outside-top'
                 value={newText}
                 onChange={(e) => setNewText(e.target.value)}
                 placeholder="Enter carousel text"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="link">Link (Optional)</Label>
               <Input
                 id="link"
+                label="Link (Optional)"
+                labelPlacement='outside-top'
                 value={newLink}
                 onChange={(e) => setNewLink(e.target.value)}
                 placeholder="Enter URL"
@@ -141,24 +138,25 @@ const CarouselPage: NextPage = () => {
             <div className="flex items-center space-x-2">
               <Switch
                 checked={newIsActive}
-                onCheckedChange={setNewIsActive}
+                onValueChange={setNewIsActive}
                 id="active"
-              />
-              <Label htmlFor="active">Active</Label>
+                defaultSelected>
+                  Active
+                </Switch>
             </div>
-            <Button onClick={handleCreateItem} disabled={!newText}>
+            <Button onPress={handleCreateItem} isDisabled={!newText} className='bg-[#8979AB] text-white rounded-lg'>
               Add Item
             </Button>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* List of Items Card */}
-      <Card>
+      <Card className='bg-white shadow-sm p-4 rounded-xl border border-gray-300'>
         <CardHeader>
-          <CardTitle>Carousel Items</CardTitle>
+          <h1>Carousel Items</h1>
         </CardHeader>
-        <CardContent>
+        <CardBody>
           <div className="space-y-4">
             {items.map((item) => (
               <div
@@ -180,18 +178,18 @@ const CarouselPage: NextPage = () => {
                 <div className="flex space-x-2">
                   <Button
                     variant="ghost"
-                    size="icon"
-                    onClick={() => {
+                    onPress={() => {
                       setEditingItem(item);
                       setIsEditDialogOpen(true);
                     }}
+                    className='hover:bg-red-100/50 rounded-lg'
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteItem(item.id)}
+                    onPress={() => handleDeleteItem(item.id)}
+                    className='hover:bg-red-100/50 rounded-lg'
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -199,20 +197,21 @@ const CarouselPage: NextPage = () => {
               </div>
             ))}
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Carousel Item</DialogTitle>
-          </DialogHeader>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='bg-white shadow-sm p-4 rounded-xl border border-gray-300'>
+        <ModalContent>
+          <ModalHeader>
+            <h1>Edit Carousel Item</h1>
+          </ModalHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-text">Text</Label>
               <Input
                 id="edit-text"
+                label="Text"
+                labelPlacement='outside-top'
                 value={editingItem?.text ?? ''}
                 onChange={(e) =>
                   setEditingItem(
@@ -222,9 +221,10 @@ const CarouselPage: NextPage = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-link">Link (Optional)</Label>
               <Input
                 id="edit-link"
+                label="Link (Optional)"
+                labelPlacement='outside-top'
                 value={editingItem?.link ?? ''}
                 onChange={(e) =>
                   setEditingItem(
@@ -236,26 +236,27 @@ const CarouselPage: NextPage = () => {
             <div className="flex items-center space-x-2">
               <Switch
                 checked={editingItem?.is_active ?? false}
-                onCheckedChange={(checked) =>
+                onValueChange={(checked) =>
                   setEditingItem(
                     prev => prev ? { ...prev, is_active: checked } : null
                   )
                 }
                 id="edit-active"
-              />
-              <Label htmlFor="edit-active">Active</Label>
+                defaultSelected>
+                  Active
+                </Switch>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+          <ModalFooter>
+            <Button onPress={() => setIsEditDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleUpdateItem}>
+            <Button onPress={handleUpdateItem} className='bg-[#8979AB] text-white rounded-lg'>
               Save Changes
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

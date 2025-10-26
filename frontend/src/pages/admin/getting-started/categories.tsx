@@ -136,7 +136,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
         {/* ADD NEW CATEGORY FORM */}
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
-            <Card className="bg-white rounded-2xl p-3 border border-gray-400">
+            <Card className="bg-white rounded-2xl p-3 border border-gray-400 shadow-sm">
               <CardHeader>
                 <h1 className="font-semibold">Add New Category</h1>
               </CardHeader>
@@ -176,7 +176,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
 
         {/* EXISTING CATEGORIES LIST */}
         <div className="lg:col-span-2">
-          <Card className="bg-white rounded-2xl p-3 border border-gray-400">
+          <Card className="bg-white rounded-2xl p-3 border border-gray-400 shadow-sm">
             <CardHeader>
               <h1 className="font-semibold">Existing Categories</h1>
             </CardHeader>
@@ -223,7 +223,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
       <Modal
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
-        className="bg-white p-4 rounded-2xl"
+        className="bg-white p-4 rounded-2xl shadow-sm"
       >
         <ModalContent>
           <ModalHeader>Edit Category</ModalHeader>

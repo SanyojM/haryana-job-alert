@@ -298,7 +298,7 @@ const AdminFormsManagement: React.FC = () => {
         </Alert>
       )}
 
-      <Card className='bg-white p-4 rounded-2xl border border-gray-300'>
+      <Card className='bg-white p-4 rounded-2xl border border-gray-300 shadow-sm'>
         <CardHeader>
           <h1>All Forms ({forms.length})</h1>
           <p>
@@ -314,7 +314,7 @@ const AdminFormsManagement: React.FC = () => {
             </div>
           ) : (
             <div className="border rounded-lg overflow-hidden">
-              <Table isStriped>
+              <Table isStriped={true}>
                 <TableHeader>
                     <TableColumn>Title</TableColumn>
                     <TableColumn>Slug</TableColumn>
@@ -400,7 +400,7 @@ const AdminFormsManagement: React.FC = () => {
       </Card>
 
       {/* Form Create/Edit Dialog */}
-      <Modal isOpen={formDialogOpen} onOpenChange={setFormDialogOpen} className='bg-white p-4 rounded-2xl border border-gray-300' size='lg'>
+      <Modal isOpen={formDialogOpen} onOpenChange={setFormDialogOpen} className='shadow-sm bg-white p-4 rounded-2xl border border-gray-300' size='lg'>
         <ModalContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <ModalHeader className='flex flex-col'>
             <h1>{editingForm ? 'Edit Form' : 'Create New Form'}</h1>
@@ -498,7 +498,7 @@ const AdminFormsManagement: React.FC = () => {
                     </div>
                   )}
 
-                  <Card className="bg-blue-50">
+                  <Card className="bg-blue-50 shadow-sm">
                     <CardHeader>
                       <h1 className="text-base">Add New Field</h1>
                     </CardHeader>
@@ -579,7 +579,7 @@ const AdminFormsManagement: React.FC = () => {
       </Modal>
 
       {/* Submissions Dialog */}
-      <Modal isOpen={submissionsDialogOpen} onOpenChange={setSubmissionsDialogOpen} className='bg-[#f8f7fa] border border-gray-300 rounded-2xl p-4' size='sm'>
+      <Modal isOpen={submissionsDialogOpen} onOpenChange={setSubmissionsDialogOpen} className='shadow-sm bg-[#f8f7fa] border border-gray-300 rounded-2xl p-4' size='sm'>
         <ModalContent className="max-w-xl max-h-[80vh] overflow-y-auto">
           <ModalHeader className='flex flex-col'>
             <h1>Form Submissions - {selectedFormTitle}</h1>
