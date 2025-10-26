@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, Clock, Users, Globe, ChevronRight, Smartphone } from 'lucide-react';
+import { ChevronDown, Clock, Users, Globe, ChevronRight, Smartphone, CircleCheck, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import AdBanner from '../shared/AdBanner';
@@ -27,6 +27,7 @@ type TestHeaderProps = {
   totalTests: number;
   freeTests: number;
   users: number;
+  categories: any[];
   language: string;
   features: string[];
   seriesCategory: string;
@@ -44,6 +45,7 @@ export default function TestHeader({
   totalTests,
   freeTests,
   users,
+  categories,
   language,
   features,
   seriesCategory,
@@ -237,8 +239,25 @@ export default function TestHeader({
           </div>
         ):(
           <div className="flex-shrink-0 w-full">
-            <div className="bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] p-4 flex items-center justify-center rounded-2xl min-h-[550px] relative">
+            <div className="bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] p-4 flex flex-col items-center justify-center rounded-2xl min-h-[550px] relative">
               <img src="/ribbon.webp" alt="" className='absolute -left-7 -top-4 w-2/3' />
+              <h1 className="text-2xl text-white playfair mb-6">
+                Explore More Categories
+              </h1>
+              <div className="flex justify-center items-center gap-3 space-x-4 w-full h-full flex-wrap">
+
+              {categories.map((category) => (
+                <Link
+                key={category.id}
+                href={`/category/${category.id}`}
+                className="text-white relative hover:underline flex justify-center items-center text-sm"
+                >
+                  <CircleCheck className="h-4 w-4 mr-1 text-green-400" />
+                  {category.name}
+                  <ArrowUpRight className="h-4 w-4 ml-1 text-white" />
+                </Link>
+              ))}
+              </div>
             </div>
           </div>
         )}

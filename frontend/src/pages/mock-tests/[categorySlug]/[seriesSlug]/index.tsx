@@ -47,25 +47,27 @@ export type MockSeriesDetails = {
 interface MockTestPageProps {
   series: MockSeriesDetails;
   categories: MockSeries[]
+  mockCategories: any[];
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { categorySlug, seriesSlug } = context.params!;
   try {
-    const [categories, series] = await Promise.all([
+    const [mockCategories, categories, series] = await Promise.all([
+        api.get("/mock-categories"),
         api.get('/mock-series'),
         api.get(`/mock-series/slug/${categorySlug}/${seriesSlug}`)
     ]);
-    return { props: { categories, series } };
+    return { props: { mockCategories, categories, series } };
   } catch (error) {
     console.error(`Failed to fetch mock series with slug /${categorySlug}/${seriesSlug}:`, error);
     console.error("Failed to fetch data for homepage:", error);
-    return { props: { categories: [], series: [] } };
+    return { props: { mockCategories: [], categories: [], series: [] } };
   }
 };
 
-const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories }) => {
-  console.log("series", categories)
+const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories, mockCategories }) => {
+  console.log("series", mockCategories)
   const testsInSeries = series.mock_series_tests.map(join => ({
     ...join.test,
     full_slug: join.full_slug
@@ -93,6 +95,7 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories })
           totalTests={testsInSeries.length}
           freeTests={testsInSeries.filter(t => t.is_free).length}
           users={series.enrolled_users_count} 
+          categories={mockCategories}
           level="Beginner"
           language="English, Hindi"
           features={[]}
