@@ -92,9 +92,11 @@ export default function HaryanaYojnaSection() {
                     }}
                     unoptimized
                   />
+                      <div className="my-2 text-sm pl-1">
+                        {post.title}
+                      </div>
                   <div className="py-2 flex items-center justify-between gap-2">
                     
-                   
                       <Link
                         href={`/posts/${post.slug}`} // <-- Fixed hardcoded slug
                         passHref

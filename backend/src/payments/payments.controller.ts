@@ -12,7 +12,7 @@ export class PaymentsController {
   @Post('create-order')
   createOrder(@Body() createOrderDto: CreateOrderDto, @Req() req: Request) {
     const user = req.user as any;
-    return this.paymentsService.createOrder(createOrderDto.mock_series_id, user.id);
+    return this.paymentsService.createOrder(createOrderDto, user.id);
   }
 
   @Post('webhook/razorpay')

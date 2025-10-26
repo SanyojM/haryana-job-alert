@@ -169,6 +169,7 @@ const MockTestSection: NextPage<MockTestsHomePageProps> = ({ series }) => {
                                       <span className="rounded-full bg-gradient-to-br from-slate-200 to-slate-300  px-4 py-2 text-slate-700 font-bold text-lg">{logoText}</span>
                                     }
                                   </div>
+                                    }
                                         {/* User Count Pill */}
                                         <div className="flex items-center gap-1 text-md font-semibold text-gray-700 bg-white border border-gray-300 px-1.5 py-1.5 rounded-full shadow-sm">
                                             <Image src="/bolt.png" width={18} height={18} alt='bolt' />

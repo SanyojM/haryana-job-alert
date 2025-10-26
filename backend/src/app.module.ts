@@ -22,6 +22,7 @@ import { FormsModule } from './forms/forms.module';
 import { CarouselModule } from './carousel/carousel.module';
 import { CourseCategoriesModule } from './course-categories/course-categories.module';
 import { CourseTagsModule } from './course-tags/course-tags.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -46,7 +47,8 @@ import { CourseTagsModule } from './course-tags/course-tags.module';
     FormsModule,
     CourseCategoriesModule,
     CourseTagsModule,
-    CoursesModule
+    CoursesModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],

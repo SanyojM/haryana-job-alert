@@ -17,6 +17,28 @@ Handles the root endpoint of the application.
 
 ---
 
+## 👥 Users API
+
+Handles fetching user information (primarily for admin purposes).
+
+### Get All Admin Users (Admin)
+
+-   **Route:** `GET /users/admins`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Retrieves a list of all users who have the 'admin' role, intended for populating selection lists like course authors.
+-   **Request Body:** None
+-   **Returns:** An array of admin user objects, including `id`, `full_name`, `email`, and `role`.
+    ```json
+    [
+      {
+        "id": "number",
+        "full_name": "string",
+        "email": "string",
+        "role": "admin"
+      }
+    ]
+    ```
+
 ## 🔐 Auth API
 
 Handles user authentication, including signup, login, and profile management.
@@ -878,6 +900,43 @@ Handles online courses, their structure (topics, lessons), and related data.
     -   `status` (string: `draft` | `published`, optional): Filters courses by status (Admin only for `draft`).
 -   **Returns:** An array of Course objects, each including `category`, `authors`, `tags`, `enrolled_users_count`, `total_duration_hhmm`, `lesson_count`, and nested `course_topics` with their `lessons`.
 
+#### Check Enrollment Status for a Course
+
+-   **Route:** `GET /courses/:id/check-enrollment`
+-   **Authentication:** **JWT Required**.
+-   **Description:** Checks if the currently authenticated user is enrolled in (has active access to) the specified course.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the course.
+-   **Request Body:** None
+-   **Returns:** An object indicating enrollment status.
+    ```json
+    {
+      "enrolled": true
+    }
+    ```
+
+
+#### Enroll in a Free Course
+
+-   **Route:** `POST /courses/:id/enroll`
+-   **Authentication:** **JWT Required**.
+-   **Description:** Enrolls the currently authenticated user in a specific course, **only if the course is free**. Checks if the user is already enrolled before creating a new enrollment record.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the free course to enroll in.
+-   **Request Body:** None
+-   **Returns (Success):** A confirmation message.
+    ```json
+    {
+      "success": true,
+      "message": "Successfully enrolled in the free course."
+    }
+    ```
+-   **Returns (Error):**
+    -   `404 Not Found`: If the course doesn't exist.
+    -   `400 Bad Request`: If the course is not free.
+    -   `409 Conflict`: If the user is already enrolled.
+
+    
 #### Get Single Course by ID (Admin)
 
 -   **Route:** `GET /courses/id/:id`
