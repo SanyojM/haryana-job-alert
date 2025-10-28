@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const AllPostsPage: NextPage<PostsPageProps> = ({ posts }) => {
   return (
-    <div>
+    <div className="py-4 px-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold tracking-tight">All Posts</h1>
         {/* We can add a "Create New" button here later */}

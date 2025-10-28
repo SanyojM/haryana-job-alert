@@ -18,26 +18,11 @@ import {
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Button } from "@heroui/button"
+import { Checkbox } from "@heroui/checkbox"
+import {  Dropdown,  DropdownTrigger,  DropdownMenu,  DropdownSection,  DropdownItem} from "@heroui/dropdown";
+import { Input } from "@heroui/input"
+import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@heroui/table";
 import { Post } from "@/pages/admin/posts" // Ensure this path is correct
 
 export function PostsClient({ data }: { data: Post[] }) {
@@ -62,14 +47,14 @@ export function PostsClient({ data }: { data: Post[] }) {
       header: ({ table }) => (
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onValueChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onValueChange={(value) => row.toggleSelected(!!value)}
           aria-label="Select row"
         />
       ),
@@ -81,7 +66,7 @@ export function PostsClient({ data }: { data: Post[] }) {
       header: ({ column }) => (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onPress={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Title
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -107,24 +92,24 @@ export function PostsClient({ data }: { data: Post[] }) {
       cell: ({ row }) => {
         const post = row.original;
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Dropdown>
+            <DropdownTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push(`/admin/posts/${post.id}/edit`)}>
+            </DropdownTrigger>
+            <DropdownMenu>
+              <DropdownSection title="Actions">
+              <DropdownItem key='new' onClick={() => router.push(`/admin/posts/${post.id}/edit`)}>
                 Edit Post
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-500" onClick={() => handleDelete(post.id)}>
+              </DropdownItem>
+              <DropdownItem key='file' className="text-red-500" onClick={() => handleDelete(post.id)}>
                 Delete Post
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownItem>
+              </DropdownSection>
+            </DropdownMenu>
+          </Dropdown>
         );
       },
     },
@@ -165,54 +150,49 @@ export function PostsClient({ data }: { data: Post[] }) {
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+        <Dropdown>
+          <DropdownTrigger asChild>
+            <Button className="ml-auto">
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          </DropdownTrigger>
+          <DropdownMenu>
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
                 return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
+                  <DropdownItem key={column.id} onSelect={(e) => e.preventDefault()}>
+                  <Checkbox
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
+                    onValueChange={(value) =>
                       column.toggleVisibility(!!value)
                     }
-                  >
+                    >
                     {column.id}
-                  </DropdownMenuCheckboxItem>
+                  </Checkbox>
+                    </DropdownItem>
                 )
               })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </DropdownMenu>
+        </Dropdown>
       </div>
-      <div className="rounded-md border bg-white">
         <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
+        <TableHeader>
+          {/* Map directly over the headers of the first headerGroup */}
+          {table.getHeaderGroups()[0].headers.map((header) => (
+            <TableColumn key={header.id}>
+              {header.isPlaceholder
+                ? null
+                : flexRender(
+                  header.column.columnDef.header,
+                  header.getContext()
+                )}
+            </TableColumn>
+          ))}
+        </TableHeader>
+        <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -241,7 +221,6 @@ export function PostsClient({ data }: { data: Post[] }) {
             )}
           </TableBody>
         </Table>
-      </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -249,17 +228,15 @@ export function PostsClient({ data }: { data: Post[] }) {
         </div>
         <div className="space-x-2">
           <Button
-            variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
+            onPress={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
           <Button
-            variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
+            onPress={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
             Next
