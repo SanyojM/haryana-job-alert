@@ -4,18 +4,17 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Pencil, Trash2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from '@/components/ui/textarea';
+// HeroUI Imports
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Modal, ModalContent, ModalHeader, ModalFooter } from "@heroui/modal";
+import { Input, Textarea } from "@heroui/input";
 
 // Define the type for a course category
 export type CourseCategory = {
-  id: string; // Assuming IDs are strings based on other files
+  id: string; 
   name: string;
-  slug: string; // Include slug if your API provides it
+  slug: string; 
   description: string | null;
 };
 
@@ -41,7 +40,7 @@ const CourseCategoriesPage: NextPage<CourseCategoriesPageProps> = ({ initialCate
   const [newDescription, setNewDescription] = useState('');
 
   const [editingCategory, setEditingCategory] = useState<CourseCategory | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false); // Changed from isDialogOpen
 
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -112,21 +111,26 @@ const CourseCategoriesPage: NextPage<CourseCategoriesPageProps> = ({ initialCate
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
             <Card>
-              <CardHeader><CardTitle>Add New Category</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="newName">Name</Label>
-                  <Input id="newName" value={newName} onChange={(e) => setNewName(e.target.value)} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="newDescription">Description</Label>
-                  <Textarea id="newDescription" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
-                </div>
+              <CardHeader>
+                <h2 className="text-lg font-semibold">Add New Category</h2>
+              </CardHeader>
+              <CardBody className="space-y-4">
+                <Input
+                  label="Name"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  required
+                />
+                <Textarea
+                  label="Description"
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                />
                 {error && <p className="text-sm text-red-600">{error}</p>}
-                <Button type="submit" disabled={isLoading} className="w-full">
+                <Button type="submit" disabled={isLoading} className="w-full bg-[#7828C8] text-white">
                   {isLoading ? 'Saving...' : 'Save Category'}
                 </Button>
-              </CardContent>
+              </CardBody>
             </Card>
           </form>
         </div>
@@ -134,21 +138,28 @@ const CourseCategoriesPage: NextPage<CourseCategoriesPageProps> = ({ initialCate
         {/* EXISTING CATEGORIES LIST */}
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader><CardTitle>Existing Categories</CardTitle></CardHeader>
-            <CardContent>
+            <CardHeader>
+              <h2 className="text-lg font-semibold">Existing Categories</h2>
+            </CardHeader>
+            <CardBody>
               {categories.length > 0 ? (
                 <ul className="space-y-3">
                   {categories.map((category) => (
-                    <li key={category.id} className="p-3 bg-slate-50 border rounded-md flex justify-between items-center">
+                    <li key={category.id} className="p-3 bg-slate-50 rounded-md flex justify-between items-center">
                       <div>
                         <p className="font-medium text-slate-900">{category.name}</p>
                         <p className="text-sm text-slate-500">{category.description || ''}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon" onClick={() => openEditDialog(category)}>
+                        <Button variant="ghost" isIconOnly={true} onPress={() => openEditDialog(category)}>
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDelete(category.id)}>
+                        <Button 
+                          variant="ghost" 
+                          isIconOnly={true} 
+                          className="text-red-500 hover:text-red-600" 
+                          onPress={() => handleDelete(category.id)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -156,36 +167,45 @@ const CourseCategoriesPage: NextPage<CourseCategoriesPageProps> = ({ initialCate
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">No categories created yet.</p>
+                <p className="text-sm text-gray-500 text-center py-4">No categories created yet.</p>
               )}
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
       </div>
 
-      {/* EDIT DIALOG */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Edit Course Category</DialogTitle></DialogHeader>
+      {/* EDIT DIALOG -> MODAL */}
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4'>
+        <ModalContent>
+          <ModalHeader>
+            <h2 className="text-lg font-semibold">Edit Course Category</h2>
+          </ModalHeader>
           {editingCategory && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="editName">Name</Label>
-                <Input id="editName" value={editingCategory.name} onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="editDescription">Description</Label>
-                <Textarea id="editDescription" value={editingCategory.description || ''} onChange={(e) => setEditingCategory({ ...editingCategory, description: e.target.value })} />
-              </div>
+              <Input
+                label="Name"
+                value={editingCategory.name}
+                onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })}
+                required
+              />
+              <Textarea
+                label="Description"
+                value={editingCategory.description || ''}
+                onChange={(e) => setEditingCategory({ ...editingCategory, description: e.target.value })}
+              />
               {error && <p className="text-sm text-red-600">{error}</p>}
-              <DialogFooter>
-                <Button type="button" variant="secondary" onClick={() => { setIsEditDialogOpen(false); setEditingCategory(null); }}>Cancel</Button>
-                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
-              </DialogFooter>
+              <ModalFooter>
+                <Button type="button" variant="bordered" onPress={() => { setIsEditDialogOpen(false); setEditingCategory(null); }}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </ModalFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

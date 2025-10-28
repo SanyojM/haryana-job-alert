@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const AllCoursesPage: NextPage<CoursesPageProps> = ({ courses }) => {
   return (
-    <div>
+    <div className="p-4">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold tracking-tight">All Courses</h1>
         {/* Button is now inside CoursesClient */}

@@ -18,27 +18,12 @@ import {
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal, PlusCircle } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@heroui/button"
+import { Checkbox } from "@heroui/checkbox"
+import {  Dropdown,  DropdownTrigger, DropdownSection,  DropdownItem, DropdownMenu} from "@heroui/dropdown";
+import { Input } from "@heroui/input"
+import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@heroui/table";
+import {Chip} from "@heroui/chip";
 import type { Course } from "./CreateCourseForm"; // Import Course type
 
 export function CoursesClient({ data }: { data: Course[] }) {
@@ -63,14 +48,14 @@ export function CoursesClient({ data }: { data: Course[] }) {
             header: ({ table }) => (
                 <Checkbox
                     checked={table.getIsAllPageRowsSelected()}
-                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    onChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                     aria-label="Select all"
                 />
             ),
             cell: ({ row }) => (
                 <Checkbox
                     checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    onChange={(value) => row.toggleSelected(!!value)}
                     aria-label="Select row"
                 />
             ),
@@ -102,9 +87,9 @@ export function CoursesClient({ data }: { data: Course[] }) {
                  const model = row.getValue("pricing_model") as string;
                  const price = row.original.sale_price ?? row.original.regular_price;
                  return (
-                    <Badge variant={model === 'free' ? 'secondary' : 'outline'}>
+                    <Chip variant={model === 'free' ? 'flat' : 'bordered'}>
                         {model === 'free' ? 'Free' : `Paid (₹${price || 'N/A'})`}
-                    </Badge>
+                    </Chip>
                  );
             }
         },
@@ -113,7 +98,7 @@ export function CoursesClient({ data }: { data: Course[] }) {
             header: "Status",
             cell: ({ row }) => {
                 const status = row.getValue("status") as string;
-                 return <Badge variant={status === 'published' ? 'default' : 'destructive'} className={status === 'published' ? 'bg-green-600' : ''}>{status}</Badge>;
+                 return <Chip color={status === 'published' ? 'default' : 'danger'} className={status === 'published' ? 'bg-green-600' : ''}>{status}</Chip>;
             }
         },
         // Add more columns as needed (e.g., authors, duration)
@@ -123,27 +108,26 @@ export function CoursesClient({ data }: { data: Course[] }) {
             cell: ({ row }) => {
                 const course = row.original;
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
+                    <Dropdown>
+                        <DropdownTrigger asChild>
+                            <Button variant="flat" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open </span>
                                 <MoreHorizontal className="h-4 w-4" />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                             <DropdownMenuItem onClick={() => router.push(`/admin/courses/${course.id}`)}>
+                        </DropdownTrigger>
+                        <DropdownMenu>
+                            <DropdownItem key='actions'>Actions</DropdownItem>
+                             <DropdownItem key='manage' onClick={() => router.push(`/admin/courses/${course.id}`)}>
                                 Manage Content (Topics/Lessons)
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push(`/admin/courses/${course.id}/edit`)}>
+                            </DropdownItem>
+                            <DropdownItem key='edit' onClick={() => router.push(`/admin/courses/${course.id}/edit`)}>
                                 Edit Course Details
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-500" onClick={() => handleDelete(course.id)}>
+                            </DropdownItem>
+                            <DropdownItem key='delete' className="text-red-500" onClick={() => handleDelete(course.id)}>
                                 Delete Course
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 );
             },
         },
@@ -190,55 +174,52 @@ export function CoursesClient({ data }: { data: Course[] }) {
                     className="max-w-sm"
                 />
                  <div className="flex items-center gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="ml-auto">
+                    <Dropdown>
+                        <DropdownTrigger asChild>
+                            <Button variant="bordered" className="ml-auto">
                                 Columns <ChevronDown className="ml-2 h-4 w-4" />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        </DropdownTrigger>
+                        <DropdownMenu>
                             {table
                                 .getAllColumns()
                                 .filter((column) => column.getCanHide())
                                 .map((column) => {
                                     return (
-                                        <DropdownMenuCheckboxItem
+                                        <DropdownItem key='checkbox'>
+                                            <Checkbox
                                             key={column.id}
                                             className="capitalize"
                                             checked={column.getIsVisible()}
-                                            onCheckedChange={(value) =>
+                                            onChange={(value) =>
                                                 column.toggleVisibility(!!value)
-                                            }
-                                        >
+                                            }>
+
+                                            </Checkbox>
                                             {column.id === 'category.name' ? 'Category' : column.id}
-                                        </DropdownMenuCheckboxItem>
+                                        </DropdownItem>
                                     )
                                 })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Button onClick={() => router.push('/admin/courses/new')}>
+                        </DropdownMenu>
+                    </Dropdown>
+                    <Button className="bg-[#7828C8] text-white" onPress={() => router.push('/admin/courses/new')}>
                          <PlusCircle className="mr-2 h-4 w-4" /> Create New Course
                     </Button>
                  </div>
             </div>
-            <div className="rounded-md border bg-white">
+            <div className="rounded-md bg-white">
                 <Table>
                     <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    )
-                                })}
-                            </TableRow>
+                        {/* Map headers from the first headerGroup directly to TableColumn */}
+                        {table.getHeaderGroups()[0].headers.map((header) => (
+                            <TableColumn key={header.id}>
+                                {header.isPlaceholder
+                                    ? null
+                                    : flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext()
+                                    )}
+                            </TableColumn>
                         ))}
                     </TableHeader>
                     <TableBody>
@@ -278,17 +259,17 @@ export function CoursesClient({ data }: { data: Course[] }) {
                 </div>
                 <div className="space-x-2">
                     <Button
-                        variant="outline"
+                        variant="bordered"
                         size="sm"
-                        onClick={() => table.previousPage()}
+                        onPress={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
                         Previous
                     </Button>
                     <Button
-                        variant="outline"
+                        variant="bordered"
                         size="sm"
-                        onClick={() => table.nextPage()}
+                        onPress={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
                         Next
