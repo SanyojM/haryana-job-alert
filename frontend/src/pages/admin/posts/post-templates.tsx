@@ -4,12 +4,9 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Pencil, Trash2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from '@/components/ui/textarea';
+import { Button, Card, CardHeader, CardBody, CardFooter } from "@heroui/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@heroui/modal';
+import { Input, Textarea } from "@heroui/input";
 
 type PostTemplate = {
   id: string;
@@ -126,20 +123,18 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
             <Card>
-              <CardHeader><CardTitle>Add New Template</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
+              <CardHeader><h1>Add New Template</h1></CardHeader>
+              <CardBody className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="newName">Template Name</Label>
-                  <Input id="newName" value={newName} onChange={(e) => setNewName(e.target.value)} required />
+                  <Input id="newName" label="Template Name" value={newName} onChange={(e) => setNewName(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="newDescription">Description</Label>
-                  <Textarea id="newDescription" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
+                  <Textarea id="newDescription" label="Description" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="newStructure">Template (HTML)</Label>
                   <Textarea
                     id="newStructure"
+                    label="Template (HTML)"
                     value={newStructure}
                     onChange={(e) => setNewStructure(e.target.value)}
                     rows={12}
@@ -149,10 +144,10 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
                   />
                 </div>
                 {error && <p className="text-sm text-red-600">{error}</p>}
-                <Button type="submit" disabled={isLoading} className="w-full">
+                <Button type="submit" disabled={isLoading} className="w-full bg-[#7828C8] text-white">
                   {isLoading ? 'Saving...' : 'Save Template'}
                 </Button>
-              </CardContent>
+              </CardBody>
             </Card>
           </form>
         </div>
@@ -160,8 +155,8 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
         {/* EXISTING TEMPLATES LIST */}
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader><CardTitle>Existing Templates</CardTitle></CardHeader>
-            <CardContent>
+            <CardHeader><h1>Existing Templates</h1></CardHeader>
+            <CardBody>
               <ul className="space-y-3">
                 {templates.map((template) => (
                   <li key={template.id} className="p-3 bg-slate-50 border rounded-md flex justify-between items-center">
@@ -170,55 +165,53 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
                       <p className="text-sm text-slate-500">{template.description || ''}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => openEditDialog(template)}>
+                      <Button onPress={() => openEditDialog(template)}>
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDelete(template.id)}>
+                      <Button className="text-red-500 hover:text-red-600" onPress={() => handleDelete(template.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </li>
                 ))}
               </ul>
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
       </div>
 
       {/* SINGLE, SHARED EDIT DIALOG */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4 px-8'>
         {/* FIX: Use flexbox to control layout and scrolling */}
-        <DialogContent className="max-w-3xl flex flex-col max-h-[90vh]">
-          <DialogHeader><DialogTitle>Edit Template</DialogTitle></DialogHeader>
+        <ModalContent className="max-w-3xl flex flex-col max-h-[90vh]">
+          <ModalHeader><h1>Edit Template</h1></ModalHeader>
           {editingTemplate && (
             // The form now uses flexbox to grow and fill the space
             <form onSubmit={handleUpdate} className="flex-1 flex flex-col gap-4 overflow-hidden">
               <div className="space-y-2">
-                <Label htmlFor="editName">Name</Label>
-                <Input id="editName" value={editingTemplate.name} onChange={(e) => setEditingTemplate({...editingTemplate, name: e.target.value})} required />
+                <Input id="editName" label="Name" value={editingTemplate.name} onChange={(e) => setEditingTemplate({...editingTemplate, name: e.target.value})} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editDescription">Description</Label>
-                <Textarea id="editDescription" value={editingTemplate.description || ''} onChange={(e) => setEditingTemplate({...editingTemplate, description: e.target.value})} />
+                <Textarea id="editDescription" label="Description" value={editingTemplate.description || ''} onChange={(e) => setEditingTemplate({...editingTemplate, description: e.target.value})} />
               </div>
               {/* This container will hold the scrollable textarea */}
               <div className="flex-1 flex flex-col space-y-2 overflow-hidden">
-                <Label htmlFor="editStructure">Template (HTML)</Label>
                 <Textarea
                   id="editStructure"
+                  label="Template (HTML)"
                   value={editingTemplate.structure}
                   onChange={(e) => setEditingTemplate({...editingTemplate, structure: e.target.value})}
                   className="font-mono text-xs flex-1 resize-none" // `flex-1` makes it take up the available space
                 />
               </div>
-              <DialogFooter className="pt-4">
-                <Button type="button" variant="secondary" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
-              </DialogFooter>
+              <ModalFooter className="pt-4">
+                <Button type="button" onPress={() => setIsEditDialogOpen(false)}>Cancel</Button>
+                <Button type="submit" isDisabled={isLoading} className='bg-[#7828C8] text-white'>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
+              </ModalFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

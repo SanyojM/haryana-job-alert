@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const CreatePostPage: NextPage<CreatePostPageProps> = ({ templates, categories, tags }) => {
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto py-4 px-8">
         <h1 className="text-3xl font-bold tracking-tight mb-6">Create New Post</h1>
         <CreatePostForm templates={templates} categories={categories} tags={tags} />
     </div>

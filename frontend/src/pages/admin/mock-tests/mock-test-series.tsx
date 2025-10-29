@@ -5,16 +5,15 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Pencil, Trash2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import {  Modal,  ModalContent,  ModalHeader,  ModalFooter} from "@heroui/modal";
+import { Input, Textarea } from "@heroui/input";
+import {Select, SelectItem} from "@heroui/select"; // Fixed import
+import { Checkbox } from "@heroui/checkbox";
+import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@heroui/table";
 
+// ... (type definitions remain the same) ...
 type MockCategory = { id: string; name: string; };
 type MockTag = { id: string; name: string; };
 type MockSeries = {
@@ -136,21 +135,19 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
   };
 
   return (
-    <div>
+    <div className='py-4 px-8'>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Manage Test Series</h1>
-        <Button onClick={() => openDialog()}>Create New Series</Button>
+        <Button onPress={() => openDialog()} className='bg-[#7828C8] text-white'>Create New Series</Button>
       </div>
       <Card>
-        <CardContent className="mt-6">
+        <CardBody className="mt-6">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
+                <TableColumn>Title</TableColumn>
+                <TableColumn>Category</TableColumn>
+                <TableColumn>Price</TableColumn>
+                <TableColumn className="text-right">Actions</TableColumn>
             </TableHeader>
             <TableBody>
               {series.map(s => (
@@ -163,41 +160,39 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
                   <TableCell>{s.mock_categories?.name || 'N/A'}</TableCell>
                   <TableCell>{s.price ? `₹${s.price}` : 'Free'}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" onClick={() => openDialog(s)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDelete(s.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" onPress={() => openDialog(s)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onPress={() => handleDelete(s.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </CardContent>
+        </CardBody>
       </Card>
 
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader><DialogTitle>{editingSeries?.id ? 'Edit' : 'Create'} Test Series</DialogTitle></DialogHeader>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
+        <ModalContent className="sm:max-w-[600px]">
+          <ModalHeader>{editingSeries?.id ? 'Edit' : 'Create'} Test Series</ModalHeader>
           {editingSeries && (
             <form onSubmit={handleSave} className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input id="title" value={editingSeries.title} onChange={(e) => setEditingSeries({ ...editingSeries, title: e.target.value })} required />
+                <Input id="title" label="Title" value={editingSeries.title} onChange={(e) => setEditingSeries({ ...editingSeries, title: e.target.value })} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea id="description" value={editingSeries.description || ''} onChange={(e) => setEditingSeries({ ...editingSeries, description: e.target.value })} />
+                <Textarea id="description" label="Description" value={editingSeries.description || ''} onChange={(e) => setEditingSeries({ ...editingSeries, description: e.target.value })} />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="thumbnail-file">Thumbnail Image</Label>
                 <Input 
                   id="thumbnail-file" 
+                  label="Thumbnail Image"
                   type="file" 
                   accept="image/*" 
                   onChange={handleFileChange}
                 />
                 {!thumbnailFile && editingSeries.id && editingSeries.thumbnail_url && (
                   <div className="mt-2">
-                    <p className="text-sm text-muted-foreground">Current thumbnail:</p>
+                    <p className="text-sm text-gray-500">Current thumbnail:</p>
                     <img 
                       src={editingSeries.thumbnail_url} 
                       alt="Current thumbnail" 
@@ -209,48 +204,59 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price</Label>
-                  <Input id="price" type="number" value={editingSeries.price || 0} onChange={(e) => setEditingSeries({ ...editingSeries, price: parseFloat(e.target.value) })} required />
+                  <Input id="price" label="Price" type="number" onChange={(e) => setEditingSeries({ ...editingSeries, price: parseFloat(e.target.value) })} required />
                 </div>
+                {/* --- SELECT FIXES --- */}
                 <div className="space-y-2">
-                  <Label>Category</Label>
-                  <Select value={editingSeries.category_id?.toString()} onValueChange={(value) => setEditingSeries({ ...editingSeries, category_id: value })} required>
-                    <SelectTrigger><SelectValue placeholder="Select a category..." /></SelectTrigger>
-                    <SelectContent>
-                      {mockCategories.map(cat => <SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>)}
-                    </SelectContent>
+                  <Select 
+                    label="Category"
+                    placeholder="Select a category..."
+                    value={editingSeries.category_id?.toString()} 
+                    onChange={(e) => setEditingSeries({ ...editingSeries, category_id: e.target.value })} 
+                    required
+                  >
+                    {mockCategories.map(cat => (
+                      <SelectItem key={cat.id}> 
+                        {cat.name}
+                      </SelectItem>
+                    ))}
                   </Select>
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Tags</Label>
+                {/* --- LABEL FIX --- */}
+                <label className="text-sm font-medium">Tags</label>
                 <div className="grid grid-cols-3 gap-2 p-4 border rounded-md max-h-48 overflow-y-auto">
                   {mockTags.map(tag => (
                     <div key={tag.id} className="flex items-center space-x-2">
+                      {/* --- CHECKBOX FIXES --- */}
                       <Checkbox
                         id={`tag-${tag.id}`}
-                        checked={editingSeries.mock_series_tags?.some(t => t.tag.id === tag.id)}
-                        onCheckedChange={(checked) => {
+                        isSelected={editingSeries.mock_series_tags?.some(t => t.tag.id === tag.id)}
+                        onChange={(selected) => {
                           const currentTags = editingSeries.mock_series_tags?.map(t => t.tag) || [];
-                          const newTags = checked
+                          const newTags = selected
                             ? [...currentTags, tag]
                             : currentTags.filter(t => t.id !== tag.id);
                           setEditingSeries({ ...editingSeries, mock_series_tags: newTags.map(t => ({ tag: t })) });
                         }}
                       />
-                      <Label htmlFor={`tag-${tag.id}`}>{tag.name}</Label>
+                      {/* --- LABEL FIX --- */}
+                      <label htmlFor={`tag-${tag.id}`} className="text-sm cursor-pointer select-none">
+                        {tag.name}
+                      </label>
                     </div>
                   ))}
                 </div>
               </div>
-              <DialogFooter>
-                <Button type="button" variant="secondary" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
-              </DialogFooter>
+              <ModalFooter>
+                <Button type="button" className='bg-[#ddd4e6]' onPress={() => setIsEditDialogOpen(false)}>Cancel</Button>
+                <Button type="submit" className='bg-[#7828C8] text-white' disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
+              </ModalFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

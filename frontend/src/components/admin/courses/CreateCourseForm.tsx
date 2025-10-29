@@ -6,16 +6,13 @@ import type { CourseCategory } from "@/pages/admin/course-categories";
 import type { CourseTag } from "@/pages/admin/course-tags";
 import type { User } from "@/context/AuthContext";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {Card, CardHeader, CardBody, CardFooter} from "@heroui/card";
+import { Input, Textarea } from "@heroui/input";
+import { Button } from "@heroui/button";
+import {Select, SelectItem} from "@heroui/select";
+import { Checkbox } from "@heroui/checkbox";
+import {RadioGroup, Radio} from "@heroui/radio";
 
-// Define the Course type based on your API
 export type Course = {
     id: string;
     title: string;
@@ -26,25 +23,24 @@ export type Course = {
     pricing_model: 'free' | 'paid';
     regular_price?: number | null;
     sale_price?: number | null;
-    category_id: string; // Assuming string ID from frontend
+    category_id: string; 
     status?: 'draft' | 'published';
     total_duration_hhmm?: string | null;
-    category?: CourseCategory; // For displaying category name
-    authors?: User[]; // Assuming User type matches admin users
-    tags?: { tag: CourseTag }[]; // Assuming structure from API
+    category?: CourseCategory; 
+    authors?: User[]; 
+    tags?: { tag: CourseTag }[];
 };
 
-// Define props for the form
 interface CreateCourseFormProps {
     initialData?: Course;
     categories: CourseCategory[];
     tags: CourseTag[];
-    authors: User[]; // Assuming admins are fetched as Users
+    authors: User[]; // This prop isn't used, as authors are fetched client-side
 }
 
-export function CreateCourseForm({ initialData, categories, tags, authors }: CreateCourseFormProps) {
-    const { token, isLoading: isAuthLoading } = useAuth(); // Get token and auth loading state
-    const [fetchedAuthors, setFetchedAuthors] = useState<User[]>([]); // State for fetched authors
+export function CreateCourseForm({ initialData, categories, tags }: CreateCourseFormProps) {
+    const { token, isLoading: isAuthLoading } = useAuth();
+    const [fetchedAuthors, setFetchedAuthors] = useState<User[]>([]); 
     const [authorFetchError, setAuthorFetchError] = useState<string | null>(null);
 
     const router = useRouter();
@@ -52,7 +48,6 @@ export function CreateCourseForm({ initialData, categories, tags, authors }: Cre
 
     const isEditMode = !!initialData;
 
-    // Form State
     const [title, setTitle] = useState(initialData?.title || "");
     const [description, setDescription] = useState(initialData?.description || "");
     const [introVideoUrl, setIntroVideoUrl] = useState(initialData?.intro_video_url || "");
@@ -75,7 +70,7 @@ export function CreateCourseForm({ initialData, categories, tags, authors }: Cre
 
     useEffect(() => {
         const loadAuthors = async () => {
-            if (token) { // Only fetch if token is available
+            if (token) { 
                 setAuthorFetchError(null);
                 try {
                     const adminUsers = await api.get('/users/admins', token);
@@ -83,15 +78,13 @@ export function CreateCourseForm({ initialData, categories, tags, authors }: Cre
                 } catch (err) {
                     console.error("Failed to fetch admin users client-side:", err);
                     setAuthorFetchError("Could not load authors. Please try reloading.");
-                    setFetchedAuthors([]); // Clear authors on error
+                    setFetchedAuthors([]); 
                 }
             } else if (!isAuthLoading) {
-                 // Handle case where auth is resolved but no token (shouldn't happen on admin pages)
                  setAuthorFetchError("Authentication error. Cannot load authors.");
             }
         };
 
-        // Don't run fetch until authentication is resolved
         if (!isAuthLoading) {
              loadAuthors();
         }
@@ -133,7 +126,6 @@ export function CreateCourseForm({ initialData, categories, tags, authors }: Cre
         setError(null);
         const authToken = token || undefined;
 
-        // --- Client-side validation based on status ---
         if (status === 'published') {
             if (!description?.trim()) {
                  setError("Description is required for publishing.");
@@ -166,7 +158,6 @@ export function CreateCourseForm({ initialData, categories, tags, authors }: Cre
              setIsLoading(false);
              return;
         }
-        // --- End validation ---
 
 
         const formData = new FormData();
@@ -175,14 +166,14 @@ export function CreateCourseForm({ initialData, categories, tags, authors }: Cre
         if (introVideoUrl) formData.append('intro_video_url', introVideoUrl);
         formData.append('pricing_model', pricingModel);
         if (pricingModel === 'paid') {
-            formData.append('regular_price', regularPrice || '0'); // Send 0 if empty but paid
+            formData.append('regular_price', regularPrice || '0'); 
             if (salePrice) formData.append('sale_price', salePrice);
         }
-        formData.append('category_id', categoryId); // Category is always required
+        formData.append('category_id', categoryId); 
         if (selectedTags.size > 0) {
             formData.append('tagIds', Array.from(selectedTags).join(','));
         }
-         formData.append('authorIds', Array.from(selectedAuthors).join(',')); // Authors always required
+         formData.append('authorIds', Array.from(selectedAuthors).join(',')); 
         if (totalDuration) formData.append('total_duration_hhmm', totalDuration);
         formData.append('status', status);
 
@@ -221,162 +212,180 @@ export function CreateCourseForm({ initialData, categories, tags, authors }: Cre
                 {/* Main Content Column */}
                 <div className="lg:col-span-2 space-y-6">
                     <Card>
-                        <CardHeader><CardTitle>Course Details</CardTitle></CardHeader>
-                        <CardContent className="space-y-4">
+                        <CardHeader>
+                            <h2 className="text-lg font-semibold">Course Details</h2>
+                        </CardHeader>
+                        <CardBody className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="course-title">Course Title</Label>
-                                <Input id="course-title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                                <Input id="course-title" label='Course Title' value={title} onChange={(e) => setTitle(e.target.value)} required />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="course-description">
-                                    Description {status === 'published' && <span className="text-red-500">*</span>}
-                                </Label>
                                 <Textarea
                                     id="course-description"
+                                    label="Description"
                                     value={description || ''}
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={5}
-                                    // Removed browser required, handle in handleSubmit
                                 />
-                                {status === 'draft' && <p className="text-xs text-muted-foreground">Required for publishing</p>}
+                                {status === 'draft' && <p className="text-xs text-gray-500">Required for publishing</p>}
                             </div>
                              <div className="space-y-2">
-                                <Label htmlFor="intro-video-url">Intro Video URL (YouTube)</Label>
-                                <Input id="intro-video-url" value={introVideoUrl || ''} onChange={(e) => setIntroVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                                <Input id="intro-video-url" label='Intro Video URL (YouTube)' value={introVideoUrl || ''} onChange={(e) => setIntroVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="total-duration">
-                                    Total Duration {status === 'published' && <span className="text-red-500">*</span>}
-                                </Label>
                                 <Input
                                     id="total-duration"
                                     value={totalDuration || ''}
+                                    label='Total Duration'
                                     onChange={(e) => setTotalDuration(e.target.value)}
                                     placeholder="HH:MM (e.g., 02:30)"
                                  />
-                                 {status === 'draft' && <p className="text-xs text-muted-foreground">Required for publishing</p>}
+                                 {status === 'draft' && <p className="text-xs text-gray-500">Required for publishing</p>}
                             </div>
-                        </CardContent>
+                        </CardBody>
                     </Card>
 
                      <Card>
-                        <CardHeader><CardTitle>Pricing</CardTitle></CardHeader>
-                        <CardContent className="space-y-4">
-                             <RadioGroup value={pricingModel} onValueChange={(value) => setPricingModel(value as 'free' | 'paid')}>
-                                <div className="flex items-center space-x-2"> <RadioGroupItem value="free" id="price-free" /> <Label htmlFor="price-free">Free</Label> </div>
-                                <div className="flex items-center space-x-2"> <RadioGroupItem value="paid" id="price-paid" /> <Label htmlFor="price-paid">Paid</Label> </div>
+                        <CardHeader>
+                            <h2 className="text-lg font-semibold">Pricing</h2>
+                        </CardHeader>
+                        <CardBody className="space-y-4 items-start">
+                            <RadioGroup
+                                value={pricingModel}
+                                onChange={(e) => setPricingModel(e.target.value as 'free' | 'paid')}
+                                className="flex items-center space-x-4"
+                            >
+                                <Radio value="free">Free</Radio>
+                                <Radio value="paid">Paid</Radio>
                             </RadioGroup>
+
                             {pricingModel === 'paid' && (
                                 <div className="grid grid-cols-2 gap-4 pt-4">
                                      <div className="space-y-2">
-                                        <Label htmlFor="regular-price">
-                                            Regular Price (₹) {(pricingModel === 'paid' && status === 'published') && <span className="text-red-500">*</span>}
-                                        </Label>
                                         <Input
                                             id="regular-price"
+                                            label='Regular Price (₹)'
                                             type="number" value={regularPrice}
                                             onChange={(e) => setRegularPrice(e.target.value)}
                                             min="0"
                                             step="any"
                                         />
-                                         {(status === 'draft' && pricingModel === 'paid') && <p className="text-xs text-muted-foreground">Required for publishing</p>}
+                                         {(status === 'draft' && pricingModel === 'paid') && <p className="text-xs text-gray-500">Required for publishing</p>}
                                     </div>
                                      <div className="space-y-2">
-                                        <Label htmlFor="sale-price">Sale Price (₹, Optional)</Label>
-                                        <Input id="sale-price" type="number" value={salePrice} onChange={(e) => setSalePrice(e.target.value)} min="0" step="any" />
+                                        <Input id="sale-price" label='Sale Price (₹, Optional)' type="number" value={salePrice} onChange={(e) => setSalePrice(e.target.value)} min="0" step="any" />
                                     </div>
                                 </div>
                             )}
-                        </CardContent>
+                        </CardBody>
                     </Card>
                 </div>
 
-                {/* Sidebar Column */}
                 <div className="lg:col-span-1 space-y-6">
                      <Card>
-                        <CardHeader><CardTitle>Publish Settings</CardTitle></CardHeader>
-                        <CardContent className="space-y-4">
+                        <CardHeader>
+                            <h2 className="text-lg font-semibold">Publish Settings</h2>
+                        </CardHeader>
+                        <CardBody className="space-y-4">
                             <div className="space-y-2">
-                                <Label>Status</Label>
-                                <Select value={status} onValueChange={(value) => setStatus(value as 'draft' | 'published')}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
-                                    <SelectContent> <SelectItem value="draft">Draft</SelectItem> <SelectItem value="published">Published</SelectItem> </SelectContent>
+                                <Select 
+                                    label='Status' 
+                                    value={status} 
+                                    onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
+                                >
+                                    <SelectItem key="draft">Draft</SelectItem>
+                                    <SelectItem key="published">Published</SelectItem>
                                 </Select>
-                                <p className="text-xs text-muted-foreground">Set to 'Published' to make the course visible.</p>
+                                <p className="text-xs text-gray-500">Set to 'Published' to make the course visible.</p>
                             </div>
-                            <Button type="submit" disabled={isLoading} className="w-full text-lg">
+                            <Button type="submit" disabled={isLoading} className="w-full text-lg bg-[#7828C8] text-white">
                                 {isLoading ? 'Saving...' : (isEditMode ? 'Update Course' : 'Create Course')}
                             </Button>
                             {error && <p className="text-sm text-red-600 mt-2 text-center">{error}</p>}
-                        </CardContent>
+                        </CardBody>
                     </Card>
 
                     <Card>
-                         <CardHeader><CardTitle>Thumbnail</CardTitle></CardHeader>
-                         <CardContent className="space-y-2">
+                         <CardHeader>
+                            <h2 className="text-lg font-semibold">Thumbnail</h2>
+                         </CardHeader>
+                         <CardBody className="space-y-2">
                             {thumbnailPreview && ( <img src={thumbnailPreview} alt="Thumbnail Preview" className="w-full h-auto rounded-md mb-2 object-cover aspect-video" /> )}
-                            <Label htmlFor="thumbnail-file">
-                                Upload Image {(status === 'published' && !thumbnailPreview) && <span className="text-red-500">*</span>}
-                            </Label>
-                            <Input
+                           <Input
                                 id="thumbnail-file"
                                 type="file"
+                                label="Upload Image"
                                 accept="image/*"
                                 ref={thumbnailFileRef}
                                 onChange={handleThumbnailChange}
                              />
-                              {(status === 'draft' && !thumbnailPreview) && <p className="text-xs text-muted-foreground">Required for publishing</p>}
-                            <p className="text-xs text-muted-foreground">Recommended: 16:9 ratio.</p>
-                         </CardContent>
+                              {(status === 'draft' && !thumbnailPreview) && <p className="text-xs text-gray-500">Required for publishing</p>}
+                            <p className="text-xs text-gray-500">Recommended: 16:9 ratio.</p>
+                         </CardBody>
                     </Card>
 
                      <Card>
-                        <CardHeader><CardTitle>Category <span className="text-red-500">*</span></CardTitle></CardHeader>
-                        <CardContent>
-                            <Select value={categoryId} onValueChange={setCategoryId} required>
-                                 <SelectTrigger><SelectValue placeholder="Choose a category..." /></SelectTrigger>
-                                <SelectContent>
-                                    {categories.map(category => ( <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem> ))}
-                                </SelectContent>
+                        <CardHeader>
+                            <h2 className="text-lg font-semibold">Category <span className="text-red-500">*</span></h2>
+                        </CardHeader>
+                        <CardBody>
+                            <Select 
+                                label="Category" // Add label
+                                placeholder="Choose a category..."
+                                value={categoryId} 
+                                onChange={(e) => setCategoryId(e.target.value)} 
+                                required
+                            >
+                                {categories.map(category => ( 
+                                    <SelectItem key={category.id.toString()}> 
+                                        {category.name}
+                                    </SelectItem> 
+                                ))}
                             </Select>
-                        </CardContent>
+                        </CardBody>
                     </Card>
 
                     <Card>
-                        <CardHeader><CardTitle>Tags</CardTitle></CardHeader>
-                        <CardContent className="space-y-2 max-h-48 overflow-y-auto">
+                        <CardHeader>
+                            <h2 className="text-lg font-semibold">Tags</h2>
+                        </CardHeader>
+                        <CardBody className="space-y-2 max-h-48 overflow-y-auto">
                             {tags.map(tag => (
-                                <div key={tag.id} className="flex items-center space-x-2">
-                                    <Checkbox id={`tag-${tag.id}`} checked={selectedTags.has(tag.id.toString())} onCheckedChange={() => handleTagChange(tag.id.toString())} />
-                                    <Label htmlFor={`tag-${tag.id}`}>{tag.name}</Label>
-                                </div>
+                                <Checkbox 
+                                    key={tag.id}
+                                    isSelected={selectedTags.has(tag.id.toString())} 
+                                    onChange={() => handleTagChange(tag.id.toString())}
+                                >
+                                    {tag.name}
+                                </Checkbox>
                             ))}
-                            {tags.length === 0 && <p className="text-sm text-muted-foreground text-center">No tags created yet.</p>}
-                        </CardContent>
+                            {tags.length === 0 && <p className="text-sm text-gray-500 text-center">No tags created yet.</p>}
+                        </CardBody>
                     </Card>
 
                      <Card>
-                        <CardHeader><CardTitle>Authors <span className="text-red-500">*</span></CardTitle></CardHeader>
-                         <CardContent className="space-y-2 max-h-48 overflow-y-auto">
+                        <CardHeader>
+                            <h2 className="text-lg font-semibold">Authors <span className="text-red-500">*</span></h2>
+                        </CardHeader>
+                         <CardBody className="space-y-2 max-h-48 overflow-y-auto">
                              {isAuthLoading ? (
-                                 <p className="text-sm text-muted-foreground text-center">Loading authors...</p>
+                                 <p className="text-sm text-gray-500 text-center">Loading authors...</p>
                              ) : authorFetchError ? (
                                  <p className="text-sm text-red-600 text-center">{authorFetchError}</p>
                              ) : fetchedAuthors && fetchedAuthors.length > 0 ? (
-                                fetchedAuthors.map(author => ( // Use fetchedAuthors here
-                                    <div key={author.id} className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id={`author-${author.id}`}
-                                            checked={selectedAuthors.has(author.id.toString())}
-                                            onCheckedChange={() => handleAuthorChange(author.id.toString())}
-                                        />
-                                        <Label htmlFor={`author-${author.id}`}>{author.full_name} ({author.email})</Label>
-                                    </div>
+                                fetchedAuthors.map(author => ( 
+                                    <Checkbox 
+                                        key={author.id}
+                                        isSelected={selectedAuthors.has(author.id.toString())}
+                                        onChange={() => handleAuthorChange(author.id.toString())}
+                                    >
+                                        {author.full_name} ({author.email})
+                                    </Checkbox>
                                 ))
                              ) : (
-                                <p className="text-sm text-muted-foreground text-center">No admin users found.</p>
+                                <p className="text-sm text-gray-500 text-center">No admin users found.</p>
                              )}
-                         </CardContent>
+                         </CardBody>
                     </Card>
                 </div>
             </div>

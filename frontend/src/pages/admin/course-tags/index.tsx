@@ -4,11 +4,11 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Pencil, Trash2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// HeroUI Imports
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Modal, ModalContent, ModalHeader, ModalFooter } from "@heroui/modal";
+import { Input } from "@heroui/input";
 
 // Define the type for a course tag
 export type CourseTag = {
@@ -103,17 +103,22 @@ const CourseTagsPage: NextPage<CourseTagsPageProps> = ({ initialTags }) => {
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
             <Card>
-              <CardHeader><CardTitle>Add New Tag</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="newName">Tag Name</Label>
-                  <Input id="newName" value={newName} onChange={(e) => setNewName(e.target.value)} required />
-                </div>
+              <CardHeader>
+                <h2 className="text-lg font-semibold">Add New Tag</h2>
+              </CardHeader>
+              <CardBody className="space-y-4">
+                <Input
+                  label="Tag Name"
+                  id="newName"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  required
+                />
                 {error && <p className="text-sm text-red-600">{error}</p>}
-                <Button type="submit" disabled={isLoading} className="w-full">
+                <Button type="submit" disabled={isLoading} className="w-full bg-[#7828C8] text-white">
                   {isLoading ? 'Saving...' : 'Save Tag'}
                 </Button>
-              </CardContent>
+              </CardBody>
             </Card>
           </form>
         </div>
@@ -121,18 +126,30 @@ const CourseTagsPage: NextPage<CourseTagsPageProps> = ({ initialTags }) => {
         {/* EXISTING TAGS LIST */}
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader><CardTitle>Existing Tags</CardTitle></CardHeader>
-            <CardContent>
+            <CardHeader>
+              <h2 className="text-lg font-semibold">Existing Tags</h2>
+            </CardHeader>
+            <CardBody>
               {tags.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (
-                    <div key={tag.id} className="group flex items-center gap-1 bg-slate-100 text-slate-800 rounded-full border text-sm font-medium transition-all hover:bg-slate-200">
+                    <div key={tag.id} className="group flex items-center gap-1 bg-slate-100 text-slate-800 rounded-full text-sm font-medium transition-all hover:bg-slate-200">
                       <span className="pl-3 pr-2 py-1">{tag.name}</span>
                       <div className="flex items-center">
-                        <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full" onClick={() => openEditDialog(tag)}>
+                        <Button
+                          variant="ghost"
+                          isIconOnly={true}
+                          className="h-6 w-6 rounded-full"
+                          onPress={() => openEditDialog(tag)}
+                        >
                           <Pencil className="h-3 w-3" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full text-red-500 hover:text-red-600" onClick={() => handleDelete(tag.id)}>
+                        <Button
+                          variant="ghost"
+                          isIconOnly={true}
+                          className="h-6 w-6 rounded-full text-red-500 hover:text-red-600"
+                          onPress={() => handleDelete(tag.id)}
+                        >
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
@@ -140,32 +157,41 @@ const CourseTagsPage: NextPage<CourseTagsPageProps> = ({ initialTags }) => {
                   ))}
                 </div>
               ) : (
-                 <p className="text-sm text-muted-foreground text-center py-4">No tags created yet.</p>
+                 <p className="text-sm text-gray-500 text-center py-4">No tags created yet.</p>
               )}
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
       </div>
 
-      {/* EDIT DIALOG */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Edit Course Tag</DialogTitle></DialogHeader>
+      {/* EDIT DIALOG -> MODAL */}
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4'>
+        <ModalContent>
+          <ModalHeader>
+            <h2 className="text-lg font-semibold">Edit Course Tag</h2>
+          </ModalHeader>
           {editingTag && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="editName">Name</Label>
-                <Input id="editName" value={editingTag.name} onChange={(e) => setEditingTag({ ...editingTag, name: e.target.value })} required />
-              </div>
+              <Input
+                label="Name"
+                id="editName"
+                value={editingTag.name}
+                onChange={(e) => setEditingTag({ ...editingTag, name: e.target.value })}
+                required
+              />
                {error && <p className="text-sm text-red-600">{error}</p>}
-              <DialogFooter>
-                <Button type="button" variant="secondary" onClick={() => { setIsEditDialogOpen(false); setEditingTag(null); }}>Cancel</Button>
-                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
-              </DialogFooter>
+              <ModalFooter>
+                <Button type="button" variant="bordered" onPress={() => { setIsEditDialogOpen(false); setEditingTag(null); }}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </ModalFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

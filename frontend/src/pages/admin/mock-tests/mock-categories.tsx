@@ -4,12 +4,10 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Pencil, Trash2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Input, Textarea } from "@heroui/input";
+import {  Modal,  ModalContent,  ModalHeader,  ModalFooter} from "@heroui/modal";
 
 type MockCategory = {
   id: string;
@@ -104,26 +102,24 @@ const MockCategoriesPage: NextPage<MockCategoriesPageProps> = ({ initialCategori
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
             <Card>
-              <CardHeader><CardTitle>Add New Category</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
+              <CardHeader>Add New Category</CardHeader>
+              <CardBody className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="newName">Name</Label>
-                  <Input id="newName" value={newName} onChange={(e) => setNewName(e.target.value)} required />
+                  <Input id="newName" label="Name" value={newName} onChange={(e) => setNewName(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="newDescription">Description</Label>
-                  <Textarea id="newDescription" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
+                  <Textarea id="newDescription" label="Description" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
                 </div>
                 {error && <p className="text-sm text-red-600">{error}</p>}
-                <Button type="submit" disabled={isLoading} className="w-full">{isLoading ? 'Saving...' : 'Save Category'}</Button>
-              </CardContent>
+                <Button type="submit" disabled={isLoading} className="w-full bg-[#7828C8] text-white">{isLoading ? 'Saving...' : 'Save Category'}</Button>
+              </CardBody>
             </Card>
           </form>
         </div>
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader><CardTitle>Existing Categories</CardTitle></CardHeader>
-            <CardContent>
+            <CardHeader>Existing Categories</CardHeader>
+            <CardBody>
               <ul className="space-y-3">
                 {categories.map((category) => (
                   <li key={category.id} className="p-3 bg-slate-50 border rounded-md flex justify-between items-center">
@@ -132,41 +128,39 @@ const MockCategoriesPage: NextPage<MockCategoriesPageProps> = ({ initialCategori
                       <p className="text-sm text-slate-500">{category.description || ''}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => openEditDialog(category)}>
+                      <Button onPress={() => openEditDialog(category)} variant='flat' className='hover:bg-red-100'>
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDelete(category.id)}>
+                      <Button className="text-red-500 hover:text-red-600 hover:bg-red-100" onPress={() => handleDelete(category.id)} variant='flat'>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </li>
                 ))}
               </ul>
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
       </div>
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Edit Mock Category</DialogTitle></DialogHeader>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
+        <ModalContent>
+          <ModalHeader>Edit Mock Category</ModalHeader>
           {editingCategory && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="editName">Name</Label>
-                <Input id="editName" value={editingCategory.name} onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })} required />
+                <Input id="editName" label="Name" value={editingCategory.name} onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="editDescription">Description</Label>
-                <Textarea id="editDescription" value={editingCategory.description || ''} onChange={(e) => setEditingCategory({ ...editingCategory, description: e.target.value })} />
+                <Textarea id="editDescription" label="Description" value={editingCategory.description || ''} onChange={(e) => setEditingCategory({ ...editingCategory, description: e.target.value })} />
               </div>
-              <DialogFooter>
-                <Button type="button" variant="secondary" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
-              </DialogFooter>
+              <ModalFooter>
+                <Button type="button" onPress={() => setIsEditDialogOpen(false)} className='bg-[#dac9ec]'>Cancel</Button>
+                <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
+              </ModalFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

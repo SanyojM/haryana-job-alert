@@ -4,13 +4,12 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from '@/components/ui/checkbox';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import {  Modal,  ModalContent,  ModalHeader,  ModalFooter} from "@heroui/modal";
+import { Input } from "@heroui/input";
+import { Checkbox } from '@heroui/checkbox';
+import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@heroui/table";
 
 type MockTest = {
   id: string;
@@ -83,22 +82,20 @@ const AllMockTestsPage: NextPage<AllMockTestsPageProps> = ({ initialTests }) => 
   };
 
   return (
-    <div>
+    <div className='p-4'>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Manage All Mock Tests</h1>
-        <Button onClick={() => openDialog()}>Create New Test</Button>
+        <Button onPress={() => openDialog()} className='bg-[#7828C8] text-white'>Create New Test</Button>
       </div>
       <Card>
-        <CardContent className="mt-6">
+        <CardBody className="mt-6">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead>Marks</TableHead>
-                <TableHead>Free</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
+                <TableColumn>Title</TableColumn>
+                <TableColumn>Duration</TableColumn>
+                <TableColumn>Marks</TableColumn>
+                <TableColumn>Free</TableColumn>
+                <TableColumn className="text-right">Actions</TableColumn>
             </TableHeader>
             <TableBody>
               {tests.map(test => (
@@ -110,51 +107,48 @@ const AllMockTestsPage: NextPage<AllMockTestsPageProps> = ({ initialTests }) => 
                   <TableCell>{test.total_marks}</TableCell>
                   <TableCell>{test.is_free ? 'Yes' : 'No'}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" onClick={() => openDialog(test)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDeleteTest(test.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant='flat' onPress={() => openDialog(test)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant='flat' className="text-red-500 hover:text-red-600 ml-2" onPress={() => handleDeleteTest(test.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </CardContent>
+        </CardBody>
       </Card>
 
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>{editingTest?.id ? 'Edit' : 'Create'} Mock Test</DialogTitle></DialogHeader>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4'>
+        <ModalContent>
+          <ModalHeader>{editingTest?.id ? 'Edit' : 'Create'} Mock Test</ModalHeader>
           {editingTest && (
             <form onSubmit={handleSaveTest} className="space-y-4 py-4">
                <div className="space-y-2">
-                <Label htmlFor="title">Test Title</Label>
-                <Input id="title" value={editingTest.title || ''} onChange={(e) => setEditingTest({ ...editingTest, title: e.target.value })} required />
+                <Input id="title" label="Test Title" value={editingTest.title || ''} onChange={(e) => setEditingTest({ ...editingTest, title: e.target.value })} required />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="duration">Duration (Minutes)</Label>
-                  <Input id="duration" type="number" value={editingTest.duration_minutes || 0} onChange={(e) => setEditingTest({ ...editingTest, duration_minutes: parseInt(e.target.value) })} required />
+                  <Input id="duration" label="Duration (Minutes)" type="number" value={String(editingTest.duration_minutes)} onChange={(e) => setEditingTest({ ...editingTest, duration_minutes: parseInt(e.target.value) })} required />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="marks">Total Marks</Label>
-                  <Input id="marks" type="number" value={editingTest.total_marks || 0} onChange={(e) => setEditingTest({ ...editingTest, total_marks: parseInt(e.target.value) })} required />
+                  <Input id="marks" label="Total Marks" type="number" value={String(editingTest.total_marks)} onChange={(e) => setEditingTest({ ...editingTest, total_marks: parseInt(e.target.value) })} required />
                 </div>
               </div>
               <div className="flex items-center space-x-2">
                   <Checkbox 
                     id="is_free" 
                     checked={editingTest.is_free} 
-                    onCheckedChange={(checked) => setEditingTest({ ...editingTest, is_free: !!checked })}
+                    onChange={(checked) => setEditingTest({ ...editingTest, is_free: !!checked })}
                   />
-                  <Label htmlFor="is_free">Is this a free test?</Label>
+                  <label htmlFor="is_free">Is this a free test?</label>
               </div>
-              <DialogFooter>
-                <Button type="button" variant="secondary" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Test'}</Button>
-              </DialogFooter>
+              <ModalFooter>
+                <Button type="button"  onPress={() => setIsEditDialogOpen(false)}>Cancel</Button>
+                <Button type="submit" className='bg-[#7828C8] text-white' disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Test'}</Button>
+              </ModalFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

@@ -1,3 +1,5 @@
+"use client" // Added "use client" as this is a client component
+
 import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { api } from "@/lib/api";
@@ -5,13 +7,11 @@ import { useAuth } from "@/context/AuthContext";
 import { Editor } from '@tinymce/tinymce-react';
 import type { Editor as TinyMCEEditor } from 'tinymce';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
+import {Card, CardHeader, CardBody, CardFooter} from "@heroui/card";
+import { Input, Textarea } from "@heroui/input";
+import { Button } from "@heroui/button";
+import {Select, SelectItem} from "@heroui/select"; // Fixed import
+import { Checkbox } from "@heroui/checkbox";
 import type { Post } from "@/pages/admin/posts";
 import type { Category, PostTemplate, Tag } from "@/pages/admin/posts/new";
 
@@ -47,9 +47,10 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
 
   const [initialContent, setInitialContent] = useState(initialData?.content_html || "");
 
-  const handleTemplateChange = (templateId: string) => {
-    const template = templates.find(t => t.id.toString() === templateId);
-    setTemplateId(templateId);
+  // Corrected handler to get value from event
+  const handleTemplateChange = (value: string) => {
+    const template = templates.find(t => t.id.toString() === value);
+    setTemplateId(value);
     if (template && editorRef.current) {
         editorRef.current.setContent(template.structure);
     }
@@ -129,10 +130,11 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Post Content</CardTitle>
-              <CardDescription>Load a template and then edit the content visually.</CardDescription>
+              {/* Added some default styling to h1/p */}
+              <h1 className="text-lg font-semibold">Post Content</h1>
+              <p className="text-sm text-gray-500">Load a template and then edit the content visually.</p>
             </CardHeader>
-            <CardContent>
+            <CardBody>
               <Editor
                 apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
                 onInit={(evt, editor) => editorRef.current = editor}
@@ -145,96 +147,113 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
                   content_style: 'body { font-family:Poppins,sans-serif; font-size:16px }'
                 }}
               />
-            </CardContent>
+            </CardBody>
           </Card>
         </div>
 
         <div className="lg:col-span-1 space-y-6">
           <Card>
-            <CardHeader><CardTitle>Settings</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+            <CardHeader>
+              <h2 className="text-lg font-semibold">Settings</h2>
+            </CardHeader>
+            {/* FIX: Changed CardContent to CardBody */}
+            <CardBody className="space-y-4">
               <div className="space-y-2">
-                <Label>Load Template</Label>
-                <Select value={templateId} onValueChange={handleTemplateChange}>
-                  <SelectTrigger><SelectValue placeholder="Load a template..." /></SelectTrigger>
-                  <SelectContent>
-                    {templates.map(template => (
-                      <SelectItem key={template.id} value={template.id.toString()}>{template.name}</SelectItem>
-                    ))}
-                  </SelectContent>
+                {/* --- TEMPLATE SELECT FIX --- */}
+                <Select 
+                  label="Load Template" 
+                  placeholder="Load a template..."
+                  value={templateId}
+                  onChange={(e) => handleTemplateChange(e.target.value)}
+                >
+                  {templates.map(template => (
+                    <SelectItem key={template.id}>
+                      {template.name}
+                    </SelectItem>
+                  ))}
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="post-title">Post Title</Label>
-                <Input id="post-title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                <Input id="post-title" label="Post Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="post-slug">Slug</Label>
-                <Input id="post-slug" value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="auto-generated-from-title" />
+                <Input id="post-slug" label="Slug" value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="auto-generated-from-title" />
               </div>
               <div className="space-y-2">
-                <Label>Category</Label>
-                <Select value={categoryId} onValueChange={setCategoryId} required>
-                  <SelectTrigger><SelectValue placeholder="Choose a category..." /></SelectTrigger>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
-                    ))}
-                  </SelectContent>
+                {/* --- CATEGORY SELECT FIX --- */}
+                <Select 
+                  label="Category" 
+                  placeholder="Choose a category..."
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                  required
+                >
+                  {categories.map(category => (
+                    <SelectItem key={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </Select>
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
 
           <Card>
-            <CardHeader><CardTitle>Meta Information</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+            <CardHeader>
+              <h2 className="text-lg font-semibold">Meta Information</h2>
+            </CardHeader>
+            <CardBody className="space-y-4">
               
               <div className="space-y-2">
-                <Label htmlFor="thumbnail-file">Thumbnail Image</Label>
-                <Input id="thumbnail-file" type="file" onChange={handleFileChange} accept="image/*" />
+                <Input id="thumbnail-file" label="Thumbnail Image" type="file" onChange={handleFileChange} accept="image/*" />
                 {!thumbnailFile && initialData?.thumbnail_url && (
                   <div className="mt-2">
-                    <p className="text-sm text-muted-foreground">Current thumbnail:</p>
+                    <p className="text-sm text-gray-500">Current thumbnail:</p>
                     <img src={initialData.thumbnail_url} alt="Current thumbnail" className="w-32 h-32 object-cover rounded-md border" />
                   </div>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="meta-title">Meta Title</Label>
-                <Input id="meta-title" value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} placeholder="SEO-friendly title" />
+                <Input id="meta-title" label="Meta Title" value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} placeholder="SEO-friendly title" />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="meta-description">Meta Description</Label>
-                <Textarea id="meta-description" value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} placeholder="SEO-friendly description for search results" />
+                <Textarea id="meta-description" label="Meta Description" value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} placeholder="SEO-friendly description for search results" />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="meta-keywords">Meta Keywords</Label>
-                <Input id="meta-keywords" value={metaKeywords} onChange={(e) => setMetaKeywords(e.target.value)} placeholder="comma, separated, keywords" />
+                <Input id="meta-keywords" label="Meta Keyword" value={metaKeywords} onChange={(e) => setMetaKeywords(e.target.value)} placeholder="comma, separated, keywords" />
               </div>
-            </CardContent>
+            </CardBody>
           </Card>
 
           <Card>
-            <CardHeader><CardTitle>Tags</CardTitle></CardHeader>
-            <CardContent className="space-y-2 max-h-48 overflow-y-auto">
+            <CardHeader>
+              <h2 className="text-lg font-semibold">Tags</h2>
+            </CardHeader>
+            <CardBody className="space-y-2 max-h-48 overflow-y-auto">
               {tags.map(tag => (
+                // --- CHECKBOX & LABEL FIX ---
                 <div key={tag.id} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`tag-${tag.id}`}
-                    checked={selectedTags.has(tag.id.toString())}
-                    onCheckedChange={() => handleTagChange(tag.id.toString())}
+                    isSelected={selectedTags.has(tag.id.toString())} // Use 'isSelected'
+                    onChange={() => handleTagChange(tag.id.toString())} // Use 'onChange'
                   />
-                  <Label htmlFor={`tag-${tag.id}`}>{tag.name}</Label>
+                  {/* Use a standard HTML label */}
+                  <label 
+                    htmlFor={`tag-${tag.id}`} 
+                    className="text-sm cursor-pointer select-none"
+                  >
+                    {tag.name}
+                  </label>
                 </div>
               ))}
-            </CardContent>
+            </CardBody>
           </Card>
 
-          <Button type="submit" disabled={isLoading} className="w-full text-lg">
+          <Button type="submit" disabled={isLoading} className="w-full text-lg bg-[#7828C8] text-white">
             {isLoading ? 'Saving...' : (isEditMode ? 'Update Post' : 'Publish Post')}
           </Button>
           {error && <p className="text-sm text-red-600 mt-2 text-center">{error}</p>}
