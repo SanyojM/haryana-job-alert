@@ -48,8 +48,6 @@ export const menus: MenuItem[] = [
   { title: "Courses", type: "title" },
   { title: "All Courses", icon: <GraduationCap size={20} />, type: "link", link: "/admin/courses" },
   { title: "Add New Course", icon: <PlusCircle size={20} />, type: "link", link: "/admin/courses/new" },
-  { title: "Update Course", icon: <FileText size={20} />, type: "link", link: "/admin/courses/update" },
   { title: "Categories", icon: <FolderOpen size={20} />, type: "link", link: "/admin/course-categories" },
   { title: "Tags", icon: <Tag size={20} />, type: "link", link: "/admin/course-tags" },
-  { title: "Reviews", icon: <Star size={20} />, type: "link", link: "/admin/reviews" },
 ];

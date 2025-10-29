@@ -54,7 +54,6 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <HeroUIProvider>
     <AuthProvider>
       {loading && (
         <div className="max-h-screen min-h-screen max-w-screen min-w-screen fixed top-0 right-0 bg-white/60 flex justify-center items-center z-[999]">
@@ -64,9 +63,11 @@ export default function App({ Component, pageProps }: AppProps) {
       </div>
       )}
       {router.pathname.startsWith('/admin') ? (
+      <HeroUIProvider>
         <AdminAuthGuard>
           <Component {...pageProps} />
         </AdminAuthGuard>
+      </HeroUIProvider>
       ) : (
         <>
         <FloatingSocials />
@@ -74,6 +75,5 @@ export default function App({ Component, pageProps }: AppProps) {
         </>
       )}
     </AuthProvider>
-    </HeroUIProvider>
   );
 }
