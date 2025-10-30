@@ -138,14 +138,14 @@ const MockTagsPage: NextPage<MockTagsPageProps> = ({ initialTags }) => {
       </div>
       <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
         <ModalContent>
-          <ModalHeader>Edit Mock Tag</ModalHeader>
+          <ModalHeader className='pl-0'>Edit Mock Tag</ModalHeader>
           {editingTag && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">
               <div className="space-y-2">
                 <Input id="editName" label="Name" value={editingTag.name} onChange={(e) => setEditingTag({ ...editingTag, name: e.target.value })} required />
               </div>
               <ModalFooter>
-                <Button type="button" variant="flat" onPress={() => setIsEditDialogOpen(false)} className="bg-[#d2c5de]">Cancel</Button>
+                <Button type="button" variant="flat" onPress={() => setIsEditDialogOpen(false)}>Cancel</Button>
                 <Button type="submit" disabled={isLoading} className="bg-[#7828C8] text-white">{isLoading ? 'Saving...' : 'Save Changes'}</Button>
               </ModalFooter>
             </form>

@@ -96,7 +96,7 @@ const MockCategoriesPage: NextPage<MockCategoriesPageProps> = ({ initialCategori
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="p-4">
       <h1 className="text-3xl font-bold tracking-tight mb-6">Manage Mock Test Categories</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
@@ -122,16 +122,27 @@ const MockCategoriesPage: NextPage<MockCategoriesPageProps> = ({ initialCategori
             <CardBody>
               <ul className="space-y-3">
                 {categories.map((category) => (
-                  <li key={category.id} className="p-3 bg-slate-50 border rounded-md flex justify-between items-center">
+                  <li key={category.id} className="p-2 rounded-lg bg-gray-50 flex justify-between items-center">
                     <div>
                       <p className="font-medium text-slate-900">{category.name}</p>
                       <p className="text-sm text-slate-500">{category.description || ''}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button onPress={() => openEditDialog(category)} variant='flat' className='hover:bg-red-100'>
+                      <Button
+                        isIconOnly
+                        variant="ghost"
+                        onPress={() => openEditDialog(category)}
+                        aria-label="Edit category"
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button className="text-red-500 hover:text-red-600 hover:bg-red-100" onPress={() => handleDelete(category.id)} variant='flat'>
+                      <Button
+                        isIconOnly
+                        variant="ghost"
+                        className="text-red-500 hover:text-red-600"
+                        onPress={() => handleDelete(category.id)}
+                        aria-label="Delete category"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -144,7 +155,7 @@ const MockCategoriesPage: NextPage<MockCategoriesPageProps> = ({ initialCategori
       </div>
       <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
         <ModalContent>
-          <ModalHeader>Edit Mock Category</ModalHeader>
+          <ModalHeader className='pl-0'>Edit Mock Category</ModalHeader>
           {editingCategory && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">
               <div className="space-y-2">
@@ -154,7 +165,7 @@ const MockCategoriesPage: NextPage<MockCategoriesPageProps> = ({ initialCategori
                 <Textarea id="editDescription" label="Description" value={editingCategory.description || ''} onChange={(e) => setEditingCategory({ ...editingCategory, description: e.target.value })} />
               </div>
               <ModalFooter>
-                <Button type="button" onPress={() => setIsEditDialogOpen(false)} className='bg-[#dac9ec]'>Cancel</Button>
+                <Button type="button" onPress={() => setIsEditDialogOpen(false)}>Cancel</Button>
                 <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
               </ModalFooter>
             </form>

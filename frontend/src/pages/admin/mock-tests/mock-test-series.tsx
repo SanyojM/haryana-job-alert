@@ -135,7 +135,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
   };
 
   return (
-    <div className='py-4 px-8'>
+    <div className='p-4'>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Manage Test Series</h1>
         <Button onPress={() => openDialog()} className='bg-[#7828C8] text-white'>Create New Series</Button>
@@ -161,7 +161,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
                   <TableCell>{s.price ? `₹${s.price}` : 'Free'}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm" onPress={() => openDialog(s)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onPress={() => handleDelete(s.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 ml-1" onPress={() => handleDelete(s.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -172,7 +172,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
 
       <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
         <ModalContent className="sm:max-w-[600px]">
-          <ModalHeader>{editingSeries?.id ? 'Edit' : 'Create'} Test Series</ModalHeader>
+          <ModalHeader className='pl-0'>{editingSeries?.id ? 'Edit' : 'Create'} Test Series</ModalHeader>
           {editingSeries && (
             <form onSubmit={handleSave} className="space-y-4 py-4">
               <div className="space-y-2">
@@ -250,7 +250,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
                 </div>
               </div>
               <ModalFooter>
-                <Button type="button" className='bg-[#ddd4e6]' onPress={() => setIsEditDialogOpen(false)}>Cancel</Button>
+                <Button type="button" onPress={() => setIsEditDialogOpen(false)}>Cancel</Button>
                 <Button type="submit" className='bg-[#7828C8] text-white' disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
               </ModalFooter>
             </form>

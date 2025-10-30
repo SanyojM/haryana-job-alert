@@ -209,14 +209,14 @@ const AdminFilesManagement: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <Card className='bg-white rounded-2xl border border-gray-300 p-4 shadow-sm'>
+      <Card className='bg-white p-4 shadow-sm'>
         <CardHeader className='w-full'>
           <div className="flex justify-between items-center w-full">
             <div>
               <h1 className='font-bold text-lg'>Files Management</h1>
               <p className='text-sm text-gray-700'>Manage downloadable files and track purchases</p>
             </div>
-            <Button onPress={handleCreateFile} className='bg-blue-600 hover:bg-blue-700 text-white rounded-lg'>
+            <Button onPress={handleCreateFile} className='bg-[#7828C8] text-white'>
               <Plus className="w-4 h-4 mr-2" />
               Add New File
             </Button>
@@ -269,16 +269,16 @@ const AdminFilesManagement: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button size="sm" onPress={() => handleEditFile(file)} className='bg-gray-100 rounded-md border border-gray-200'>
+                        <Button size="sm" onPress={() => handleEditFile(file)} className='bg-gray-100 border border-gray-200'>
                           <Edit className="w-3 h-3" />
                         </Button>
-                        <Button size="sm" onPress={() => handleViewPurchases(file.id)} className='bg-gray-100 rounded-md border border-gray-200'>
+                        <Button size="sm" onPress={() => handleViewPurchases(file.id)} className='bg-gray-100 border border-gray-200'>
                           <Download className="w-3 h-3" />
                         </Button>
-                        <Button size="sm" onPress={() => window.open(`/offline-forms/${file.slug}`, '_blank')} className='bg-gray-100 rounded-md border border-gray-200'>
+                        <Button size="sm" onPress={() => window.open(`/offline-forms/${file.slug}`, '_blank')} className='bg-gray-100  border border-gray-200'>
                           <ExternalLink className="w-3 h-3" />
                         </Button>
-                        <Button size="sm" onPress={() => handleDelete(file.id)} className="bg-[#DC6C6C] text-white rounded-md">
+                        <Button size="sm" onPress={() => handleDelete(file.id)} className="bg-[#DC6C6C] text-white">
                           <Trash2 className="w-3 h-3" />
                         </Button>
                       </div>
@@ -292,7 +292,7 @@ const AdminFilesManagement: React.FC = () => {
       </Card>
 
       {/* Create/Edit Dialog */}
-      <Modal isOpen={fileDialogOpen} onOpenChange={setFileDialogOpen} className='shadow-sm bg-white p-6 border border-gray-400 rounded-xl'>
+      <Modal isOpen={fileDialogOpen} onOpenChange={setFileDialogOpen} className='shadow-sm bg-white'>
         <ModalContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <ModalHeader className='flex flex-col'>
             <h1>{editingFile ? 'Edit File' : 'Create New File'}</h1>
@@ -405,11 +405,11 @@ const AdminFilesManagement: React.FC = () => {
             </ModalBody>
           <ModalFooter className='flex justify-start'>
             <div className="flex gap-2">
-              <Button onPress={() => setFileDialogOpen(false)} className='border border-gray-200 rounded-lg'>Cancel</Button>
+              <Button onPress={() => setFileDialogOpen(false)} className='border border-gray-200'>Cancel</Button>
               <Button 
                 onPress={handleSubmit} 
                 isDisabled={loading || !formData.title || !formData.file_url}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (editingFile ? 'Update' : 'Create')}
               </Button>
@@ -419,7 +419,7 @@ const AdminFilesManagement: React.FC = () => {
       </Modal>
 
       {/* Purchases Dialog */}
-      <Modal isOpen={purchasesDialogOpen} onOpenChange={setPurchasesDialogOpen} className='shadow-sm bg-white p-4 border border-gray-400 rounded-xl'>
+      <Modal isOpen={purchasesDialogOpen} onOpenChange={setPurchasesDialogOpen} className='py-2'>
         <ModalContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <ModalHeader className='flex flex-col'>
             <h1>File Purchases</h1>

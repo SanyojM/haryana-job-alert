@@ -111,7 +111,7 @@ const TagsPage: NextPage<TagsPageProps> = ({ initialTags }) => {
         {/* ADD NEW TAG FORM */}
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
-            <Card className='bg-white p-4 rounded-xl border border-gray-300 shadow-sm'>
+            <Card className=''>
               <CardHeader><h1>Add New Tag</h1></CardHeader>
               <CardBody className="space-y-4">
                 <div className="space-y-2">
@@ -120,7 +120,7 @@ const TagsPage: NextPage<TagsPageProps> = ({ initialTags }) => {
                 {error && <p className="text-sm text-red-600">{error}</p>}
               </CardBody>
               <CardFooter>
-                <Button type="submit" disabled={isLoading} className="w-full bg-[#8979AB] text-white rounded-lg">
+                <Button type="submit" disabled={isLoading} className="w-full bg-[#7828C8] text-white rounded-lg">
                   {isLoading ? 'Saving...' : 'Save Tag'}
                 </Button>
               </CardFooter>
@@ -130,18 +130,24 @@ const TagsPage: NextPage<TagsPageProps> = ({ initialTags }) => {
 
         {/* EXISTING TAGS LIST */}
         <div className="lg:col-span-2">
-          <Card className='bg-white p-4 rounded-xl border border-gray-300 shadow-sm'>
+          <Card className=''>
             <CardHeader><h1>Existing Tags</h1></CardHeader>
             <CardBody>
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
-                  <div key={tag.id} className="group flex items-center gap-1 bg-slate-100 text-slate-800 rounded-full border text-sm font-medium transition-all hover:bg-slate-200">
+                  <div key={tag.id} className="group flex items-center gap-1 bg-slate-100 text-slate-800 rounded-full  text-sm font-medium transition-all hover:bg-slate-200">
                     <span className="pl-3 pr-2 py-1">{tag.name}</span>
                     <div className="flex items-center">
-                      <Button className='rounded-full' onPress={() => openEditDialog(tag)}>
+                      <Button
+                          variant="ghost"
+                          isIconOnly={true}
+                          className="h-6 w-6 rounded-full" onPress={() => openEditDialog(tag)}>
                         <Pencil className="h-3 w-3" />
                       </Button>
-                      <Button className="rounded-full text-red-500 hover:text-red-600" onPress={() => handleDelete(tag.id)}>
+                      <Button
+                          variant="ghost"
+                          isIconOnly={true}
+                          className="h-6 w-6 rounded-full text-red-500 hover:text-red-600" onPress={() => handleDelete(tag.id)}>
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
@@ -154,9 +160,9 @@ const TagsPage: NextPage<TagsPageProps> = ({ initialTags }) => {
       </div>
 
       {/* SINGLE, SHARED EDIT DIALOG */}
-      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='bg-white p-4 border border-gray-300 rounded-xl shadow-sm'>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
         <ModalContent>
-          <ModalHeader><h1>Edit Tag</h1></ModalHeader>
+          <ModalHeader className='pl-0'>Edit Tag</ModalHeader>
           {editingTag && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">
               <div className="space-y-2">
@@ -164,7 +170,7 @@ const TagsPage: NextPage<TagsPageProps> = ({ initialTags }) => {
               </div>
               <ModalFooter>
                 <Button type="button" className='bg-[#dfd9eb] rounded-lg' onPress={() => setIsEditDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" className='bg-[#8979AB] text-white rounded-lg' isDisabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
+                <Button type="submit" className='bg-[#7828C8] text-white rounded-lg' isDisabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
               </ModalFooter>
             </form>
           )}

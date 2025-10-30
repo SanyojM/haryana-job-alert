@@ -165,10 +165,10 @@ const CourseTagsPage: NextPage<CourseTagsPageProps> = ({ initialTags }) => {
       </div>
 
       {/* EDIT DIALOG -> MODAL */}
-      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4'>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
         <ModalContent>
-          <ModalHeader>
-            <h2 className="text-lg font-semibold">Edit Course Tag</h2>
+          <ModalHeader className='pl-0'>
+            Edit Course Tag
           </ModalHeader>
           {editingTag && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">
@@ -181,7 +181,7 @@ const CourseTagsPage: NextPage<CourseTagsPageProps> = ({ initialTags }) => {
               />
                {error && <p className="text-sm text-red-600">{error}</p>}
               <ModalFooter>
-                <Button type="button" variant="bordered" onPress={() => { setIsEditDialogOpen(false); setEditingTag(null); }}>
+                <Button type="button" onPress={() => { setIsEditDialogOpen(false); setEditingTag(null); }}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>
