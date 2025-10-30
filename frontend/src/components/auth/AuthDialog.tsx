@@ -240,7 +240,7 @@ export function AuthDialog({
           <Tabs
             className="bg-white p-5 rounded-2xl"
             value={activeTab}
-            onValueChange={(value) => setActiveTab(value as "login" | "signup")}
+            onValueChange={(value : any) => setActiveTab(value as "login" | "signup")}
           >
             <TabsList className="grid w-full grid-cols-2 mb-6 rounded-xl">
               <TabsTrigger
