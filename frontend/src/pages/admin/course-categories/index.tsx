@@ -175,10 +175,10 @@ const CourseCategoriesPage: NextPage<CourseCategoriesPageProps> = ({ initialCate
       </div>
 
       {/* EDIT DIALOG -> MODAL */}
-      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4'>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
         <ModalContent>
-          <ModalHeader>
-            <h2 className="text-lg font-semibold">Edit Course Category</h2>
+          <ModalHeader className='pl-0'>
+            Edit Course Category
           </ModalHeader>
           {editingCategory && (
             <form onSubmit={handleUpdate} className="space-y-4 py-4">

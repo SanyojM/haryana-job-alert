@@ -283,7 +283,7 @@ const AdminFormsManagement: React.FC = () => {
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Forms Management</h1>
-        <Button onClick={handleCreateNew} className='bg-[#8A79AB] text-white rounded-md'>
+        <Button onPress={handleCreateNew} className='bg-[#7828C8] text-white'>
           <Plus className="w-4 h-4 mr-2" />
           Create New Form
         </Button>
@@ -298,7 +298,7 @@ const AdminFormsManagement: React.FC = () => {
         </Alert>
       )}
 
-      <Card className='bg-white p-4 rounded-2xl border border-gray-300 shadow-sm'>
+      <Card className='bg-white p-2 shadow-sm'>
         <CardHeader>
           <h1>All Forms ({forms.length})</h1>
           <p>
@@ -313,7 +313,7 @@ const AdminFormsManagement: React.FC = () => {
               No forms created yet. Click "Create New Form" to get started!
             </div>
           ) : (
-            <div className="border rounded-lg overflow-hidden">
+            <div className="overflow-hidden">
               <Table isStriped={true}>
                 <TableHeader>
                     <TableColumn>Title</TableColumn>
@@ -352,7 +352,7 @@ const AdminFormsManagement: React.FC = () => {
                         <Button 
                           variant="ghost" 
                           size="sm"
-                          onClick={() => fetchSubmissions(form.id, form.title)}
+                          onPress={() => fetchSubmissions(form.id, form.title)}
                           className="text-blue-600 hover:text-blue-700"
                         >
                           <Users className="w-4 h-4 mr-1" />
@@ -400,9 +400,9 @@ const AdminFormsManagement: React.FC = () => {
       </Card>
 
       {/* Form Create/Edit Dialog */}
-      <Modal isOpen={formDialogOpen} onOpenChange={setFormDialogOpen} className='shadow-sm bg-white p-4 rounded-2xl border border-gray-300' size='lg'>
+      <Modal isOpen={formDialogOpen} onOpenChange={setFormDialogOpen} className='shadow-sm bg-white p-4 border border-gray-300' size='lg'>
         <ModalContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <ModalHeader className='flex flex-col'>
+          <ModalHeader className='flex flex-col pl-0'>
             <h1>{editingForm ? 'Edit Form' : 'Create New Form'}</h1>
             <p className='text-xs font-medium'>
               {editingForm ? 'Update the form details and fields' : 'Build a custom form with dynamic fields'}
@@ -477,7 +477,7 @@ const AdminFormsManagement: React.FC = () => {
                   {formData.fields.length > 0 && (
                     <div className="space-y-2 mb-4">
                       {formData.fields.map((field, index) => (
-                        <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                        <div key={index} className="flex items-center gap-3 p-3 bg-gray-50">
                           <GripVertical className="w-4 h-4 text-gray-400" />
                           <div className="flex-1">
                             <div className="font-medium">{field.label}</div>
@@ -489,7 +489,7 @@ const AdminFormsManagement: React.FC = () => {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleRemoveField(index)}
+                            onPress={() => handleRemoveField(index)}
                           >
                             <Trash2 className="w-4 h-4 text-red-500" />
                           </Button>
@@ -571,7 +571,7 @@ const AdminFormsManagement: React.FC = () => {
                   </Card>
                 </div>
 
-                <Button type="submit" className="w-full bg-[#8A79AB] rounded-md text-white" disabled={loading}>
+                <Button type="submit" className="w-full bg-[#7828C8] text-white" disabled={loading}>
                   {loading ? (editingForm ? 'Updating...' : 'Creating...') : (editingForm ? 'Update Form' : 'Create Form')}
                 </Button>
               </form>
@@ -579,7 +579,7 @@ const AdminFormsManagement: React.FC = () => {
       </Modal>
 
       {/* Submissions Dialog */}
-      <Modal isOpen={submissionsDialogOpen} onOpenChange={setSubmissionsDialogOpen} className='shadow-sm bg-[#f8f7fa] border border-gray-300 rounded-2xl p-4' size='sm'>
+      <Modal isOpen={submissionsDialogOpen} onOpenChange={setSubmissionsDialogOpen} className='shadow-sm bg-[#f8f7fa] border border-gray-300 rounded-2xl p-2' size='sm'>
         <ModalContent className="max-w-xl max-h-[80vh] overflow-y-auto">
           <ModalHeader className='flex flex-col'>
             <h1>Form Submissions - {selectedFormTitle}</h1>
@@ -597,7 +597,7 @@ const AdminFormsManagement: React.FC = () => {
           ) : (
             <div className="space-y-4 mt-4">
               {submissions.map((submission) => (
-                <Card key={submission.id} className='bg-white p-2 rounded-xl border border-gray-200'>
+                <Card key={submission.id} className='bg-white p-2 border border-gray-200'>
                   <CardBody className="p-4">
                     <div className="flex justify-between items-start mb-3">
                       <div>

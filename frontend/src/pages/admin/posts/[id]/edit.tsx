@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const EditPostPage: NextPage<EditPostPageProps> = ({ post, templates, categories, tags }) => {
   return (
-    <div>
+    <div className="p-4">
         <h1 className="text-3xl font-bold tracking-tight mb-6">Edit Post</h1>
         {/* We pass the post data to the form component */}
         <CreatePostForm 

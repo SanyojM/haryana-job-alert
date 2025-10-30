@@ -107,9 +107,9 @@ const CarouselPage: NextPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-8">
+    <div className="container mx-auto p-4 space-y-8">
       {/* Add New Item Card */}
-      <Card className='bg-white shadow-sm p-4 rounded-xl border border-gray-300'>
+      <Card className='p-2'>
         <CardHeader>
           <h1>Add New Carousel Item</h1>
         </CardHeader>
@@ -119,7 +119,6 @@ const CarouselPage: NextPage = () => {
               <Input
                 id="text"
                 label="Text"
-                labelPlacement='outside-top'
                 value={newText}
                 onChange={(e) => setNewText(e.target.value)}
                 placeholder="Enter carousel text"
@@ -129,7 +128,6 @@ const CarouselPage: NextPage = () => {
               <Input
                 id="link"
                 label="Link (Optional)"
-                labelPlacement='outside-top'
                 value={newLink}
                 onChange={(e) => setNewLink(e.target.value)}
                 placeholder="Enter URL"
@@ -144,7 +142,7 @@ const CarouselPage: NextPage = () => {
                   Active
                 </Switch>
             </div>
-            <Button onPress={handleCreateItem} isDisabled={!newText} className='bg-[#8979AB] text-white rounded-lg'>
+            <Button onPress={handleCreateItem} isDisabled={!newText} className='bg-[#7828C8] text-white rounded-lg'>
               Add Item
             </Button>
           </div>
@@ -152,16 +150,16 @@ const CarouselPage: NextPage = () => {
       </Card>
 
       {/* List of Items Card */}
-      <Card className='bg-white shadow-sm p-4 rounded-xl border border-gray-300'>
+      <Card className='p-2'>
         <CardHeader>
-          <h1>Carousel Items</h1>
+          Carousel Items
         </CardHeader>
         <CardBody>
           <div className="space-y-4">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
+                className="flex items-center justify-between bg-gray-50 p-2 rounded-lg"
               >
                 <div className="space-y-1">
                   <p className="font-medium">{item.text}</p>
@@ -175,25 +173,28 @@ const CarouselPage: NextPage = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex space-x-2">
-                  <Button
-                    variant="ghost"
-                    onPress={() => {
+                <div className="flex items-center gap-2">
+                      <Button
+                        isIconOnly
+                        variant="ghost"
+                        onPress={() => {
                       setEditingItem(item);
                       setIsEditDialogOpen(true);
                     }}
-                    className='hover:bg-red-100/50 rounded-lg'
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onPress={() => handleDeleteItem(item.id)}
-                    className='hover:bg-red-100/50 rounded-lg'
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                        aria-label="Edit category"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        isIconOnly
+                        variant="ghost"
+                        className="text-red-500 hover:text-red-600"
+                        onPress={() => handleDeleteItem(item.id)}
+                        aria-label="Delete category"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
               </div>
             ))}
           </div>
@@ -203,7 +204,7 @@ const CarouselPage: NextPage = () => {
       {/* Edit Dialog */}
       <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='bg-white shadow-sm p-4 rounded-xl border border-gray-300'>
         <ModalContent>
-          <ModalHeader>
+          <ModalHeader className='pl-0'>
             <h1>Edit Carousel Item</h1>
           </ModalHeader>
           <div className="space-y-4">
@@ -211,7 +212,6 @@ const CarouselPage: NextPage = () => {
               <Input
                 id="edit-text"
                 label="Text"
-                labelPlacement='outside-top'
                 value={editingItem?.text ?? ''}
                 onChange={(e) =>
                   setEditingItem(
@@ -224,7 +224,6 @@ const CarouselPage: NextPage = () => {
               <Input
                 id="edit-link"
                 label="Link (Optional)"
-                labelPlacement='outside-top'
                 value={editingItem?.link ?? ''}
                 onChange={(e) =>
                   setEditingItem(
@@ -251,7 +250,7 @@ const CarouselPage: NextPage = () => {
             <Button onPress={() => setIsEditDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onPress={handleUpdateItem} className='bg-[#8979AB] text-white rounded-lg'>
+            <Button onPress={handleUpdateItem} className='bg-[#7828C8] text-white'>
               Save Changes
             </Button>
           </ModalFooter>

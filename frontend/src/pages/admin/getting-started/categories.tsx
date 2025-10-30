@@ -136,7 +136,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
         {/* ADD NEW CATEGORY FORM */}
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
-            <Card className="bg-white rounded-2xl p-3 border border-gray-400 shadow-sm">
+            <Card className="bg-white rounded-2xl p-2 shadow-sm">
               <CardHeader>
                 <h1 className="font-semibold">Add New Category</h1>
               </CardHeader>
@@ -165,7 +165,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-[#8A79AB] text-white rounded-md"
+                  className="w-full bg-[#7828C8] text-white rounded-md"
                 >
                   {isLoading ? 'Saving...' : 'Save Category'}
                 </Button>
@@ -176,7 +176,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
 
         {/* EXISTING CATEGORIES LIST */}
         <div className="lg:col-span-2">
-          <Card className="bg-white rounded-2xl p-3 border border-gray-400 shadow-sm">
+          <Card className="bg-white rounded-2xl p-2 shadow-sm">
             <CardHeader>
               <h1 className="font-semibold">Existing Categories</h1>
             </CardHeader>
@@ -185,7 +185,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
                 {categories.map((category) => (
                   <li
                     key={category.id}
-                    className="p-3 bg-slate-50 border rounded-md flex justify-between items-center"
+                    className="p-3 bg-slate-50 rounded-md flex justify-between items-center"
                   >
                     <div>
                       <p className="font-medium text-slate-900">{category.name}</p>
@@ -223,7 +223,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
       <Modal
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
-        className="bg-white p-4 rounded-2xl shadow-sm"
+        className="bg-white p-2"
       >
         <ModalContent>
           <ModalHeader>Edit Category</ModalHeader>
@@ -268,7 +268,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-[#8A79AB] text-white rounded-md"
+                  className="bg-[#7828C8] text-white rounded-md"
                 >
                   {isLoading ? 'Saving...' : 'Save Changes'}
                 </Button>

@@ -88,7 +88,7 @@ const AllMockTestsPage: NextPage<AllMockTestsPageProps> = ({ initialTests }) => 
         <Button onPress={() => openDialog()} className='bg-[#7828C8] text-white'>Create New Test</Button>
       </div>
       <Card>
-        <CardBody className="mt-6">
+        <CardBody className="">
           <Table>
             <TableHeader>
                 <TableColumn>Title</TableColumn>
@@ -107,8 +107,8 @@ const AllMockTestsPage: NextPage<AllMockTestsPageProps> = ({ initialTests }) => 
                   <TableCell>{test.total_marks}</TableCell>
                   <TableCell>{test.is_free ? 'Yes' : 'No'}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant='flat' onPress={() => openDialog(test)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant='flat' className="text-red-500 hover:text-red-600 ml-2" onPress={() => handleDeleteTest(test.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" onPress={() => openDialog(test)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 ml-1" onPress={() => handleDeleteTest(test.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -117,9 +117,9 @@ const AllMockTestsPage: NextPage<AllMockTestsPageProps> = ({ initialTests }) => 
         </CardBody>
       </Card>
 
-      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4'>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
         <ModalContent>
-          <ModalHeader>{editingTest?.id ? 'Edit' : 'Create'} Mock Test</ModalHeader>
+          <ModalHeader className='pl-0'>{editingTest?.id ? 'Edit' : 'Create'} Mock Test</ModalHeader>
           {editingTest && (
             <form onSubmit={handleSaveTest} className="space-y-4 py-4">
                <div className="space-y-2">

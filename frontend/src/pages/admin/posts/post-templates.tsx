@@ -115,14 +115,14 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
   };
 
   return (
-    <div className='container mx-auto p-4'>
+    <div className='p-4'>
       <h1 className="text-3xl font-bold tracking-tight mb-6">Manage Post Templates</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* ADD NEW TEMPLATE FORM */}
         <div className="lg:col-span-1">
           <form onSubmit={handleCreate}>
-            <Card>
+            <Card className='p-2'>
               <CardHeader><h1>Add New Template</h1></CardHeader>
               <CardBody className="space-y-4">
                 <div className="space-y-2">
@@ -154,21 +154,32 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
 
         {/* EXISTING TEMPLATES LIST */}
         <div className="lg:col-span-2">
-          <Card>
+          <Card className='p-2'>
             <CardHeader><h1>Existing Templates</h1></CardHeader>
             <CardBody>
               <ul className="space-y-3">
                 {templates.map((template) => (
-                  <li key={template.id} className="p-3 bg-slate-50 border rounded-md flex justify-between items-center">
+                  <li key={template.id} className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
                     <div>
                       <p className="font-medium text-slate-900">{template.name}</p>
                       <p className="text-sm text-slate-500">{template.description || ''}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button onPress={() => openEditDialog(template)}>
+                      <Button
+                        isIconOnly
+                        variant="ghost"
+                        onPress={() => openEditDialog(template)}
+                        aria-label="Edit category"
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button className="text-red-500 hover:text-red-600" onPress={() => handleDelete(template.id)}>
+                      <Button
+                        isIconOnly
+                        variant="ghost"
+                        className="text-red-500 hover:text-red-600"
+                        onPress={() => handleDelete(template.id)}
+                        aria-label="Delete category"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -181,10 +192,10 @@ const PostTemplatesPage: NextPage<PostTemplatesPageProps> = ({ initialTemplates 
       </div>
 
       {/* SINGLE, SHARED EDIT DIALOG */}
-      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4 px-8'>
+      <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='p-4'>
         {/* FIX: Use flexbox to control layout and scrolling */}
         <ModalContent className="max-w-3xl flex flex-col max-h-[90vh]">
-          <ModalHeader><h1>Edit Template</h1></ModalHeader>
+          <ModalHeader className='pl-0'><h1>Edit Template</h1></ModalHeader>
           {editingTemplate && (
             // The form now uses flexbox to grow and fill the space
             <form onSubmit={handleUpdate} className="flex-1 flex flex-col gap-4 overflow-hidden">
