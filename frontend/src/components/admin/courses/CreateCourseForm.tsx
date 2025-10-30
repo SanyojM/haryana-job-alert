@@ -186,18 +186,13 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
             const endpoint = isEditMode ? `/courses/${initialData.id}` : '/courses';
             const method = isEditMode ? 'PUT' : 'POST';
 
-            const response = await fetch(`http://localhost:3000${endpoint}`, {
-                method: method,
-                headers: { 'Authorization': `Bearer ${authToken}` },
-                body: formData,
-            });
-
-            if (!response.ok) {
-                 const errorData = await response.json();
-                 throw new Error(errorData.message || `Failed to ${isEditMode ? 'update' : 'create'} course`);
+            // Use api helper methods which set the base URL and headers correctly
+            if (isEditMode) {
+                await api.putFormData(endpoint, formData, authToken);
+            } else {
+                await api.postFormData(endpoint, formData, authToken);
             }
 
-            await response.json();
             router.push('/admin/courses');
         } catch (err: unknown) {
             setError(err instanceof Error ? err.message : `Failed to ${isEditMode ? 'update' : 'create'} course.`);

@@ -250,18 +250,14 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                 ? `/courses/lessons/${editingLesson.id}`
                 : `/courses/topics/${currentTopicIdForLesson}/lessons`;
              const method = isEditMode ? 'PUT' : 'POST';
+            // Use api helper methods for FormData requests (they add base URL and auth header)
+            if (isEditMode) {
+                await api.putFormData(endpoint, formData, authToken);
+            } else {
+                await api.postFormData(endpoint, formData, authToken);
+            }
 
-             const response = await fetch(`http://localhost:3000${endpoint}`, {
-                method: method,
-                headers: { 'Authorization': `Bearer ${authToken}` },
-                body: formData,
-            });
-             if (!response.ok) {
-                 const errData = await response.json();
-                 throw new Error(errData.message || 'Failed to save lesson');
-             }
-             
-             await reloadData(); // Reload data to get new order and image URL
+            await reloadData(); // Reload data to get new order and image URL
 
             setIsLessonModalOpen(false);
             setEditingLesson(null);
