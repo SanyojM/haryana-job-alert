@@ -9,6 +9,13 @@ import { HashLoader } from 'react-spinners'; // Loading spinner
 import Router from 'next/router';
 import FloatingSocials from '@/components/shared/FloatingSocials';
 import { HeroUIProvider } from '@heroui/react';
+import { Poppins } from 'next/font/google'
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+})
 
 // This component handles the protection logic
 const AdminAuthGuard = ({ children }: { children: ReactNode }) => {
@@ -83,10 +90,10 @@ export default function App({ Component, pageProps }: AppProps) {
         </AdminAuthGuard>
       </HeroUIProvider>
       ) : (
-        <>
+        <main className={poppins.className}>
         <FloatingSocials />
         <Component {...pageProps} />
-        </>
+        </main>
       )}
     </AuthProvider>
   );
