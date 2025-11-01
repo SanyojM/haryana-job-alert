@@ -122,6 +122,8 @@ export default function Header() {
           <div
             className="relative bg-center bg-cover h-35 sm:h-35 w-full"
             style={{ backgroundImage: "url('/header.jpg')" }}
+            // @ts-ignore
+            fetchpriority="high"
           >
             <div className="absolute top-10 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-3xl sm:text-4xl font-bold text-white z-10 flex items-center">
