@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://theharyanajobalert.com
+
+# Sitemaps
+Sitemap: https://theharyanajobalert.com/sitemap.xml

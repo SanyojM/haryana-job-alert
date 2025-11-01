@@ -53,6 +53,20 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, []);
 
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      (window as any).gtag('config', 'G-Y96FVJBE7W', {
+      page_path: url,
+      })
+    }
+
+    router.events.on('routeChangeComplete', handleRouteChange)
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router.events])
+
+
   return (
     <AuthProvider>
       {loading && (
