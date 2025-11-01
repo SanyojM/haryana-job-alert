@@ -120,10 +120,10 @@ export default function Header() {
 
         <div>
           <div
-            className="relative bg-center bg-cover h-25 sm:h-35 w-full"
+            className="relative bg-center bg-cover h-35 sm:h-35 w-full"
             style={{ backgroundImage: "url('/header.jpg')" }}
           >
-            <div className="absolute top-4 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
+            <div className="absolute top-10 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-2xl sm:text-4xl font-bold text-white z-10 flex items-center">
                 <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
                 <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
@@ -132,7 +132,7 @@ export default function Header() {
             </div>
 
             <div className="absolute lg:block playfair text-xl !font-light hidden top-14 text-white left-[65vw] z-20">
-              theharyana<span className="text-[#fdf500]">jobalerts</span>.com
+              theharyana<span className="text-[#fdf500]">jobalert</span>.com
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function Header() {
             </Link>
 
             <div className="hidden lg:flex items-center justify-center flex-1 mr-14">
-              <div className="p-2 rounded-xl border bg-gray-100">
+              <div className="p-2 rounded-xl border border-gray-300 bg-gray-100">
                 <div className="bg-white rounded-xl shadow-lg px-4 py-2 flex items-center space-x-2">
                   {navLinks.map((link) => (
                     <Link
@@ -168,7 +168,7 @@ export default function Header() {
                         More
                       </button>
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-64 p-2 bg-gray-100 border border-gray-400 rounded-2xl mt-2 shadow-lg">
+                    <HoverCardContent className="w-64 p-2 bg-gray-100 border border-gray-300 rounded-2xl mt-2 shadow-lg">
                       <div className="bg-white grid gap-1 p-2 rounded-2xl shadow-lg">
                         <div className="px-2 py-1 text-xs font-semibold text-gray-500 uppercase">
                           Categories
@@ -217,7 +217,7 @@ export default function Header() {
                           </button>
                         </HoverCardTrigger>
                         <HoverCardContent
-                          className="w-60 p-2 bg-gray-100 rounded-3xl mt-6 mr-14"
+                          className="w-60 p-2 bg-gray-100 rounded-3xl mt-6 mr-14 border border-gray-300"
                           side="bottom"
                         >
                           <div className="flex flex-col space-y-1 border-2 border-gray-200 rounded-2xl bg-white">
@@ -280,7 +280,7 @@ export default function Header() {
             </div>
 
             <div
-              className="lg:hidden w-full border rounded-xl p-2 bg-gray-100"
+              className="lg:hidden w-full border border-gray-300 rounded-xl p-2 bg-gray-100"
               ref={menuRef}
             >
               <div className="bg-white rounded-lg shadow-lg flex items-center justify-between w-full py-0.5 px-3">

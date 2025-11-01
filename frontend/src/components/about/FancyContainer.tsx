@@ -21,16 +21,23 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
         <div className="absolute bottom-[80px] left-0 w-[70px] h-[70px] bg-white" />
         <div className="absolute bottom-[80px] left-0 w-[80px] h-[80px] bg-gradient-to-r from-[#093028] to-[#0d3d2e] sm:to-[#0a362d] rounded-bl-[50px] z-10" />
 
-        <div className="absolute top-5 -right-3 bg-black p-4 rounded-full">
-          <Instagram size={30} color="white" />
+        <div className="absolute top-5 -right-3 bg-black p-4 rounded-full z-90">
+          <a href="https://www.instagram.com/haryana_jobalertas" target="_blank" rel="noopener noreferrer" className="flex">
+            <Instagram size={30} color="white" />
+            <span className="hidden">
+              test
+            </span>
+          </a>
         </div>
 
         <div className="absolute -bottom-3 left-3 flex justify-between items-center">
           <div className="rounded-full p-4">
               <img src="/logo.png" alt="" className="w-15" />
           </div>
-          <div className="rounded-full flex justify-center items-center bg-black w-15 h-15">
+          <div className="rounded-full flex justify-center items-center bg-black w-15 h-15 z-90">
+            <a href="https://whatsapp.com/channel/0029VbBbS0R7T8bTQRa9230i">
             <ArrowRight size={25} color="white" />
+            </a>
           </div>
           <div className="ml-10 mb-5">
           </div>
@@ -98,16 +105,23 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
         <div className="absolute bottom-[80px] left-0 w-[70px] h-[70px] bg-white" />
         <div className="absolute bottom-[80px] left-0 w-[80px] h-[80px] bg-gradient-to-r from-[#93291e] to-[#a42a24] sm:to-[#9a2821] rounded-bl-[50px] z-10" />
 
-        <div className="absolute top-5 -right-3 bg-black p-4 rounded-full">
-          <Instagram size={30} color="white" />
+        <div className="absolute top-5 -right-3 bg-black p-4 rounded-full z-90">
+          <a href="https://www.instagram.com/value_plus_campus_2611" target="_blank" rel="noopener noreferrer" className="flex">
+            <span className="hidden">
+              Haryana Job Alert
+            </span>
+            <Instagram size={30} color="white" />
+          </a>
         </div>
 
         <div className="absolute -bottom-3 left-3 flex justify-between items-center">
           <div className="rounded-full p-4">
               <img src="/logo.png" alt="" className="w-15" />
           </div>
-          <div className="rounded-full flex justify-center items-center bg-black w-15 h-15">
-            <ArrowRight size={25} color="white" />
+          <div className="rounded-full flex justify-center items-center bg-black w-15 h-15 z-90">
+            <a href="https://whatsapp.com/channel/0029VbBbS0R7T8bTQRa9230i">
+              <ArrowRight size={25} color="white" />
+            </a>
           </div>
           <div className="ml-10 mb-5">
           </div>

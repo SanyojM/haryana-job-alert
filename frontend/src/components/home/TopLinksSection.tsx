@@ -16,7 +16,7 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
   return (
     <section className="bg-white pb-8 px-4 sm:px-6 lg:px-8 mt-0">
       <div className="max-w-5xl mx-auto text-center">
-        <div className="flex items-center justify-center gap-4 mb-6">
+        <div className="flex items-center justify-center gap-4 mb-6 mt-8 sm:-mt-6">
 
         <img src="/leftarrow.png" alt="" className='inline w-17 h-12 object-cover mt-10' />
         <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
