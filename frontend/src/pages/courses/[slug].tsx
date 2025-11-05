@@ -362,6 +362,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                     </aside> */}
                 </div>
             </div>
+            
             <Footer />
         </div>
     );
