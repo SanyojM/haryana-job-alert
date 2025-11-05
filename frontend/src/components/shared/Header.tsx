@@ -170,35 +170,42 @@ export default function Header() {
                         More
                       </button>
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-64 p-2 bg-gray-100 border border-gray-300 rounded-2xl mt-2 shadow-lg">
-                      <div className="bg-white grid gap-1 p-2 rounded-2xl shadow-lg">
-                        <div className="px-2 py-1 text-xs font-semibold text-gray-500 uppercase">
-                          Categories
-                        </div>
-                        {categories?.length === 0 ? (
-                          <div className="px-3 py-2 text-sm text-gray-500">
-                            Loading...
-                          </div>
-                        ) : (
-                          categories
-                            .filter((cat) => {
-                              const name = (cat.name || "").toLowerCase();
-                              return name !== "yojna" && name !== "latest jobs";
-                            })
-                            .map((category) => (
-                              <Link
-                                key={category.id}
-                                href={`/category/${category.name
-                                  .toLowerCase()
-                                  .replace(/\s+/g, "-")}`}
-                                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                              >
-                                {category.name}
-                              </Link>
-                            ))
-                        )}
-                      </div>
-                    </HoverCardContent>
+                     <HoverCardContent className="w-64 p-2 bg-gray-100 border border-gray-300 rounded-2xl mt-2 shadow-lg">
+                       <div className="bg-white grid gap-1 p-2 rounded-2xl shadow-lg">
+                         
+                         <div className="px-2 py-1 text-xs font-semibold text-gray-500 uppercase">
+                           Categories
+                         </div>
+                         {categories?.length === 0 ? (
+                           <div className="px-3 py-2 text-sm text-gray-500">
+                             Loading...
+                           </div>
+                         ) : (
+                           categories
+                             .filter((cat) => {
+                               const name = (cat.name || "").toLowerCase();
+                               return name !== "yojna" && name !== "latest jobs";
+                             })
+                             .map((category) => (
+                               <Link
+                                 key={category.id}
+                                 href={`/category/${category.name
+                                   .toLowerCase()
+                                   .replace(/\s+/g, "-")}`}
+                                 className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                               >
+                                 {category.name}
+                               </Link>
+                             ))
+                         )}
+                         <Link
+                           href="/courses"
+                           className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                         >
+                           Courses
+                         </Link>
+                       </div>
+                     </HoverCardContent>
                   </HoverCard>
                   <div className="border-l border-gray-200 ml-2 pl-4 flex items-center space-x-3">
                     {isLoggedIn ? (
@@ -403,33 +410,40 @@ export default function Header() {
                     }`}
                   />
                 </CollapsibleTrigger>
-                <CollapsibleContent className="mt-1">
-                  <div className="ml-4 space-y-1">
-                    {categories?.length === 0 ? (
-                      <div className="px-3 py-2 text-sm text-gray-500">
-                        Loading...
-                      </div>
-                    ) : (
-                      categories
-                        ?.filter((cat) => {
-                          const name = (cat.name || "").toLowerCase();
-                          return name !== "yojna" && name !== "latest jobs";
-                        })
-                        .map((category) => (
-                          <Link
-                            key={category.id}
-                            href={`/category/${category.name
-                              .toLowerCase()
-                              .replace(/\s+/g, "-")}`}
-                            className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            {category.name}
-                          </Link>
-                        ))
-                    )}
-                  </div>
-                </CollapsibleContent>
+                 <CollapsibleContent className="mt-1">
+                   <div className="ml-4 space-y-1">
+                     <Link
+                       href="/courses"
+                       className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                       onClick={() => setIsMenuOpen(false)}
+                     >
+                       Courses
+                     </Link>
+                     {categories?.length === 0 ? (
+                       <div className="px-3 py-2 text-sm text-gray-500">
+                         Loading...
+                       </div>
+                     ) : (
+                       categories
+                         ?.filter((cat) => {
+                           const name = (cat.name || "").toLowerCase();
+                           return name !== "yojna" && name !== "latest jobs";
+                         })
+                         .map((category) => (
+                           <Link
+                             key={category.id}
+                             href={`/category/${category.name
+                               .toLowerCase()
+                               .replace(/\s+/g, "-")}`}
+                             className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                             onClick={() => setIsMenuOpen(false)}
+                           >
+                             {category.name}
+                           </Link>
+                         ))
+                     )}
+                   </div>
+                 </CollapsibleContent>
               </Collapsible>
             </div>
           </div>
