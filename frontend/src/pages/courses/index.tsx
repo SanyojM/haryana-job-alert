@@ -6,7 +6,7 @@ import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Users } from "lucide-react"; // Import icons
+import { Heart, Star, Users } from "lucide-react"; // Import icons
 
 // Reuse the Course type, ensure it includes necessary fields for display
 import type { Course } from "@/components/admin/courses/CreateCourseForm";
@@ -17,97 +17,105 @@ interface PublicCourse extends Omit<Course, 'tags' | 'authors'> { // Omit admin-
     slug: string; // Ensure slug is included
     thumbnail_url: string | null;
     category: CourseCategory | undefined; // Expect category object
-    authors: { full_name: string }[]; // Expect authors with names
+    authors: { full_name: string; avatar_url: string }[]; // Expect authors with names
     tags: { tag: { name: string } }[]; // Expect tags nested like this
     enrolled_users_count?: number; // Optional count
     lesson_count?: number; // Optional count
     total_duration_hhmm?: string | null; // Optional duration
+    rating: number;
+    reviews: number;
+    offerEndsSoon: boolean;
     // Add calculated rating if provided by API, otherwise handle client-side if needed
 }
 
 interface CoursesHomePageProps {
-  courses: PublicCourse[];
+    courses: PublicCourse[];
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    // Fetch only published courses for the public page
-    const courses = await api.get('/courses?status=published');
-    return { props: { courses } };
-  } catch (error) {
-    console.error("Failed to fetch published courses:", error);
-    return { props: { courses: [] } };
-  }
+    try {
+        // Fetch only published courses for the public page
+        const courses = await api.get('/courses?status=published');
+        return { props: { courses } };
+    } catch (error) {
+        console.error("Failed to fetch published courses:", error);
+        return { props: { courses: [] } };
+    }
 };
 
 const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
-  return (
-    <div className="bg-gray-100 min-h-screen">
-      <Header />
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6">Available Courses</h1>
-        {courses.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
-              <Link key={course.id} href={`/courses/${course.slug}`} legacyBehavior>
-                <a className="block h-full">
-                  <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
-                    {course.thumbnail_url ? (
-                      <div className="relative aspect-video w-full">
-                        <Image
-                          src={course.thumbnail_url}
-                          alt={course.title}
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-t-xl"
-                        />
-                      </div>
-                    ) : (
-                      <div className="aspect-video w-full bg-gray-200 rounded-t-xl flex items-center justify-center">
-                        <span className="text-gray-500">No Image</span>
-                      </div>
-                    )}
-                    <CardHeader>
-                      <CardTitle className="line-clamp-2">{course.title}</CardTitle>
-                      {course.authors && course.authors.length > 0 && (
-                        <CardDescription>By {course.authors.map(a => a.full_name).join(', ')}</CardDescription>
-                      )}
-                    </CardHeader>
-                    <CardContent className="flex-grow flex flex-col justify-between">
-                      <div>
-                        {/* Add Rating and Student Count if available */}
-                        {/* <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                            <span className="flex items-center gap-1"><Star className="w-4 h-4 text-yellow-500 fill-yellow-500" /> 4.5</span>
-                            <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {course.enrolled_users_count || 0} students</span>
-                        </div> */}
-                        <div className="flex flex-wrap gap-1 mb-4">
-                          {course.tags?.map(({ tag }) => (
-                            <Badge key={tag.name} variant="secondary" className="text-xs">{tag.name}</Badge>
-                          ))}
+    return (
+        <div className="bg-white min-h-screen">
+            <Header />
+            <main className="container mx-auto px-4 py-8">
+                <h1 className="text-3xl md:text-4xl font-bold mb-6">Available Courses</h1>
+                <div className="flex overflow-x-auto scrollbar-hide gap-3 py-2">
+                    {courses.map((course) => (
+                        <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col flex-shrink-0 w-[70%] md:w-[32%] shadow-sm">
+                            <div className="relative">
+                                <Image
+                                    src={course?.thumbnail_url || ''}
+                                    alt={course?.title}
+                                    className="w-full h-auto object-cover aspect-video rounded-2xl"
+                                    width={600}
+                                    height={400}
+                                    unoptimized
+                                />
+                            </div>
+
+                            <div className="py-5 px-1 flex flex-col flex-grow justify-between">
+                                <div className="flex justify-between items-start mb-2 flex-col sm:flex-row">
+                                    <h3 className="md:text-md text-sm font-bold text-gray-800 leading-tight">
+                                        {course?.title}
+                                    </h3>
+                                    <div className="flex items-center gap-1 text-sm text-gray-600 flex-shrink-0 ml-2">
+                                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                                        <span>{course?.rating} ({course?.reviews})</span>
+                                    </div>
+                                </div>
+                                <p className="md:text-sm text-xs text-gray-500 mb-3">{course?.description}</p>
+
+                                <div className="flex items-center gap-2 mb-4">
+                                    <Image src={course.authors?.[0]?.avatar_url || ''} width={40} height={40} alt={course.authors?.[0]?.full_name || 'Instructor'} className="w-7 h-7 rounded-full" unoptimized />
+                                    <span className="text-sm text-gray-700">By {course.authors.map(name => name.full_name) || 'Unknown Instructor'}</span>
+                                </div>
+
+                                <div className="flex md:items-center gap-3 mb-5 flex-col sm:flex-row">
+                                    <span className="text-2xl font-bold text-gray-800">
+                                        {course.pricing_model === 'free'
+                                            ? 'Free'
+                                            : `₹${course.sale_price ?? course.regular_price}`
+                                        }
+                                        {course.pricing_model === 'paid' && course.sale_price && course.regular_price && course.sale_price < course.regular_price && (
+                                            <span className="ml-2 text-sm text-muted-foreground line-through">₹{course.regular_price}</span>
+                                        )}
+                                    </span>
+                                    {course.offerEndsSoon && (
+                                        <span className="text-xs font-semibold bg-green-100 text-green-700 px-2.5 py-1 rounded-md">
+                                            Free offer will end soon
+                                        </span>
+                                    )}
+                                </div>
+
+                                <div className="mt-auto flex items-center gap-3">
+                                    <Link
+                                        href={`/courses/${course.id}`}
+                                        className="shine flex-grow bg-gradient-to-r from-red-600 to-gray-800 text-white text-center rounded-lg px-4 py-3 font-semibold text-xs md:text-sm inline-flex items-center justify-center hover:opacity-90 transition-opacity"
+                                    >
+                                        View Course
+                                    </Link>
+                                    <button className="p-3 rounded-lg bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-500 transition-colors">
+                                        <Heart className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      <div className="mt-auto font-bold text-lg text-right">
-                        {course.pricing_model === 'free'
-                            ? 'Free'
-                            : `₹${course.sale_price ?? course.regular_price}`
-                        }
-                        {course.pricing_model === 'paid' && course.sale_price && course.regular_price && course.sale_price < course.regular_price && (
-                             <span className="ml-2 text-sm text-muted-foreground line-through">₹{course.regular_price}</span>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </a>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-muted-foreground py-12">No courses published yet. Check back soon!</p>
-        )}
-      </main>
-      <Footer />
-    </div>
-  );
+                    ))}
+                </div>
+            </main>
+            <Footer />
+        </div>
+    );
 };
 
 export default CoursesHomePage;

@@ -81,7 +81,7 @@ export default function CourseEnrollmentCard({
         <div className="relative">
           <Image
             src={thumbnailUrl}
-            alt={title} // Use dynamic title
+            alt={title}
             width={400}
             height={225}
             className="w-full h-auto"

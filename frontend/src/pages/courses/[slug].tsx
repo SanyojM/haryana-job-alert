@@ -14,11 +14,12 @@ import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext"; // Import useAuth
 import { useRouter } from "next/router"; // Import useRouter
 import { Button } from "@/components/ui/button";
-import { ExternalLink } from 'lucide-react'; // Import Button for mobile enroll
+import { CheckCircle, Download, ExternalLink, FileText, MonitorPlay } from 'lucide-react'; // Import Button for mobile enroll
 // --- MODIFICATION END ---
 
 
 import type { Lesson, Topic } from "@/pages/admin/courses/[id]";
+import Image from "next/image";
 
 export interface FullCourseDetails {
     id: string;
@@ -241,14 +242,14 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
 
 
     return (
-        <div className="bg-gray-100">
+        <div className="bg-white">
             <Head>
                  <title>{`${course.title} | Haryana Job Alert`}</title>
                  <meta name="description" content={course.description || `Learn about ${course.title} on Haryana Job Alert.`} />
             </Head>
 
             <Header />
-            <div className="mt-6 relative"> {/* Added relative positioning */}
+            <div className="mt-6"> {/* Added relative positioning */}
                 <CourseHeader
                     title={course.title}
                     description={course.description || ''}
@@ -261,11 +262,50 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                     studentCount={course.enrolled_users_count || 0}
                     isBestseller={false} // Determine bestseller status if needed
                     isFree={course.pricing_model === 'free'}
+                    course={course}                 
                 />
                  {/* --- MODIFICATION START: Show Enroll/Buy button for mobile/tablet --- */}
                 <div className="container mx-auto px-4 xl:hidden mt-[-4rem] mb-8 relative z-20">
                     <Card className="bg-white p-4 shadow-lg rounded-lg">
-                        <img src={course.thumbnail_url || "https://via.placeholder.com/400x225"} alt={course.title} className="w-full h-auto rounded-md mb-4 aspect-video object-cover"/>
+                        <Image src={course.thumbnail_url || ''}
+                            alt={course.title}
+                            width={400} 
+                            height={225}
+                            className="w-full h-auto" />
+                            <div className="">
+                        <h3 className="font-bold text-2xl mb-4 line-clamp-2">{course.title}</h3> {/* Use dynamic title */}
+                        <p className="md:text-sm text-xs text-gray-500 mb-3">{course.description}</p>
+                                    {/* <p className="text-xs text-center">{description}</p> */} {/* Description removed for cleaner card */}
+                                    <div className=" mt-4 px-8 py-2 rounded-sm flex gap-4 items-center">
+                                      <Image
+                                        src={course.authors[0].avatar_url || '/js.png'} // Placeholder avatar
+                                        className="w-12 h-12 object-cover border border-white rounded-full bg-white"
+                                        alt={course.authors[0].full_name}
+                                        width={64}
+                                        height={64}
+                                      />
+                                      <p className="text-sm">By {course.authors[0].full_name}</p>
+                                    </div>
+                                    </div>
+                        
+                        <div className=" space-y-3 text-gray-600">
+                            <h4 className="font-bold text-gray-800">This course gives you:</h4>
+                            <div className="flex items-center gap-3 text-sm">
+                                <MonitorPlay size={16} className="text-indigo-500" /> Course Duration: {formatDuration(null, course.total_duration_hhmm)}
+                            </div>
+                                <div className="flex items-center gap-3 text-sm">
+                                    <FileText size={16} className="text-indigo-500" /> Articles attached: {0}
+                                </div>
+                                <div className="flex items-center gap-3 text-sm">
+                                    <Download size={16} className="text-indigo-500" /> Downloadable resources: {0}
+                                </div>
+                            <div className="flex items-center gap-3 text-sm">
+                                <CheckCircle size={16} className="text-indigo-500" /> {course.pricing_model === 'free' ? 'Free Course' : 'Paid Course'}
+                            </div>
+                                <div className="flex items-center gap-3 text-sm">
+                                    <FileText size={16} className="text-indigo-500" /> Mock tests: {0}
+                                </div>
+                        </div>
                         <div className="text-2xl font-bold text-gray-800 mb-2 text-right">
                            {course.pricing_model === 'free' ? 'Free' : `₹${course.sale_price ?? course.regular_price}`}
                            {course.pricing_model === 'paid' && course.sale_price && course.regular_price && course.sale_price < course.regular_price && (
@@ -295,17 +335,15 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
             </div>
 
             <div className="container mx-auto px-4 py-8 pt-0 md:pt-8"> {/* Adjusted padding */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 items-start">
+                <div className="grid grid-cols-1 xl:grid-cols-3 items-start">
                     <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0 mt-12 md:mt-0">
                         <CourseDescription description={course.description || "No description provided."} />
                         <CourseContentAccordion content={courseContentData} />
                     </main>
 
-                    <aside className="space-y-8 col-span-1 hidden xl:block sticky top-24">
+                    {/* <aside className="space-y-8 col-span-1 hidden xl:block sticky top-24">
                         <CourseEnrollmentCard
-                            // --- CORRECTED PROPS ---
-                            // courseId={Number(course.id)}                // Pass ID as a number
-                            slug={course.slug}                            // <-- ADDED: Pass the slug for navigation
+                            slug={course.slug}                           
                             isEnrolled={isEnrolled}
                             pricingModel={course.pricing_model}
                             price={course.sale_price ?? course.regular_price}
@@ -320,12 +358,11 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                             articlesAttached={0}
                             downloadableResources={0}
                             mockTests={0}
-                            // --- REMOVED description and freeCourse props ---
                         />
-                        {/* Ad Banner can be placed here if needed */}
-                    </aside>
+                    </aside> */}
                 </div>
             </div>
+            
             <Footer />
         </div>
     );
