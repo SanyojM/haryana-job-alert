@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { GetServerSideProps, NextPage } from 'next';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { Pencil, Trash2 } from 'lucide-react';
+import { CirclePlus, Eye, Pencil, Trash2 } from 'lucide-react';
 
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
@@ -13,7 +13,16 @@ import {Select, SelectItem} from "@heroui/select"; // Fixed import
 import { Checkbox } from "@heroui/checkbox";
 import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@heroui/table";
 
-// ... (type definitions remain the same) ...
+// --- ADDED TYPE ---
+type MockTest = {
+  id: string;
+  title: string;
+  duration_minutes: number;
+  total_marks: number;
+  is_free: boolean;
+};
+// --- END ADDED TYPE ---
+
 type MockCategory = { id: string; name: string; };
 type MockTag = { id: string; name: string; };
 type MockSeries = {
@@ -55,11 +64,31 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
   const [isLoading, setIsLoading] = useState(false);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
+  // --- ADDED MOCK TEST STATE ---
+  const [tests, setTests] = useState<MockTest[]>([]); // We need this for the save handler
+  const [editingTest, setEditingTest] = useState<Partial<MockTest & { series_id: string }> | null>(null);
+  const [isTestDialogOpen, setIsTestDialogOpen] = useState(false);
+  // --- END ADDED STATE ---
+
   const openDialog = (seriesData: Partial<MockSeries> | null = null) => {
     setEditingSeries(seriesData ? { ...seriesData } : { title: '', description: '', price: 0, category_id: '', mock_series_tags: [] });
     setThumbnailFile(null);
     setIsEditDialogOpen(true);
   };
+
+  // --- ADDED FUNCTION to open the test modal ---
+  const openMockDialog = (seriesId: string) => {
+    // Set up a new test object, crucially adding the series_id
+    setEditingTest({
+      title: '',
+      duration_minutes: 90,
+      total_marks: 100,
+      is_free: false,
+      series_id: seriesId // This links the test to the series
+    });
+    setIsTestDialogOpen(true); // Use the new state variable
+  };
+  // --- END ADDED FUNCTION ---
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -68,6 +97,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
   };
 
   const handleSave = async (e: React.FormEvent) => {
+    // ... (This function remains unchanged)
     const authToken = token || undefined;
     e.preventDefault();
     if (!editingSeries || !editingSeries.category_id) {
@@ -124,6 +154,7 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
   };
 
   const handleDelete = async (seriesId: string) => {
+    // ... (This function remains unchanged)
     const authToken = token || undefined;
     if (!window.confirm('Are you sure you want to delete this series? This will also delete all tests within it.')) return;
     try {
@@ -133,6 +164,36 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
       alert(`Failed to delete series: ${err instanceof Error ? err.message : "An unknown error occurred."}`);
     }
   };
+
+  // --- ADDED FUNCTION to save the new test ---
+  const handleSaveTest = async (e: React.FormEvent) => {
+    const authToken = token || undefined;
+    e.preventDefault();
+    if (!editingTest) return;
+    setIsLoading(true);
+
+    // A new test won't have an ID, so isEditMode will be false
+    const isEditMode = !!editingTest.id;
+    const endpoint = isEditMode ? `/mock-tests/${editingTest.id}` : '/mock-tests';
+    const method = isEditMode ? 'put' : 'post';
+    
+    try {
+      // The editingTest object (which includes series_id) is sent
+      const result = await api[method](endpoint, editingTest, authToken);
+      
+      if (isEditMode) {
+        setTests(prev => prev.map(t => (t.id === result.id ? result : t)));
+      } else {
+        setTests(prev => [...prev, result]);
+      }
+      setIsTestDialogOpen(false); // Close the correct modal
+    } catch (err: unknown) {
+      alert(`Failed to save test: ${err instanceof Error ? err.message : "An unknown error occurred."}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // --- END ADDED FUNCTION ---
 
   return (
     <div className='p-4'>
@@ -147,21 +208,22 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
                 <TableColumn>Title</TableColumn>
                 <TableColumn>Category</TableColumn>
                 <TableColumn>Price</TableColumn>
-                <TableColumn className="text-right">Actions</TableColumn>
+                <TableColumn className='text-right'>Actions</TableColumn>
             </TableHeader>
             <TableBody>
               {series.map(s => (
                 <TableRow key={s.id}>
                   <TableCell className="font-medium">
-                    <Link href={`/admin/mock-tests/mock-test-series/${s.id}`} className="hover:underline">
                       {s.title}
-                    </Link>
                   </TableCell>
                   <TableCell>{s.mock_categories?.name || 'N/A'}</TableCell>
                   <TableCell>{s.price ? `₹${s.price}` : 'Free'}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className='gap-2 flex justify-end'>
+                    <Button variant="ghost" size="sm" onPress={() => openMockDialog(s.id)}><CirclePlus className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className='p-0'><Link href={`/admin/mock-tests/mock-test-series/${s.id}`} className="hover:underline w-full flex justify-center h-full items-center">
+                    <Eye className="h-4 w-4" /></Link></Button>
                     <Button variant="ghost" size="sm" onPress={() => openDialog(s)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 ml-1" onPress={() => handleDelete(s.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onPress={() => handleDelete(s.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -170,11 +232,13 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
         </CardBody>
       </Card>
 
+      {/* This is your existing "Edit Series" Modal */}
       <Modal isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} className='px-4'>
         <ModalContent className="sm:max-w-[600px]">
           <ModalHeader className='pl-0'>{editingSeries?.id ? 'Edit' : 'Create'} Test Series</ModalHeader>
           {editingSeries && (
             <form onSubmit={handleSave} className="space-y-4 py-4">
+              {/* ... (Your series form fields remain unchanged) ... */}
               <div className="space-y-2">
                 <Input id="title" label="Title" value={editingSeries.title} onChange={(e) => setEditingSeries({ ...editingSeries, title: e.target.value })} required />
               </div>
@@ -257,6 +321,43 @@ const MockSeriesPage: NextPage<MockSeriesPageProps> = ({ initialSeries, mockCate
           )}
         </ModalContent>
       </Modal>
+
+      {/* --- ADDED "Create Test" Modal --- */}
+      <Modal isOpen={isTestDialogOpen} onOpenChange={setIsTestDialogOpen} className='px-4'>
+        <ModalContent>
+          {/* We only support creating, so the title is simpler */}
+          <ModalHeader className='pl-0'>Create Mock Test</ModalHeader>
+          {editingTest && (
+            <form onSubmit={handleSaveTest} className="space-y-4 py-4">
+               <div className="space-y-2">
+                <Input id="title" label="Test Title" value={editingTest.title || ''} onChange={(e) => setEditingTest({ ...editingTest, title: e.target.value })} required />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Input id="duration" label="Duration (Minutes)" type="number" value={String(editingTest.duration_minutes)} onChange={(e) => setEditingTest({ ...editingTest, duration_minutes: parseInt(e.target.value) })} required />
+                </div>
+                <div className="space-y-2">
+                  <Input id="marks" label="Total Marks" type="number" value={String(editingTest.total_marks)} onChange={(e) => setEditingTest({ ...editingTest, total_marks: parseInt(e.target.value) })} required />
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="is_free" 
+                    isSelected={editingTest.is_free} // Use isSelected for heroui/checkbox
+                    onChange={(selected) => setEditingTest({ ...editingTest, is_free: !!selected })}
+                  />
+                  <label htmlFor="is_free">Is this a free test?</label>
+              </div>
+              <ModalFooter>
+                {/* Ensure this button uses the correct state */}
+                <Button type="button"  onPress={() => setIsTestDialogOpen(false)}>Cancel</Button>
+                <Button type="submit" className='bg-[#7828C8] text-white' disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Test'}</Button>
+              </ModalFooter>
+            </form>
+          )}
+        </ModalContent>
+      </Modal>
+      {/* --- END ADDED MODAL --- */}
     </div>
   );
 };

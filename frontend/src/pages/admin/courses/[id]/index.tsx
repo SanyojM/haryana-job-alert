@@ -3,7 +3,7 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { PlusCircle, Edit, Trash2, GripVertical } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, GripVertical, Upload } from 'lucide-react'; // Added Upload
 import {
     DragDropContext,
     Droppable,
@@ -13,13 +13,16 @@ import {
     DroppableProvided,
     DraggableProvided
 } from '@hello-pangea/dnd'; // Use @hello-pangea/dnd
+import { Editor } from '@tinymce/tinymce-react';
+import type { Editor as TinyMCEEditor } from 'tinymce';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from '@/components/ui/textarea';
+// --- HeroUI Imports ---
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
+import { Modal, ModalContent, ModalHeader, ModalFooter } from "@heroui/modal";
+import { Input, Textarea } from "@heroui/input";
+// --- End HeroUI Imports ---
+
 import type { Course } from '@/components/admin/courses/CreateCourseForm';
 
 // Define Topic and Lesson types based on API
@@ -124,6 +127,10 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
     // State is initialized from the fetched data
     const [course, setCourse] = useState<CourseWithContent>(initialCourse);
     const [topics, setTopics] = useState<Topic[]>(initialCourse.course_topics || []);
+    
+    // --- ADDED STATE for accordion ---
+    const [openTopics, setOpenTopics] = useState<Set<string>>(new Set());
+    // --- END ADDED STATE ---
 
     const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
     const [editingTopic, setEditingTopic] = useState<Partial<Topic> | null>(null);
@@ -135,6 +142,20 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // --- ADDED FUNCTION to toggle accordion ---
+    const toggleTopic = (topicId: string) => {
+        setOpenTopics(prevOpenTopics => {
+            const newOpenTopics = new Set(prevOpenTopics);
+            if (newOpenTopics.has(topicId)) {
+                newOpenTopics.delete(topicId);
+            } else {
+                newOpenTopics.add(topicId);
+            }
+            return newOpenTopics;
+        });
+    };
+    // --- END ADDED FUNCTION ---
 
     const reloadData = async () => {
         const authToken = token || undefined;
@@ -204,7 +225,11 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
 
     const openLessonModal = (topicId: string, lesson: Partial<Lesson> | null = null) => {
         setCurrentTopicIdForLesson(topicId);
-        setEditingLesson(lesson ? { ...lesson } : { title: '', description: '', video_url: ''});
+        // Set default duration to 0 if not provided
+        setEditingLesson(lesson 
+            ? { ...lesson, video_duration_sec: lesson.video_duration_sec || 0 } 
+            : { title: '', description: '', video_url: '', video_duration_sec: 0 }
+        );
         setImagePreview(lesson?.featured_image_url || null);
          if (featuredImageFileRef.current) {
             featuredImageFileRef.current.value = "";
@@ -238,7 +263,9 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
         formData.append('title', editingLesson.title);
         if (editingLesson.description) formData.append('description', editingLesson.description);
         if (editingLesson.video_url) formData.append('video_url', editingLesson.video_url);
-        if (editingLesson.video_duration_sec) formData.append('video_duration_sec', editingLesson.video_duration_sec.toString());
+        
+        // Ensure we send 0 if it's null or undefined
+        formData.append('video_duration_sec', (editingLesson.video_duration_sec || 0).toString());
 
         const imageFile = featuredImageFileRef.current?.files?.[0];
         if (imageFile) {
@@ -250,14 +277,14 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                 ? `/courses/lessons/${editingLesson.id}`
                 : `/courses/topics/${currentTopicIdForLesson}/lessons`;
              const method = isEditMode ? 'PUT' : 'POST';
-            // Use api helper methods for FormData requests (they add base URL and auth header)
+            // Use api helper methods for FormData requests
             if (isEditMode) {
                 await api.putFormData(endpoint, formData, authToken);
             } else {
                 await api.postFormData(endpoint, formData, authToken);
             }
 
-            await reloadData(); // Reload data to get new order and image URL
+            await reloadData(); // Reload data
 
             setIsLessonModalOpen(false);
             setEditingLesson(null);
@@ -343,9 +370,9 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Manage Course Content</h1>
-                    <p className="text-muted-foreground">Course: {course.title}</p>
+                    <p className="text-gray-500">Course: {course.title}</p>
                 </div>
-                <Button onClick={() => openTopicModal()}>
+                <Button onPress={() => openTopicModal()} className='bg-[#7828c8] text-white'>
                     <PlusCircle className="mr-2 h-4 w-4" /> Add Topic
                 </Button>
             </div>
@@ -358,143 +385,229 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                                 <Draggable key={topic.id} draggableId={`topic-${topic.id}`} index={index}>
                                     {(providedDraggable) => (
                                         <Card ref={providedDraggable.innerRef} {...providedDraggable.draggableProps}>
-                                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                                 <div className="flex items-center gap-2">
-                                                    <div {...providedDraggable.dragHandleProps}>
-                                                         <GripVertical className="h-5 w-5 text-muted-foreground cursor-grab" />
-                                                    </div>
-                                                    <CardTitle className="text-lg font-medium">{topic.title}</CardTitle>
-                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                      <Button variant="outline" size="sm" onClick={() => openTopicModal(topic)}>
-                                                        <Edit className="h-3 w-3 mr-1" /> Edit Topic
-                                                    </Button>
-                                                     <Button variant="outline" size="sm" onClick={() => openLessonModal(topic.id)}>
-                                                        <PlusCircle className="h-3 w-3 mr-1" /> Add Lesson
-                                                    </Button>
-                                                    <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDeleteTopic(topic.id)}>
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            </CardHeader>
-                                            <CardContent>
-                                                 {topic.description && <p className="text-sm text-muted-foreground mb-4">{topic.description}</p>}
-                                                <Droppable droppableId={`lessons-${topic.id}`} type="LESSON">
-                                                     {(providedLessons) => (
-                                                        <div ref={providedLessons.innerRef} {...providedLessons.droppableProps} className="space-y-3 pl-4 border-l ml-[10px] min-h-[50px]">
-                                                            {(topic.lessons || []).map((lesson, lessonIndex) => (
-                                                                <Draggable key={lesson.id} draggableId={`lesson-${lesson.id}`} index={lessonIndex}>
-                                                                     {(providedLessonDraggable) => (
-                                                                        <div ref={providedLessonDraggable.innerRef} {...providedLessonDraggable.draggableProps} className="flex items-center justify-between p-2 rounded-md bg-white border hover:bg-slate-50">
-                                                                             <div className="flex items-center gap-2 text-sm">
-                                                                                 <div {...providedLessonDraggable.dragHandleProps}>
-                                                                                    <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
-                                                                                </div>
-                                                                                <span>{lesson.title}</span>
-                                                                                {lesson.video_url && <span className="text-xs text-blue-500">(Video)</span>}
-                                                                                {lesson.featured_image_url && <img src={lesson.featured_image_url} alt="thumb" className="h-6 w-auto rounded ml-2"/>}
-                                                                             </div>
-                                                                            <div className="flex items-center gap-1">
-                                                                                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openLessonModal(topic.id, lesson)}>
-                                                                                    <Edit className="h-3.5 w-3.5" />
-                                                                                </Button>
-                                                                                <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:text-red-600" onClick={() => handleDeleteLesson(lesson.id)}>
-                                                                                    <Trash2 className="h-3.5 w-3.5" />
-                                                                                </Button>
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                </Draggable>
-                                                            ))}
-                                                             {providedLessons.placeholder}
-                                                             {(topic.lessons || []).length === 0 && ( <p className="text-xs text-muted-foreground p-2">Drag lessons here or click "Add Lesson".</p> )}
+                                            <CardBody>
+                                                <div className="flex flex-row items-center justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <div {...providedDraggable.dragHandleProps}>
+                                                            <GripVertical className="h-5 w-5 text-gray-500 cursor-grab" />
                                                         </div>
-                                                    )}
-                                                </Droppable>
-                                            </CardContent>
+                                                        {/* --- MODIFIED H2 --- */}
+                                                        <h2 
+                                                            className="text-lg font-medium cursor-pointer select-none"
+                                                            onClick={() => toggleTopic(topic.id)}
+                                                        >
+                                                            {topic.title}
+                                                        </h2>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Button variant="light" size="sm" onPress={() => openTopicModal(topic)}>
+                                                            <Edit className="h-3 w-3 mr-1" /> Edit Topic
+                                                        </Button>
+                                                        <Button variant="light" size="sm" onPress={() => openLessonModal(topic.id)}>
+                                                            <PlusCircle className="h-3 w-3 mr-1" /> Add Lesson
+                                                        </Button>
+                                                        <Button variant="light" size="sm" className="text-red-500 hover:text-red-600" onPress={() => handleDeleteTopic(topic.id)}>
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                                
+                                                {/* --- MODIFIED CONTENT (Conditional Render) --- */}
+                                                {openTopics.has(topic.id) && (
+                                                    <>
+                                                        {topic.description && <p className="text-sm text-gray-500 mb-4">{topic.description}</p>}
+                                                        <Droppable droppableId={`lessons-${topic.id}`} type="LESSON">
+                                                            {(providedLessons) => (
+                                                                <div ref={providedLessons.innerRef} {...providedLessons.droppableProps} className="space-y-3 mt-3 pl-4 border-l ml-[10px] min-h-[50px]">
+                                                                    {(topic.lessons || []).map((lesson, lessonIndex) => (
+                                                                        <Draggable key={lesson.id} draggableId={`lesson-${lesson.id}`} index={lessonIndex}>
+                                                                            {(providedLessonDraggable) => (
+                                                                                <div ref={providedLessonDraggable.innerRef} {...providedLessonDraggable.draggableProps} className="flex items-center justify-between p-2 rounded-md bg-gray-100 hover:bg-slate-50">
+                                                                                    <div className="flex items-center gap-2 text-sm">
+                                                                                        <div {...providedLessonDraggable.dragHandleProps}>
+                                                                                            <GripVertical className="h-4 w-4 text-gray-500 cursor-grab" />
+                                                                                        </div>
+                                                                                        <span>{lesson.title}</span>
+                                                                                        {lesson.video_url && <span className="text-xs text-blue-500">(Video)</span>}
+                                                                                        {lesson.featured_image_url && <img src={lesson.featured_image_url} alt="thumb" className="h-6 w-auto rounded ml-2"/>}
+                                                                                    </div>
+                                                                                    <div className="flex items-center gap-1">
+                                                                                        <Button variant="ghost" size="sm" className="h-7 w-7" onPress={() => openLessonModal(topic.id, lesson)}>
+                                                                                            <Edit className="h-3.5 w-3.5" />
+                                                                                        </Button>
+                                                                                        <Button variant="ghost" size="sm" className="h-7 w-7 text-red-500 hover:text-red-600" onPress={() => handleDeleteLesson(lesson.id)}>
+                                                                                            <Trash2 className="h-3.5 w-3.5" />
+                                                                                        </Button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            )}
+                                                                        </Draggable>
+                                                                    ))}
+                                                                    {providedLessons.placeholder}
+                                                                    {(topic.lessons || []).length === 0 && ( <p className="text-xs text-gray-500 p-2">Drag lessons here or click "Add Lesson".</p> )}
+                                                                </div>
+                                                            )}
+                                                        </Droppable>
+                                                    </>
+                                                )}
+                                                {/* --- END MODIFIED CONTENT --- */}
+                                            </CardBody>
                                         </Card>
                                      )}
                                 </Draggable>
                              ))}
                              {provided.placeholder}
-                             {topics.length === 0 && ( <p className="text-sm text-muted-foreground text-center py-8">No topics created yet.</p> )}
+                             {topics.length === 0 && ( <p className="text-sm text-gray-500 text-center py-8">No topics created yet.</p> )}
                         </div>
                     )}
                 </Droppable>
             </DragDropContext>
 
              {/* Topic Add/Edit Modal */}
-            <Dialog open={isTopicModalOpen} onOpenChange={setIsTopicModalOpen}>
-                 <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{editingTopic?.id ? 'Edit Topic' : 'Add New Topic'}</DialogTitle>
-                    </DialogHeader>
+            <Modal isOpen={isTopicModalOpen} onOpenChange={setIsTopicModalOpen} className='px-4'>
+                 <ModalContent>
+                    <ModalHeader className='pl-0'>{editingTopic?.id ? 'Edit Topic' : 'Add New Topic'}</ModalHeader>
                     {editingTopic && (
                         <form onSubmit={handleSaveTopic} className="space-y-4 py-4">
                             <div className="space-y-2">
-                                <Label htmlFor="topic-title">Title</Label>
-                                <Input id="topic-title" value={editingTopic.title || ''} onChange={(e) => setEditingTopic({ ...editingTopic, title: e.target.value })} required />
+                                <Input 
+                                    label="Title" 
+                                    id="topic-title" 
+                                    value={editingTopic.title || ''} 
+                                    // --- TS FIX ---
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingTopic({ ...editingTopic, title: e.target.value })} 
+                                    required 
+                                />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="topic-description">Description (Optional)</Label>
-                                <Textarea id="topic-description" value={editingTopic.description || ''} onChange={(e) => setEditingTopic({ ...editingTopic, description: e.target.value })} />
-                            </div>
-                            {error && <p className="text-sm text-red-600">{error}</p>}
-                            <DialogFooter>
-                                <Button type="button" variant="secondary" onClick={() => setIsTopicModalOpen(false)}>Cancel</Button>
-                                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Topic'}</Button>
-                            </DialogFooter>
-                        </form>
-                    )}
-                </DialogContent>
-            </Dialog>
-
-             {/* Lesson Add/Edit Modal */}
-            <Dialog open={isLessonModalOpen} onOpenChange={setIsLessonModalOpen}>
-                 <DialogContent className="sm:max-w-[600px]">
-                    <DialogHeader>
-                        <DialogTitle>{editingLesson?.id ? 'Edit Lesson' : 'Add New Lesson'}</DialogTitle>
-                         {currentTopicIdForLesson && !editingLesson?.id && <CardDescription>Adding to: {topics.find(t=>t.id === currentTopicIdForLesson)?.title}</CardDescription>}
-                    </DialogHeader>
-                    {editingLesson && (
-                        <form onSubmit={handleSaveLesson} className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-6">
-                             <div className="space-y-2">
-                                <Label htmlFor="lesson-title">Lesson Title</Label>
-                                <Input id="lesson-title" value={editingLesson.title || ''} onChange={(e) => setEditingLesson({ ...editingLesson, title: e.target.value })} required />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="lesson-description">Description (Optional)</Label>
-                                <Textarea id="lesson-description" value={editingLesson.description || ''} onChange={(e) => setEditingLesson({ ...editingLesson, description: e.target.value })} />
-                            </div>
-                             <div className="space-y-2">
-                                <Label htmlFor="lesson-video-url">Video URL (YouTube, Optional)</Label>
-                                <Input id="lesson-video-url" value={editingLesson.video_url || ''} onChange={(e) => setEditingLesson({ ...editingLesson, video_url: e.target.value })} placeholder="https://www.youtube.com/watch?v=..." />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="lesson-image">Featured Image (Optional)</Label>
-                                {imagePreview && (
-                                    <img src={imagePreview} alt="Preview" className="w-full h-auto rounded-md mb-2 object-cover aspect-video"/>
-                                )}
-                                <Input
-                                    id="lesson-image"
-                                    type="file"
-                                    accept="image/*"
-                                    ref={featuredImageFileRef}
-                                    onChange={handleImageChange}
+                                <Textarea 
+                                    label="Description (Optional)" 
+                                    id="topic-description" 
+                                    value={editingTopic.description || ''} 
+                                    // --- TS FIX ---
+                                    onChange={(e) => setEditingTopic({ ...editingTopic, description: e.target.value })} 
                                 />
                             </div>
                             {error && <p className="text-sm text-red-600">{error}</p>}
-                            <DialogFooter className="sticky bottom-0 bg-white pt-4 border-t">
-                                <Button type="button" variant="secondary" onClick={() => setIsLessonModalOpen(false)}>Cancel</Button>
-                                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Lesson'}</Button>
-                            </DialogFooter>
+                            <ModalFooter>
+                                <Button type="button" variant="light" onPress={() => setIsTopicModalOpen(false)}>Cancel</Button>
+                                <Button type="submit" disabled={isLoading} className='bg-[#7828c8] text-white'>{isLoading ? 'Saving...' : 'Save Topic'}</Button>
+                            </ModalFooter>
                         </form>
                     )}
-                </DialogContent>
-            </Dialog>
+                </ModalContent>
+            </Modal>
+
+            {/* --- REBUILT LESSON MODAL --- */}
+            <Modal isOpen={isLessonModalOpen} onOpenChange={setIsLessonModalOpen} className='px-4'>
+                <ModalContent className="sm:max-w-5xl"> {/* Made modal wider */}
+                    <ModalHeader className='flex flex-col pl-0'>
+                        <span className='text-lg'>Lesson | Topic: {topics.find(t=>t.id === currentTopicIdForLesson)?.title}</span>
+                    </ModalHeader>
+                    {editingLesson && (
+                        <form onSubmit={handleSaveLesson} className="py-4">
+                            {/* Two-column grid layout */}
+                            <div className="grid grid-cols-3 gap-6">
+                                
+                                {/* --- LEFT COLUMN --- */}
+                                <div className="col-span-3 lg:col-span-2 space-y-6">
+                                    <div className="space-y-2">
+                                        <Input 
+                                            label="Lesson Name" 
+                                            id="lesson-title" 
+                                            value={editingLesson.title || ''} 
+                                            // --- TS FIX ---
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingLesson({ ...editingLesson, title: e.target.value })} 
+                                            required 
+                                            className="text-lg" // Make title bigger
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        {/* This emulates the "Content" block */}
+                                        <label className="text-sm font-medium">Content</label>
+                                        <Editor
+                                            apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
+                                            value={editingLesson.description || ''}
+                                            onEditorChange={(content: string) => {
+                                                setEditingLesson({ ...editingLesson, description: content });
+                                            }}
+                                            init={{
+                                                height: 400,
+                                                menubar: true,
+                                                plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+                                                toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                                                content_style: 'body { font-family:Poppins,sans-serif; font-size:16px }'
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* --- RIGHT COLUMN --- */}
+                                <div className="col-span-3 lg:col-span-1 space-y-6">
+                                    {/* Featured Image Box */}
+                                    <div className="space-y-2 p-4 border border-gray-300 rounded-md">
+                                        <label className="text-sm font-medium">Featured Image</label>
+                                        <div className="flex flex-col items-center justify-center p-4 border border-gray-200 border-dashed rounded-md h-48">
+                                            {imagePreview ? (
+                                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-md"/>
+                                            ) : (
+                                                <div className="text-center text-gray-500">
+                                                    <Upload className="mx-auto h-8 w-8" />
+                                                    <p className="text-sm mt-2">Upload Image</p>
+                                                    <p className="text-xs">JPEG, PNG, GIF, WebP</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <Input
+                                            id="lesson-image"
+                                            type="file"
+                                            accept="image/*"
+                                            ref={featuredImageFileRef}
+                                            onChange={handleImageChange}
+                                            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                        />
+                                    </div>
+
+                                    {/* Video Box */}
+                                    <div className="space-y-2 p-4 border border-gray-300 rounded-md">
+                                        <label className="text-sm font-medium">Video</label>
+                                        <Input 
+                                            label="Add from URL (YouTube, Optional)" 
+                                            id="lesson-video-url" 
+                                            value={editingLesson.video_url || ''} 
+                                            // --- TS FIX ---
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingLesson({ ...editingLesson, video_url: e.target.value })} 
+                                            placeholder="https://www.youtube.com/watch?v=..."
+                                        />
+                                        <Input 
+                                            label="Video Duration (in seconds)" 
+                                            id="lesson-duration" 
+                                            type="number"
+                                            value={editingLesson.video_duration_sec === null || editingLesson.video_duration_sec === undefined ? '' : String(editingLesson.video_duration_sec)}
+                                            // --- TS FIX ---
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                const num = parseInt(e.target.value);
+                                                setEditingLesson({ ...editingLesson, video_duration_sec: isNaN(num) ? null : num })
+                                            }}
+                                            placeholder="e.g., 300"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Error and Footer */}
+                            {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
+                            <ModalFooter className="sticky bottom-0 bg-white pt-4 border-t mt-6 -mx-6 px-6">
+                                <Button type="button" variant="light" onPress={() => setIsLessonModalOpen(false)}>Cancel</Button>
+                                <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>{isLoading ? 'Saving...' : 'Save Lesson'}</Button>
+                            </ModalFooter>
+                        </form>
+                    )}
+                </ModalContent>
+            </Modal>
+            {/* --- END REBUILT LESSON MODAL --- */}
         </div>
     );
 }
-
 
 export default ManageCourseContentPage;

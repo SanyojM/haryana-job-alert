@@ -129,7 +129,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-col items-start">
               {/* Added some default styling to h1/p */}
               <h1 className="text-lg font-semibold">Post Content</h1>
               <p className="text-sm text-gray-500">Load a template and then edit the content visually.</p>

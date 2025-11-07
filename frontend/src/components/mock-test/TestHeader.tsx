@@ -161,10 +161,12 @@ export default function TestHeader({
           {/* Title Section */}
           <div className="flex flex-wrap items-start justify-start gap-12 mb-8">
             <div className="flex items-start gap-4">
-              <Image src={logo ? logo : "https://placehold.co/60x60/e2e8f0/334155?text=Mock"} width={60} height={60} alt="Test Logo" className="w-14 h-14 rounded-full -mt-3 hidden lg:block" unoptimized />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-                <div className="flex items-center gap-2 text-xs text-gray-500 mt-15">
+                <div className='flex gap-2 items-center'>
+                  <Image src={logo ? logo : "https://placehold.co/60x60/e2e8f0/334155?text=Mock"} width={60} height={60} alt="Test Logo" className="w-14 h-14 rounded-full" unoptimized />
+                  <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500 mt-8 lg:ml-18">
                   <Clock size={14} />
                   <span>Last update on {lastUpdated}</span>
                 </div>
