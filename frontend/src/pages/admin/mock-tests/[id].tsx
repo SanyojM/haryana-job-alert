@@ -5,14 +5,13 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Pencil, Trash2, Upload, PlusCircle } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from '@/components/ui/textarea';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+// --- HeroUI Imports ---
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
+import { Modal, ModalContent, ModalHeader, ModalFooter } from "@heroui/modal";
+import { Input, Textarea } from "@heroui/input";
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table";
+import { Popover, PopoverTrigger, PopoverContent } from '@heroui/popover';
 
 type MockQuestion = {
   id: string;
@@ -138,18 +137,18 @@ const SingleTestPage: NextPage<SingleTestPageProps> = ({ initialTest }) => {
   };
 
   return (
-    <div>
+    <div className='p-4'>
       <div className="flex items-center justify-between mb-2">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{test.title}</h1>
-          <p className="text-muted-foreground">{test.description || 'Manage the questions for this test below.'}</p>
+          <p className="text-gray-500">{test.description || 'Manage the questions for this test below.'}</p>
         </div>
         <div className="flex gap-2">
-            <Button onClick={() => openQuestionDialog()}>
+            <Button onPress={() => openQuestionDialog()} className='bg-[#7828C8] text-white'>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Question
             </Button>
-            <Button variant="outline" onClick={() => setIsCsvDialogOpen(true)}>
+            <Button variant="bordered" onPress={() => setIsCsvDialogOpen(true)}>
                 <Upload className="mr-2 h-4 w-4" />
                 Bulk Upload CSV
             </Button>
@@ -157,104 +156,104 @@ const SingleTestPage: NextPage<SingleTestPageProps> = ({ initialTest }) => {
       </div>
 
       <Card className="mt-6">
-        <CardHeader><CardTitle>Questions ({test.mock_questions.length})</CardTitle></CardHeader>
-        <CardContent>
+        <CardBody>
+          <h2 className="text-xl font-bold tracking-tight mb-4">Questions ({test.mock_questions.length})</h2>
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-[50%]">Question Text</TableHead>
-                <TableHead>Options</TableHead>
-                <TableHead>Correct Answer</TableHead>
-                <TableHead>Marks</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
+                <TableColumn className="w-[50%]">Question Text</TableColumn>
+                <TableColumn>Options</TableColumn>
+                <TableColumn>Correct Answer</TableColumn>
+                <TableColumn>Marks</TableColumn>
+                <TableColumn className="text-right">Actions</TableColumn>
             </TableHeader>
             <TableBody>
               {test.mock_questions.map(q => (
                 <TableRow key={q.id}>
                   <TableCell className="font-medium">{q.question_text}</TableCell>
                   <TableCell>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild><Button variant="outline" size="sm">View</Button></TooltipTrigger>
-                        <TooltipContent><pre className="text-xs">{JSON.stringify(q.options, null, 2)}</pre></TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    {/* Replaced Tooltip with Popover to support complex content */}
+                    <Popover>
+                      <PopoverTrigger>
+                        <Button variant="bordered" size="sm">View</Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <pre className="text-xs">{JSON.stringify(q.options, null, 2)}</pre>
+                      </PopoverContent>
+                    </Popover>
                   </TableCell>
                   <TableCell>{q.correct_answer}</TableCell>
                   <TableCell>{q.marks}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="icon" onClick={() => openQuestionDialog(q)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDeleteQuestion(q.id)}><Trash2 className="h-4 w-4" /></Button>
+                  <TableCell className="flex justify-end gap-1">
+                    <Button variant="ghost" size="sm" onPress={() => openQuestionDialog(q)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onPress={() => handleDeleteQuestion(q.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </CardContent>
+        </CardBody>
       </Card>
 
-      <Dialog open={isCsvDialogOpen} onOpenChange={setIsCsvDialogOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Bulk Upload Questions</DialogTitle></DialogHeader>
+      {/* CSV Upload Modal */}
+      <Modal isOpen={isCsvDialogOpen} onOpenChange={setIsCsvDialogOpen} className='px-4'>
+        <ModalContent>
+          <ModalHeader className='pl-0'>Bulk Upload Questions</ModalHeader>
           <form onSubmit={handleCsvUpload} className="space-y-4 py-4">
             <div className="space-y-2">
-                <Label htmlFor="csv-file">CSV File</Label>
                 <Input 
                     id="csv-file" 
                     type="file" 
+                    label="CSV File"
                     accept=".csv" 
                     ref={fileInputRef}
                     onChange={(e) => setCsvFile(e.target.files ? e.target.files[0] : null)}
                     required 
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-500">
                     Must have headers: question_text, options, correct_answer. The 'options' column must be a valid JSON string.
                 </p>
             </div>
-            <DialogFooter>
-              <Button type="button" variant="secondary" onClick={() => setIsCsvDialogOpen(false)}>Cancel</Button>
-              <Button type="submit" disabled={isLoading}>{isLoading ? 'Uploading...' : 'Upload File'}</Button>
-            </DialogFooter>
+            <ModalFooter>
+              <Button type="button" variant="bordered" onPress={() => setIsCsvDialogOpen(false)}>Cancel</Button>
+              <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>{isLoading ? 'Uploading...' : 'Upload File'}</Button>
+            </ModalFooter>
           </form>
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
       
-      <Dialog open={isQuestionDialogOpen} onOpenChange={setIsQuestionDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader><DialogTitle>{editingQuestion?.id ? 'Edit' : 'Create'} Question</DialogTitle></DialogHeader>
+      {/* Create/Edit Question Modal */}
+      <Modal isOpen={isQuestionDialogOpen} onOpenChange={setIsQuestionDialogOpen} className='px-4'>
+        <ModalContent className="sm:max-w-[600px]">
+          <ModalHeader className='pl-0'>{editingQuestion?.id ? 'Edit' : 'Create'} Question</ModalHeader>
           {editingQuestion && (
-            <form onSubmit={handleSaveQuestion} className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-6">
+            <form onSubmit={handleSaveQuestion} className="space-y-4 py-4 max-h-[70vh] overflow-y-auto">
               <div className="space-y-2">
-                <Label htmlFor="q-text">Question Text</Label>
-                <Textarea id="q-text" value={editingQuestion.question_text || ''} onChange={(e) => setEditingQuestion({ ...editingQuestion, question_text: e.target.value })} required />
+                <Textarea label="Question Text" id="q-text" value={editingQuestion.question_text || ''} onChange={(e) => setEditingQuestion({ ...editingQuestion, question_text: e.target.value })} required />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {Object.keys(editingQuestion.options || {}).map(key => (
                     <div key={key} className="space-y-2">
-                        <Label htmlFor={`q-opt-${key}`}>Option {key.toUpperCase()}</Label>
-                        <Input id={`q-opt-${key}`} value={editingQuestion.options?.[key] || ''} onChange={(e) => setEditingQuestion({ ...editingQuestion, options: {...editingQuestion.options, [key]: e.target.value }})} />
+                        <Input id={`q-opt-${key}`} label="Option" value={editingQuestion.options?.[key] || ''} onChange={(e) => setEditingQuestion({ ...editingQuestion, options: {...editingQuestion.options, [key]: e.target.value }})} />
                     </div>
                 ))}
               </div>
                <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="q-correct">Correct Answer Key</Label>
-                    <Input id="q-correct" value={editingQuestion.correct_answer || ''} onChange={(e) => setEditingQuestion({ ...editingQuestion, correct_answer: e.target.value })} placeholder="e.g., 'a'" required/>
+                    <Input id="q-correct" label="Correct Answer Key" value={editingQuestion.correct_answer || ''} onChange={(e) => setEditingQuestion({ ...editingQuestion, correct_answer: e.target.value })} placeholder="e.g., 'a'" required/>
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="q-marks">Marks</Label>
-                    <Input id="q-marks" type="number" value={editingQuestion.marks || 1} onChange={(e) => setEditingQuestion({ ...editingQuestion, marks: parseInt(e.target.value) })} required/>
+                    <Input id="q-marks" label="Marks" type="number" value={String(editingQuestion.marks)} onChange={(e) => setEditingQuestion({ ...editingQuestion, marks: parseInt(e.target.value) })} required/>
                 </div>
               </div>
-              <DialogFooter className="sticky bottom-0 bg-white pt-4">
-                <Button type="button" variant="secondary" onClick={() => setIsQuestionDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Question'}</Button>
-              </DialogFooter>
+              {/* Added original sticky classes to ModalFooter for scrolling form */}
+              <ModalFooter className="sticky bottom-0 bg-white pt-4"> 
+                <Button type="button" variant="bordered" onPress={() => setIsQuestionDialogOpen(false)}>Cancel</Button>
+                <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>{isLoading ? 'Saving...' : 'Save Question'}</Button>
+              </ModalFooter>
             </form>
           )}
-        </DialogContent>
-      </Dialog>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

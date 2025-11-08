@@ -1,16 +1,203 @@
-import {Card, CardHeader, CardBody, CardFooter} from "@heroui/card";
+import type { GetServerSideProps, NextPage } from 'next';
+import { api } from '@/lib/api';
+import { Card, CardHeader, CardBody } from "@heroui/card";
+import { BookCopy, Library, FileText, LayoutDashboard, Users, UserCheck } from 'lucide-react'; // Added icons
+import Link from 'next/link';
+import { Button } from '@heroui/button';
 
-export default function AdminIndex() {
+// 1. Define an interface for the props our page will receive
+interface AdminDashboardProps {
+  courseCount: number;
+  seriesCount: number;
+  testCount: number;
+  postCount: number;
+  totalCourseEnrollments: number;
+  totalSeriesEnrollments: number;
+  recentPosts: { id: string; title: string }[];
+  recentCourses: { id: string; title: string; slug: string }[];
+}
+
+// 2. A simple helper component for displaying each stat
+const StatCard = ({ title, value, icon }: { title: string, value: number, icon: React.ReactNode }) => (
+  <Card className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <h2 className="text-sm font-medium text-gray-600">{title}</h2>
+      {icon}
+    </CardHeader>
+    <CardBody>
+      <div className="text-3xl font-bold">{value}</div>
+    </CardBody>
+  </Card>
+);
+
+// 3. Your page component now receives the counts as props
+const AdminIndex: NextPage<AdminDashboardProps> = ({ 
+  courseCount, 
+  seriesCount, 
+  testCount, 
+  postCount,
+  totalCourseEnrollments,
+  totalSeriesEnrollments,
+  recentCourses,
+  recentPosts,
+}) => {
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <Card className="w-full max-w-md bg-white border border-gray-300 rounded-xl p-4">
-                <CardHeader>
-                    <h1>Admin Dashboard</h1>
-                </CardHeader>
-                <CardBody>
-                    <p>Welcome to the admin panel. Use the navigation to manage the site.</p>
-                </CardBody>
-            </Card>
+        <div className="p-4 md:p-8">
+            <h1 className="text-3xl font-bold tracking-tight mb-6">Admin Dashboard</h1>
+            
+            {/* A grid to display the stat cards */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <StatCard 
+                    title="Total Courses" 
+                    value={courseCount} 
+                    icon={<BookCopy className="h-5 w-5 text-gray-500" />} 
+                />
+                <StatCard 
+                    title="Test Series" 
+                    value={seriesCount} 
+                    icon={<Library className="h-5 w-5 text-gray-500" />} 
+                />
+                <StatCard 
+                    title="Mock Tests" 
+                    value={testCount} 
+                    icon={<FileText className="h-5 w-5 text-gray-500" />} 
+                />
+                <StatCard 
+                    title="Total Posts" 
+                    value={postCount} 
+                    icon={<LayoutDashboard className="h-5 w-5 text-gray-500" />} 
+                />
+                <StatCard 
+                    title="Course Enrollments" 
+                    value={totalCourseEnrollments} 
+                    icon={<Users className="h-5 w-5 text-gray-500" />} 
+                />
+                <StatCard 
+                    title="Series Enrollments" 
+                    value={totalSeriesEnrollments} 
+                    icon={<UserCheck className="h-5 w-5 text-gray-500" />} 
+                />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight mb-4 mt-4">Recent Activity</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                {/* Recent Posts Card */}
+                <Card className="bg-white border border-gray-200 rounded-xl shadow-sm">
+                    <CardHeader>
+                        <h3 className="text-lg font-semibold">Recent Posts</h3>
+                    </CardHeader>
+                    <CardBody>
+                        <ul className="divide-y divide-gray-200">
+                            {recentPosts.length > 0 ? recentPosts.map(post => (
+                                <li key={post.id} className="py-3">
+                                    <p className="text-sm font-medium text-gray-900">{post.title}</p>
+                                </li>
+                            )) : (
+                                <p className="text-sm text-gray-500">No recent posts found.</p>
+                            )}
+                        </ul>
+                    </CardBody>
+                </Card>
+
+                {/* Recent Courses Card */}
+                <Card className="bg-white border border-gray-200 rounded-xl shadow-sm">
+                    <CardHeader>
+                        <h3 className="text-lg font-semibold">Recent Courses</h3>
+                    </CardHeader>
+                    <CardBody>
+                        <ul className="divide-y divide-gray-200">
+                            {recentCourses.length > 0 ? recentCourses.map(course => (
+                                <li key={course.id} className="py-3 flex justify-between items-center">
+                                    <p className="text-sm font-medium text-gray-900">{course.title}</p>
+                                    <Link href={`/admin/courses/${course.id}`} passHref>
+                                        <Button as="a" variant="light" size="sm">Manage</Button>
+                                    </Link>
+                                </li>
+                            )) : (
+                                <p className="text-sm text-gray-500">No recent courses found.</p>
+                            )}
+                        </ul>
+                    </CardBody>
+                </Card>
+            </div>
         </div>
     );
 }
+
+// 4. Use getServerSideProps to fetch data before the page loads
+export const getServerSideProps: GetServerSideProps = async () => {
+
+  try {
+    // Fetch all data in parallel
+    const [courses, mockSeries, mockTests, posts] = await Promise.all([
+      api.get('/courses'), 
+      api.get('/mock-series'),
+      api.get('/mock-tests'),
+      api.get('/posts'),
+    ]);
+
+    // --- DEBUGGING ---
+    // Add this line to see the *exact* structure of your data
+    // in your server terminal.
+    console.log("Fetched Data:", { courses, mockSeries, mockTests, posts });
+    // --- END DEBUGGING ---
+
+    const courseData = courses.data || courses;
+    const seriesData = mockSeries.data || mockSeries;
+    const postData = posts.data || posts;
+
+    const totalCourseEnrollments = courseData.reduce((sum: number, course: any) => 
+        sum + (course.enrolled_users_count || 0), 0
+    );
+    
+    const totalSeriesEnrollments = seriesData.reduce((sum: number, series: any) => 
+        sum + (series.enrolled_users_count || 0), 0
+    );
+
+    const recentPosts = postData.slice(0, 5).map((post: any) => ({
+        id: post.id,
+        title: post.title
+    }));
+    
+    // Assuming courses are also sorted by newness (or just grabbing first 5)
+    const recentCourses = courseData.slice(0, 5).map((course: any) => ({
+        id: course.id,
+        title: course.title,
+        slug: course.slug
+    }));
+
+    // --- POTENTIAL FIX ---
+    // If your data is nested (e.g., in a 'data' property),
+    // you must access it like this:
+    return {
+      props: {
+        courseCount: courses.data ? courses.data.length : courses.length,
+        seriesCount: mockSeries.data ? mockSeries.data.length : mockSeries.length,
+        testCount: mockTests.data ? mockTests.data.length : mockTests.length,
+        postCount: posts.data ? posts.data.length : posts.length,
+        totalCourseEnrollments,
+        totalSeriesEnrollments,
+        recentCourses,
+        recentPosts,
+      }
+    };
+
+  } catch (error) {
+    console.error("Failed to fetch dashboard data:", error);
+    // Return 0 counts on failure so the page doesn't crash
+    return {
+      props: {
+        courseCount: 0,
+        seriesCount: 0,
+        testCount: 0,
+        postCount: 0,
+        totalCourseEnrollments: 0,
+        totalSeriesEnrollments: 0,
+        recentPosts: [],
+        recentCourses: []
+      }
+    };
+  }
+};
+
+export default AdminIndex;

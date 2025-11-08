@@ -261,7 +261,7 @@ export default function CourseHeader({
     <Image src="/avatar.png" alt={''} width={120} height={120}/>
     </div> */}
 
-<div className="absolute -bottom-[40%] xl:max-w-lg min-w-md right-45 hidden xl:block">
+<div className="absolute -bottom-[30%] min-w-[25%] right-45 hidden xl:block">
       <CourseEnrollmentCard
         // --- CORRECTED PROPS ---
         // courseId={Number(course.id)}                // Pass ID as a number

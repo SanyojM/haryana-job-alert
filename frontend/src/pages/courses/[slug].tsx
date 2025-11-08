@@ -249,7 +249,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
             </Head>
 
             <Header />
-            <div className="mt-6"> {/* Added relative positioning */}
+            <div> {/* Added relative positioning */}
                 <CourseHeader
                     title={course.title}
                     description={course.description || ''}
@@ -336,7 +336,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
 
             <div className="container mx-auto px-4 py-8 pt-0 md:pt-8"> {/* Adjusted padding */}
                 <div className="grid grid-cols-1 xl:grid-cols-3 items-start">
-                    <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0 mt-12 md:mt-0">
+                    <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0 mt-12 md:mt-0 p-18">
                         <CourseDescription description={course.description || "No description provided."} />
                         <CourseContentAccordion content={courseContentData} />
                     </main>

@@ -4,14 +4,13 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import Header from "@/components/shared/Header";
 import LearnSidebar from "@/components/courses/LearnSidebar";
 import LessonContent from "@/components/courses/LessonContent";
 import { FullCourseDetails } from "@/pages/courses/[slug]"; // Reuse this type
 import { Lesson, Topic } from "@/pages/admin/courses/[id]"; // Reuse this type
-import { HashLoader } from "react-spinners";
-import { AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AlertCircle, AlertTriangle, Video } from "lucide-react";
+import { Button } from "@heroui/button";
+import {Tabs, Tab} from "@heroui/tabs";
 import Link from "next/link";
 
 interface CourseLearnPageProps {
@@ -52,10 +51,6 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
                     setIsLoading(true);
                     setError(null);
 
-                    // We fetch the course data *with* the token.
-                    // The backend MUST be configured to check enrollment
-                    // and only return data if the user is enrolled.
-                    
                     // First, get course ID and check enrollment (requires backend endpoints)
                     const basicCourse = await api.get(`/courses/slug/${slug}`, token);
                     if (!basicCourse || !basicCourse.id) {
@@ -101,7 +96,7 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
     if (isLoading || isAuthLoading) {
         return (
             <div className="flex h-screen items-center justify-center">
-                <HashLoader color="#8a79ab" size={100} />
+                <h2 className="text-xl font-semibold">Loading Course...</h2>
             </div>
         );
     }
@@ -112,7 +107,7 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
                 <AlertTriangle className="h-12 w-12 text-red-500" />
                 <h2 className="text-xl font-semibold">Error Loading Course</h2>
                 <p className="text-gray-500">{error}</p>
-                <Button onClick={() => router.push('/courses')}>Go back to Courses</Button>
+                <Button onPress={() => router.push('/courses')}>Go back to Courses</Button>
             </div>
         );
     }
@@ -121,13 +116,14 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
         return <div className="flex h-screen items-center justify-center">Course not found.</div>;
     }
 
-    // 4. Render the two-column layout
+    // 4. Render the NEW two-column layout
     return (
         <div className="flex flex-col h-screen">
             <Head>
                 <title>Learning: {course.title}</title>
             </Head>
-            {/* A simple header for the learn page */}
+            
+            {/* Simple header for the learn page */}
             <header className="flex-shrink-0 bg-white border-b p-4 flex justify-between items-center">
                  <Link href="/dashboard" className="font-semibold text-lg hover:text-blue-600">
                     &larr; Back to Dashboard
@@ -136,23 +132,58 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
                  {/* You can add a "Next Lesson" button here */}
             </header>
             
-            <div className="flex flex-1 overflow-hidden">
-                {/* Sidebar */}
-                <div className="w-full max-w-xs h-full overflow-y-auto hidden md:block">
+            <div className="flex-1 grid grid-cols-12 overflow-hidden">
+                {/* Main Content (Video + Tabs) */}
+                <main className="col-span-12 lg:col-span-9 flex flex-col overflow-y-auto">
+                    {/* Video Player Area */}
+                    <div className="bg-black">
+                        <LessonContent lesson={selectedLesson} />
+                    </div>
+
+                    {/* Tabs Area */}
+                    <div className="p-4 md:p-8">
+                        <Tabs aria-label="Options">
+                            <Tab key="overview" title="Overview">
+                                {selectedLesson ? (
+                                    <>
+                                        <h1 className="text-2xl md:text-3xl font-bold mb-4">{selectedLesson.title}</h1>
+                                        {selectedLesson.description ? (
+                                            <div 
+                                                className="prose max-w-none text-gray-700"
+                                                dangerouslySetInnerHTML={{ __html: selectedLesson.description }}
+                                            />
+                                        ) : (
+                                            <p className="text-gray-500">No description for this lesson.</p>
+                                        )}
+                                    </>
+                                ) : (
+                                    <p className="text-gray-500">Please select a lesson to see its overview.</p>
+                                )}
+                            </Tab>
+                            <Tab key="notes" title="Notes">
+                                <h2 className="text-xl font-semibold">Notes</h2>
+                                <p className="text-gray-500">(Feature coming soon)</p>
+                            </Tab>
+                            <Tab key="announcements" title="Announcements">
+                                <h2 className="text-xl font-semibold">Announcements</h2>
+                                <p className="text-gray-500">(Feature coming soon)</p>
+                            </Tab>
+                            <Tab key="reviews" title="Reviews">
+                                <h2 className="text-xl font-semibold">Reviews</h2>
+                                <p className="text-gray-500">(Feature coming soon)</p>
+                            </Tab>
+                        </Tabs>
+                    </div>
+                </main>
+                
+                {/* Sidebar (now on the right) */}
+                <aside className="col-span-12 lg:col-span-3 h-full overflow-y-auto bg-white border-l hidden lg:block">
                     <LearnSidebar
                         course={course}
                         selectedLessonId={selectedLesson?.id || null}
                         onSelectLesson={(lesson) => setSelectedLesson(lesson)}
                     />
-                </div>
-                
-                {/* Main Content */}
-                <main className="flex-1 h-full overflow-y-auto bg-gray-50">
-                    <LessonContent 
-                        lesson={selectedLesson} 
-                        courseTitle={course.title}
-                    />
-                </main>
+                </aside>
             </div>
         </div>
     );

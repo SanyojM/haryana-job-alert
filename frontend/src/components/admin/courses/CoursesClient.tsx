@@ -16,7 +16,15 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, PlusCircle } from "lucide-react"
+// --- MODIFIED ICON IMPORT ---
+import { 
+    ArrowUpDown, 
+    ChevronDown, 
+    PlusCircle, 
+    Eye,        // Added
+    Pencil,     // Added
+    Trash2      // Added
+} from "lucide-react"
 
 import { Button } from "@heroui/button"
 import { Checkbox } from "@heroui/checkbox"
@@ -47,14 +55,14 @@ export function CoursesClient({ data }: { data: Course[] }) {
             id: "select",
             header: ({ table }) => (
                 <Checkbox
-                    checked={table.getIsAllPageRowsSelected()}
+                    isSelected={table.getIsAllPageRowsSelected()} // Changed 'checked' to 'isSelected'
                     onChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                     aria-label="Select all"
                 />
             ),
             cell: ({ row }) => (
                 <Checkbox
-                    checked={row.getIsSelected()}
+                    isSelected={row.getIsSelected()} // Changed 'checked' to 'isSelected'
                     onChange={(value) => row.toggleSelected(!!value)}
                     aria-label="Select row"
                 />
@@ -67,7 +75,7 @@ export function CoursesClient({ data }: { data: Course[] }) {
             header: ({ column }) => (
                 <Button
                     variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onPress={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Title
                     <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -98,39 +106,44 @@ export function CoursesClient({ data }: { data: Course[] }) {
             header: "Status",
             cell: ({ row }) => {
                 const status = row.getValue("status") as string;
-                 return <Chip color={status === 'published' ? 'default' : 'danger'} className={status === 'published' ? 'bg-green-600' : ''}>{status}</Chip>;
+                 return <Chip color={status === 'published' ? 'default' : 'danger'} className={status === 'published' ? 'bg-green-400 text-green-900' : ''}>{status}</Chip>;
             }
         },
-        // Add more columns as needed (e.g., authors, duration)
+        // --- MODIFIED ACTIONS COLUMN ---
         {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
                 const course = row.original;
                 return (
-                    <Dropdown>
-                        <DropdownTrigger asChild>
-                            <Button variant="flat" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open </span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu>
-                            <DropdownItem key='actions'>Actions</DropdownItem>
-                             <DropdownItem key='manage' onClick={() => router.push(`/admin/courses/${course.id}`)}>
-                                Manage Content (Topics/Lessons)
-                            </DropdownItem>
-                            <DropdownItem key='edit' onClick={() => router.push(`/admin/courses/${course.id}/edit`)}>
-                                Edit Course Details
-                            </DropdownItem>
-                            <DropdownItem key='delete' className="text-red-500" onClick={() => handleDelete(course.id)}>
-                                Delete Course
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+                    <div className="flex gap-1 justify-end">
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onPress={() => router.push(`/admin/courses/${course.id}`)}
+                        >
+                            <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onPress={() => router.push(`/admin/courses/${course.id}/edit`)}
+                        >
+                            <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="text-red-500 hover:text-red-600" 
+                            onPress={() => handleDelete(course.id)}
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
                 );
             },
         },
+        // --- END MODIFIED ACTIONS COLUMN ---
     ];
 
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -175,7 +188,8 @@ export function CoursesClient({ data }: { data: Course[] }) {
                 />
                  <div className="flex items-center gap-2">
                     <Dropdown>
-                        <DropdownTrigger asChild>
+                        {/* --- REMOVED 'asChild' prop --- */}
+                        <DropdownTrigger> 
                             <Button variant="bordered" className="ml-auto">
                                 Columns <ChevronDown className="ml-2 h-4 w-4" />
                             </Button>
@@ -186,17 +200,21 @@ export function CoursesClient({ data }: { data: Course[] }) {
                                 .filter((column) => column.getCanHide())
                                 .map((column) => {
                                     return (
-                                        <DropdownItem key='checkbox'>
+                                        // Note: Checkbox in DropdownItem might need custom styling
+                                        <DropdownItem key={column.id}>
                                             <Checkbox
-                                            key={column.id}
-                                            className="capitalize"
-                                            checked={column.getIsVisible()}
-                                            onChange={(value) =>
-                                                column.toggleVisibility(!!value)
-                                            }>
-
+                                                key={column.id}
+                                                className="capitalize"
+                                                isSelected={column.getIsVisible()} // Changed 'checked' to 'isSelected'
+                                                onChange={(value) =>
+                                                    column.toggleVisibility(!!value)
+                                                }
+                                            >
+                                                {/* Added label text */}
+                                                <span className="ml-2">
+                                                    {column.id === 'category.name' ? 'Category' : column.id}
+                                                </span>
                                             </Checkbox>
-                                            {column.id === 'category.name' ? 'Category' : column.id}
                                         </DropdownItem>
                                     )
                                 })}
@@ -253,7 +271,7 @@ export function CoursesClient({ data }: { data: Course[] }) {
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-muted-foreground">
+                <div className="flex-1 text-sm text-gray-500"> {/* Replaced muted-foreground */}
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
