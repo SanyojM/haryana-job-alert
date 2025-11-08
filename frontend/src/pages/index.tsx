@@ -22,28 +22,47 @@ import FloatingSocials from "@/components/shared/FloatingSocials";
 import FancyContainer from "@/components/about/FancyContainer";
 import BannerHeader from "@/components/shared/BannerHeader";
 import { useEffect, useState } from "react";
+import type { Course } from "@/components/admin/courses/CreateCourseForm";
+import type { CourseCategory } from "@/pages/admin/course-categories";
+
+interface PublicCourse extends Omit<Course, 'tags' | 'authors'> {
+    slug: string;
+    thumbnail_url: string | null;
+    category: CourseCategory | undefined;
+    authors: { full_name: string; avatar_url: string }[];
+    tags: { tag: { name: string } }[];
+    enrolled_users_count?: number;
+    lesson_count?: number;
+    total_duration_hhmm?: string | null;
+    rating: number;
+    reviews: number;
+    offerEndsSoon: boolean;
+}
 
 interface HomePageProps {
   posts: Post[];
   categories: Category[]; // Add categories to the props
   series: MockSeries[]; // Add series to the props
+  courses: PublicCourse[];
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const [categories, series] = await Promise.all([
+    const [categories, series, course] = await Promise.all([
       api.get('/categories'),
       api.get('/mock-series'),
+      api.get('/courses?status=published'),
     ]);
 
-    return { props: { categories, series } };
+    const courses = course.data || course;
+    return { props: { categories, series, courses } };
   } catch (error) {
     console.error("Failed to fetch data for homepage:", error);
-    return { props: { categories: [], series: [] } };
+    return { props: { categories: [], series: [], courses: [] } };
   }
 };
 
-const HomePage: NextPage<HomePageProps> = ({ categories, series }) => {
+const HomePage: NextPage<HomePageProps> = ({ categories, series, courses }) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loadingPosts, setLoadingPosts] = useState(true);
 
@@ -85,7 +104,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, series }) => {
             <MockTestSection series={series} />
             {/* <AdBanner text="Google Ads Section" className="h-32" /> */}
             <CurrentAffairsSection />
-            <CourseSection />
+            <CourseSection courses={courses} />
             <AboutSection />
             <FaqSection />
             </div>

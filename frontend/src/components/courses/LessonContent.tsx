@@ -5,22 +5,18 @@ type LessonContentProps = {
   lesson: Lesson | null;
 };
 
-// Helper function to extract YouTube embed ID
 const getYouTubeEmbedUrl = (url: string | null | undefined): string | null => {
     if (!url) return null;
     let videoId: string | null = null;
     
-    // Check for standard watch URL
     const watchMatch = url.match(/[?&]v=([^&]+)/);
     if (watchMatch) {
         videoId = watchMatch[1];
     } else {
-        // Check for youtu.be short URL
         const shortMatch = url.match(/youtu\.be\/([^?]+)/);
         if (shortMatch) {
             videoId = shortMatch[1];
         } else {
-             // Check for embed URL
              const embedMatch = url.match(/embed\/([^?]+)/);
              if(embedMatch) {
                 videoId = embedMatch[1];
@@ -31,12 +27,12 @@ const getYouTubeEmbedUrl = (url: string | null | undefined): string | null => {
     if (videoId) {
         return `https://www.youtube.com/embed/${videoId}`;
     }
-    return null; // Return null if no valid ID found
+    
+    return null; 
 };
 
 
 export default function LessonContent({ lesson }: LessonContentProps) {
-  // Show a welcome message if no lesson is selected
   if (!lesson) {
     return (
       <div className="aspect-video w-full bg-black flex flex-col items-center justify-center text-center p-8">
@@ -66,6 +62,7 @@ export default function LessonContent({ lesson }: LessonContentProps) {
       ) : (
          <div className="aspect-video w-full bg-black flex items-center justify-center">
             <Video className="h-12 w-12 text-gray-400" />
+            <p className="text-gray-400 ml-4">No valid video URL provided for this lesson.</p>
          </div>
       )}
     </>

@@ -49,6 +49,7 @@ export default function CourseEnrollmentCard({
 
   const renderEnrollButton = () => {
     if (isEnrolled) {
+      console.log("asdasdasfasdfsadfdsfdsfdsfsdfdsfsdfdsadsfdsfdsfdsfdsfdsfdsf")
       return (
         <Button
           className="w-full text-lg shine bg-gradient-to-r from-green-600 to-green-800"
@@ -86,20 +87,7 @@ export default function CourseEnrollmentCard({
             height={225}
             className="w-full h-auto"
           />
-          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white p-4">
-            <h3 className="font-bold text-2xl mb-4 line-clamp-2">{title}</h3> {/* Use dynamic title */}
-            {/* <p className="text-xs text-center">{description}</p> */} {/* Description removed for cleaner card */}
-            <div className="bg-gray-200/20 mt-4 px-8 py-2 rounded-sm flex justify-between gap-4 items-center">
-              <Image
-                src="/js.png" // Placeholder avatar
-                className="w-16 h-16 object-cover border border-white rounded-full bg-white"
-                alt={instructorName}
-                width={64}
-                height={64}
-              />
-              <p className="text-sm">By {instructorName}</p>
-            </div>
-          </div>
+          
         </div>
 
         <div className="p-6">
@@ -126,24 +114,18 @@ export default function CourseEnrollmentCard({
             <div className="flex items-center gap-3 text-sm">
               <MonitorPlay size={16} className="text-indigo-500" /> Course Duration: {courseDuration}
             </div>
-            {articlesAttached > 0 && (
               <div className="flex items-center gap-3 text-sm">
                 <FileText size={16} className="text-indigo-500" /> Articles attached: {articlesAttached}
               </div>
-            )}
-            {downloadableResources > 0 && (
               <div className="flex items-center gap-3 text-sm">
                 <Download size={16} className="text-indigo-500" /> Downloadable resources: {downloadableResources}
               </div>
-            )}
             <div className="flex items-center gap-3 text-sm">
                 <CheckCircle size={16} className="text-indigo-500" /> {pricingModel === 'free' ? 'Free Course' : 'Paid Course'}
             </div>
-            {mockTests > 0 && (
               <div className="flex items-center gap-3 text-sm">
                 <FileText size={16} className="text-indigo-500" /> Mock tests: {mockTests}
               </div>
-            )}
           </div>
         </div>
       </div>
