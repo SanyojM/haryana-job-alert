@@ -107,6 +107,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
     const [formattedDate, setFormattedDate] = useState('');
     const [formattedStudentCount, setFormattedStudentCount] = useState<string | number>(course.enrolled_users_count || 0);
 
+
     useEffect(() => {
         setFormattedDate(new Date(course.updated_at || course.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
         setFormattedStudentCount((course.enrolled_users_count || 0).toLocaleString());
@@ -262,6 +263,10 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                     studentCount={course.enrolled_users_count || 0}
                     isBestseller={false} // Determine bestseller status if needed
                     isFree={course.pricing_model === 'free'}
+                    isEnrolled={isEnrolled}
+                    onEnrollOrPurchase={handleEnrollOrPurchase}
+                    isLoading={isProcessingEnrollment || isAuthLoading}
+                    error={error}
                     course={course}                 
                 />
                  {/* --- MODIFICATION START: Show Enroll/Buy button for mobile/tablet --- */}
