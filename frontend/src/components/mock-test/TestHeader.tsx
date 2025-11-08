@@ -212,7 +212,7 @@ export default function TestHeader({
 
             {price && price > 0 ? (
           isEnrolled ? (
-            <div className="md:max-w-xl text-center w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold py-3 px-12 rounded-lg">
+            <div className="md:max-w-xl text-center w-full bg-gradient-to-r from-[#1c1e47] via-[#2b2d6c] to-[#34387e] text-white font-bold py-3 px-12 rounded-lg">
               You are enrolled in this series
             </div>
           ) : (
@@ -241,25 +241,46 @@ export default function TestHeader({
           </div>
         ):(
           <div className="flex-shrink-0 w-full">
-            <div className="bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] p-4 flex flex-col items-center justify-center rounded-2xl min-h-[550px] relative">
-              <img src="/ribbon.webp" alt="" className='absolute -left-7 -top-4 w-2/3' />
-              <h1 className="text-2xl text-white playfair mb-6">
-                Explore More Categories
+            <div className="bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] p-4 flex flex-col items-center rounded-2xl min-h-[550px] relative">
+              <img src="/card-bg.jpg" alt="" className="w-full absolute top-0" />
+              <img src="/bow-ribbon.jpg" alt="" className='absolute -right-10 -top-5 w-35'/>
+              <img src="/header-logo.jpg" alt="" className="w-12 h-12 object-cover rounded-xl z-50 mt-2" />
+              <h1 className="text-center text-2xl font-semibold z-10 text-white mt-3">
+                Haryana <span className="text-[#f7f900]">
+                  Job Alert
+                </span>
               </h1>
-              <div className="flex justify-center items-center gap-3 space-x-4 w-full h-full flex-wrap">
 
-              {categories.map((category) => (
-                <Link
-                key={category.id}
-                href={`/category/${category.id}`}
-                className="text-white relative hover:underline flex justify-center items-center text-sm"
-                >
-                  <CircleCheck className="h-4 w-4 mr-1 text-green-400" />
-                  {category.name}
-                  <ArrowUpRight className="h-4 w-4 ml-1 text-white" />
-                </Link>
-              ))}
+              <div className="text-lg playfair text-center z-10 text-white mt-1 !font-medium">
+                theharyana<span className="text-[#f7f900]">jobalert</span>.com
               </div>
+              <img src="/header-arrow.jpg" alt="" className='z-10 w-[55%] ml-3 -mt-6' />
+
+
+              <a href='https://softricity.in' className="text-white rounded-xl h-8 shine flex items-center mt-16 text-sm">
+                Powered by <img src="/softricity.png" alt="" className='ml-2 h-15 w-[100px] object-cover' />
+              </a>
+              <div className="rounded-xl bg-[#2b2e6c] p-2 mt-4.5 w-full">
+                <div className="rounded-xl bg-[#2c306f] flex justify-between items-center p-2 divide-x-2 divide-white">
+                  <div className="w-1/2 flex flex-col justify-center items-center gap-3">
+                    <img src="/star.png" alt="" className="w-6 h-6 rounded-full" />
+                    <h1 className="text-lg playfair !font-light text-white">
+                      Mock Tests
+                    </h1>
+                  </div>
+                  <div className="w-1/2">
+                    <div className="text-white text-xs px-3">
+                      Use <span className="text-[#f7f900] font-semibold">Haryana Job Alert</span> Platform to practice for exams using mock tests.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <img src="/loved.jpg" alt="" className="w-3/4 mt-4.5" />
+
+              <Link href="/mock-tests" className="shine w-full text-center mt-8 bg-gradient-to-r from-[#c31432] to-[#414345] rounded-xl p-3 text-white">
+                Explore More
+              </Link>
             </div>
           </div>
         )}

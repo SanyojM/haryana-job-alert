@@ -78,14 +78,17 @@ export default function CourseEnrollmentCard({
   return (
     <div>
       {/* This div was causing layout issues, removed sticky/absolute positioning */}
-      <div className="bg-white rounded-xl shadow-lg border border-gray-200/80 overflow-hidden">
+      <div className="bg-white relative rounded-xl shadow-lg border border-gray-200/80">
+        {
+          pricingModel === 'free' ? <img src="/free-ribbon.jpg" alt="" className='absolute -top-17 z-10 w-[100px] -left-21' /> : <img src="/paid-ribbon.jpg" alt="" className='absolute -top-17 z-10 w-[100px] -left-21' />
+        }
         <div className="relative">
           <Image
             src={thumbnailUrl}
             alt={title}
             width={400}
             height={225}
-            className="w-full h-auto"
+            className="w-full h-auton rounded-t-xl"
           />
           
         </div>
@@ -93,7 +96,7 @@ export default function CourseEnrollmentCard({
         <div className="p-6">
           {/* --- FIX: Dynamic Price Display --- */}
           <div className="text-3xl font-bold text-gray-800 mb-4 text-right">
-            {pricingModel === 'free' ? 'Free' : `₹${price}`}
+            {pricingModel === 'free' ? '' : `₹${price}`}
             {pricingModel === 'paid' && price && regularPrice && price < regularPrice && (
                 <span className="ml-2 text-base text-muted-foreground line-through">₹{regularPrice}</span>
             )}

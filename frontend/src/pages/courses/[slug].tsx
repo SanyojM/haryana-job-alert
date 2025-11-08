@@ -95,6 +95,7 @@ const formatLessonDuration = (seconds?: number | null): string => {
 
 
 const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
+    console.log("Rendering CoursePage for course:", course);
     // --- MODIFICATION START ---
     const { user, token, isLoading: isAuthLoading } = useAuth();
     const router = useRouter();
@@ -271,27 +272,12 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                 />
                  {/* --- MODIFICATION START: Show Enroll/Buy button for mobile/tablet --- */}
                 <div className="container mx-auto px-4 xl:hidden mt-[-4rem] mb-8 relative z-20">
-                    <Card className="bg-white p-4 shadow-lg rounded-lg">
+                    <Card className="bg-white p-4 shadow-lg rounded-4xl border border-gray-200">
                         <Image src={course.thumbnail_url || ''}
                             alt={course.title}
                             width={400} 
                             height={225}
-                            className="w-full h-auto" />
-                            <div className="">
-                        <h3 className="font-bold text-2xl mb-4 line-clamp-2">{course.title}</h3> {/* Use dynamic title */}
-                        <p className="md:text-sm text-xs text-gray-500 mb-3">{course.description}</p>
-                                    {/* <p className="text-xs text-center">{description}</p> */} {/* Description removed for cleaner card */}
-                                    <div className=" mt-4 px-8 py-2 rounded-sm flex gap-4 items-center">
-                                      <Image
-                                        src={course.authors[0].avatar_url || '/js.png'} // Placeholder avatar
-                                        className="w-12 h-12 object-cover border border-white rounded-full bg-white"
-                                        alt={course.authors[0].full_name}
-                                        width={64}
-                                        height={64}
-                                      />
-                                      <p className="text-sm">By {course.authors[0].full_name}</p>
-                                    </div>
-                                    </div>
+                            className="w-full h-auto rounded-2xl" />
                         
                         <div className=" space-y-3 text-gray-600">
                             <h4 className="font-bold text-gray-800">This course gives you:</h4>
@@ -299,23 +285,14 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                                 <MonitorPlay size={16} className="text-indigo-500" /> Course Duration: {formatDuration(null, course.total_duration_hhmm)}
                             </div>
                                 <div className="flex items-center gap-3 text-sm">
-                                    <FileText size={16} className="text-indigo-500" /> Articles attached: {0}
+                                    <FileText size={16} className="text-indigo-500" /> Articles attached
                                 </div>
                                 <div className="flex items-center gap-3 text-sm">
-                                    <Download size={16} className="text-indigo-500" /> Downloadable resources: {0}
+                                    <Download size={16} className="text-indigo-500" /> Downloadable resources
                                 </div>
                             <div className="flex items-center gap-3 text-sm">
                                 <CheckCircle size={16} className="text-indigo-500" /> {course.pricing_model === 'free' ? 'Free Course' : 'Paid Course'}
                             </div>
-                                <div className="flex items-center gap-3 text-sm">
-                                    <FileText size={16} className="text-indigo-500" /> Mock tests: {0}
-                                </div>
-                        </div>
-                        <div className="text-2xl font-bold text-gray-800 mb-2 text-right">
-                           {course.pricing_model === 'free' ? 'Free' : `₹${course.sale_price ?? course.regular_price}`}
-                           {course.pricing_model === 'paid' && course.sale_price && course.regular_price && course.sale_price < course.regular_price && (
-                                <span className="ml-2 text-base text-muted-foreground line-through">₹{course.regular_price}</span>
-                           )}
                         </div>
                         {isEnrolled ? (
                              <Button
@@ -326,11 +303,11 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                              </Button>
                         ) : (
                             <Button
-                                className="w-full text-lg shine bg-gradient-to-r from-indigo-600 to-indigo-300"
+                                className="w-full rounded-2xl shine bg-gradient-to-r from-indigo-600 to-indigo-300"
                                 onClick={handleEnrollOrPurchase}
                                 disabled={isProcessingEnrollment || isAuthLoading}
                             >
-                                {isProcessingEnrollment ? 'Processing...' : (course.pricing_model === 'free' ? 'Enroll Now' : 'Buy Now')}
+                                {isProcessingEnrollment ? 'Processing...' : (course.pricing_model === 'free' ? 'Enroll Now' : `Buy Now ${course.sale_price ? `at ₹${course.sale_price}` : ''}`)}
                             </Button>
                          )}
                          {error && <p className="text-sm text-red-600 mt-2 text-center">{error}</p>}
@@ -341,7 +318,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
 
             <div className="container mx-auto px-4 py-8 pt-0 md:pt-8"> {/* Adjusted padding */}
                 <div className="grid grid-cols-1 xl:grid-cols-3 items-start">
-                    <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0 mt-12 md:mt-0 p-18">
+                    <main className="lg:col-span-2 space-y-6 lg:mr-8 mr-0 mt-1 sm:mt-12 md:mt-0 p-3 sm:p-18">
                         <CourseDescription description={course.description || "No description provided."} />
                         <CourseContentAccordion content={courseContentData} />
                     </main>

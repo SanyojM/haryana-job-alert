@@ -76,10 +76,10 @@ export default function CourseHeader({
 
 
   return (
-    <section className="bg-[#16161D] text-white p-6 sm:p-8 relative min-h-[40vh] pb-24 md:pb-32">
+    <section className="bg-[#0b0b0e] text-white p-6 -mt-3 sm:-mt-19 pt-20 sm:pt-30 sm:p-8 relative min-h-[40vh] pb-24 md:pb-32">
       <div className="relative z-10 md:px-18 px-4 lg:max-w-4xl">
         {/* ... (all your existing JSX for breadcrumbs, title, etc.) ... */}
-        <nav aria-label="Breadcrumb" className="text-sm text-gray-300 mb-6">
+        <nav aria-label="Breadcrumb" className="text-sm text-gray-300 mb-12">
             <ol className="flex items-center space-x-2">
               <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
               <li><span className="text-gray-500"><ChevronRight size={14}/></span></li>
@@ -89,12 +89,12 @@ export default function CourseHeader({
             </ol>
         </nav>
 
-        <h1 className="text-3xl lg:text-4xl font-bold mb-3">{title}</h1>
-        <p className="max-w-2xl text-gray-200 mb-6">{description}</p>
+        <h1 className="text-3xl lg:text-4xl font-bold mb-9">{title}</h1>
+        <p className="max-w-2xl text-gray-200 mb-12">{description}</p>
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-6">
             <div className="flex items-center gap-2">
-                <Image src={instructorAvatar || '/default-avatar.png'} alt={instructorName} width={48} height={48} className="rounded-full bg-white h-12 w-12 object-cover border-2 border-indigo-300" />
+                <Image src={'/js.png'} alt={instructorName} width={48} height={48} className="rounded-full bg-white h-12 w-12 object-cover border-2 border-indigo-300" />
                 <span className="font-medium">By {instructorName}</span>
             </div>
             {isBestseller && (
@@ -107,7 +107,7 @@ export default function CourseHeader({
             )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-300 mb-8 border-b border-gray-700 w-fit pb-4">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-300 border-b border-gray-700 w-fit pb-4">
             <div className="flex items-center gap-1.5"><Clock size={16} /> Last update on {lastUpdated}</div>
             <span className='hidden sm:block text-gray-600'>|</span>
             <div className="flex items-center gap-1.5"><Globe size={16} /> {language}</div>
@@ -116,30 +116,30 @@ export default function CourseHeader({
       
       <div className="absolute -bottom-16 left-0 right-0 px-8 z-20 hidden xl:block max-w-[60%]">
         {/* ... (your ratings block) ... */}
-        <div className=" bg-white text-gray-800 rounded-lg p-4 flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg mx-auto sm:mx-0 sm:ml-6 lg:ml-18">
-            <div className="shine flex-shrink-0 bg-gradient-to-r from-[#982920] to-[#fb3d3d] p-4 rounded-md">
+        <div className=" bg-white text-gray-800 rounded-lg flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg mx-auto sm:mx-0 sm:ml-6 lg:ml-18">
+            <div className="shine flex-shrink-0 bg-gradient-to-r from-[#982920] to-[#fb3d3d] p-6 rounded-l-md">
                 <Image src="/logo.png" alt="Logo" width={60} height={60} className="rounded-sm bg-none" />
             </div>
             <div className="flex-grow text-center sm:text-left">
-                <p className="font-semibold text-gray-700 leading-tight">Access the best and the latest top content from Haryana Job Alert, with the <span className="font-bold text-red-600">Pro Subscription</span></p>
+                <p className="text-gray-700 leading-tight">Access the best and the latest top content from <span className="text-red-600 font-bold">Haryana Job Alert</span></p>
             </div>
             <div className="text-center flex-shrink-0 pl-4 sm:border-l border-gray-200">
-                <p className="text-3xl font-bold text-gray-900">{rating}</p>
+                <p className="text-3xl font-bold text-gray-900">{4.5}</p>
                 <div className="flex text-yellow-400 justify-center">
                     <Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} className="text-gray-300" />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">{formattedRatingCount} ratings</p>
+                <p className="text-xs text-gray-500 mt-1">12k+ ratings</p>
             </div>
-            <div className="text-center flex items-center flex-col flex-shrink-0 px-4 py-4 sm:border-l border-gray-200">
+            <div className="text-center flex items-center flex-col flex-shrink-0 px-7 my-4 sm:border-l border-gray-200">
                 <Users size={24} />
-                <p className="text-xl font-bold text-gray-900 mt-1">{formattedStudentCount}</p>
+                <p className="text-xl font-bold text-gray-900 mt-1 -mb-1">40k+</p>
                 <p className="text-xs text-gray-500 mt-1">Learners</p>
             </div>
         </div>
       </div>
 
       {/* The desktop enrollment card, now receiving the synced state */}
-      <div className="absolute -bottom-[40%] w-[23%] right-45 hidden xl:block">
+      <div className="absolute top-40 w-[23%] right-45 hidden xl:block">
         <CourseEnrollmentCard
           slug={course.slug}
           // This prop now gets the correctly synced state

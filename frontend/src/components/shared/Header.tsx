@@ -120,22 +120,26 @@ export default function Header() {
 
         <div>
           <div
-            className="relative bg-center bg-cover h-35 sm:h-35 w-full"
+            className="relative bg-center bg-cover h-37 sm:h-35 w-full"
             style={{ backgroundImage: "url('/header.jpg')" }}
             // @ts-ignore
             fetchpriority="high"
           >
-            <div className="absolute top-10 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
+            <div className="absolute top-6 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-3xl sm:text-4xl font-bold text-white z-10 flex items-center">
                 <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
                 <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
               </h1>
-              <img src="/header-arrow.jpg" alt="" className="h-4 w-30 sm:w-40 object-cover -mt-3 -mr-10 sm:mr-0" />
+              <img src="/header-arrow.jpg" alt="" className="h-4 w-30 sm:w-40 object-cover -mt-2 sm:-mt-3 -mr-10 sm:mr-0" />
             </div>
 
             <div className="absolute lg:block playfair text-xl !font-light hidden top-14 text-white left-[65vw] z-20">
               theharyana<span className="text-[#fdf500]">jobalert</span>.com
             </div>
+
+            <a href='https://softricity.in' className="text-white shine inline-flex items-center rounded-xl h-8 text-xs px-1 sm:text-sm absolute top-17 sm:top-24 left-63 sm:left-[87vw]">
+              <span className="lg:inline hidden">Powered by</span> <img src="/softricity.png" alt="" className='ml-0 sm:ml-2 inline h-15 w-[100px] object-cover' />
+            </a>
           </div>
         </div>
 
@@ -148,7 +152,7 @@ export default function Header() {
               </h1> */}
             </Link>
 
-            <div className="hidden lg:flex items-center justify-center flex-1 mr-14">
+            <div className="hidden lg:flex items-center justify-center flex-1 mr-14 z-10">
               <div className="p-2 rounded-xl border border-gray-300 bg-gray-100">
                 <div className="bg-white rounded-xl shadow-lg px-4 py-2 flex items-center space-x-2">
                   {navLinks.map((link) => (
@@ -289,7 +293,7 @@ export default function Header() {
             </div>
 
             <div
-              className="lg:hidden w-full border border-gray-300 rounded-xl p-2 bg-gray-100"
+              className="lg:hidden z-10 w-full border border-gray-300 rounded-xl p-2 bg-gray-100"
               ref={menuRef}
             >
               <div className="bg-white rounded-lg shadow-lg flex items-center justify-between w-full py-0.5 px-3">
@@ -320,7 +324,7 @@ export default function Header() {
                         </Avatar>
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-60 p-2 bg-gray-100 border-gray-300 rounded-3xl mt-5 mr-4">
+                    <DropdownMenuContent className="w-60 p-2 bg-gray-100 rounded-3xl mt-5 mr-4">
                       <div className="flex flex-col space-y-1 border-2 border-gray-200 rounded-2xl bg-white">
                         <div className="font-bold p-3 pb-0.5">
                           {user.full_name || "User"}
@@ -328,7 +332,7 @@ export default function Header() {
                         <div className="text-sm text-gray-600 pl-3 truncate">
                           {user.email || "No Email"}
                         </div>
-                        <hr className="my-1 text-gray-300" />
+                        <hr className="my-1" />
                         <DropdownMenuItem asChild>
                           <Link
                             href="/dashboard"
@@ -347,7 +351,7 @@ export default function Header() {
                             <span>Profile</span>
                           </Link>
                         </DropdownMenuItem>
-                        <hr className="my-1 text-gray-300" />
+                        <hr className="my-1" />
                         <DropdownMenuItem
                           variant="destructive"
                           onClick={() => logout()}

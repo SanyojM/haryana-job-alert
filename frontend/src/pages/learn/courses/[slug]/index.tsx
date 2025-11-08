@@ -8,7 +8,7 @@ import LearnSidebar from "@/components/courses/LearnSidebar";
 import LessonContent from "@/components/courses/LessonContent";
 import { FullCourseDetails } from "@/pages/courses/[slug]"; // Reuse this type
 import { Lesson, Topic } from "@/pages/admin/courses/[id]"; // Reuse this type
-import { AlertCircle, AlertTriangle, Book, Video } from "lucide-react";
+import { AlertCircle, AlertTriangle, Book, Video, Menu, X } from "lucide-react";
 import { Button } from "@heroui/button";
 import {Tabs, Tab} from "@heroui/tabs";
 import Link from "next/link";
@@ -36,6 +36,7 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // 2. useEffect handles fetching data and checking auth/enrollment
     useEffect(() => {
@@ -138,12 +139,20 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
-                        <span className="font-semibold">Back to Dashboard</span>
+                        <span className="font-semibold hidden sm:inline">Back to Dashboard</span>
                     </Link>
                     <div className="flex items-center gap-3">
                         <h1 className="text-lg md:text-xl text-white truncate hidden md:block max-w-md lg:max-w-2xl">
                             {course.title}
                         </h1>
+                        {/* Mobile menu toggle */}
+                        <button
+                            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                            className="lg:hidden text-white p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                            aria-label="Toggle curriculum"
+                        >
+                            {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                        </button>
                     </div>
                 </div>
             </header>
@@ -295,6 +304,39 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
                     />
                 </aside>
             </div>
+
+            {/* Mobile Sidebar Overlay */}
+            {isSidebarOpen && (
+                <>
+                    {/* Backdrop */}
+                    <div 
+                        className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                        onClick={() => setIsSidebarOpen(false)}
+                    />
+                    
+                    {/* Sidebar */}
+                    <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl z-50 lg:hidden overflow-y-auto transform transition-transform duration-300 ease-in-out">
+                        <div className="sticky top-0 bg-gray-950 p-4 flex justify-between items-center z-10 shadow-md">
+                            <h2 className="text-white font-semibold text-lg">Course Content</h2>
+                            <button
+                                onClick={() => setIsSidebarOpen(false)}
+                                className="text-white p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                                aria-label="Close curriculum"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
+                        <LearnSidebar
+                            course={course}
+                            selectedLessonId={selectedLesson?.id || null}
+                            onSelectLesson={(lesson) => {
+                                setSelectedLesson(lesson);
+                                setIsSidebarOpen(false); // Close sidebar on mobile after selecting
+                            }}
+                        />
+                    </div>
+                </>
+            )}
         </div>
     );
 };
