@@ -44,15 +44,16 @@ export default function LessonContent({ lesson }: LessonContentProps) {
   }
 
   const embedUrl = getYouTubeEmbedUrl(lesson.video_url);
+  console.log("Embedding video URL:", lesson);
 
   return (
     <>
-      {embedUrl ? (
+      {lesson.video_url ? (
         <div className="aspect-video w-full bg-black overflow-hidden">
           <iframe
             width="100%"
             height="100%"
-            src={embedUrl}
+            src={lesson.video_url.replaceAll("/watch?v=","/embed/").replaceAll("/watch/","/embed/").replaceAll("/live/","/embed/")}
             title={lesson.title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

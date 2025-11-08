@@ -49,7 +49,7 @@ export default function CourseEnrollmentCard({
 
   const renderEnrollButton = () => {
     if (isEnrolled) {
-      console.log("asdasdasfasdfsadfdsfdsfdsfsdfdsfsdfdsadsfdsfdsfdsfdsfdsfdsf")
+      console.log("User is already enrolled, showing 'Go to Course' button.");
       return (
         <Button
           className="w-full text-lg shine bg-gradient-to-r from-green-600 to-green-800"

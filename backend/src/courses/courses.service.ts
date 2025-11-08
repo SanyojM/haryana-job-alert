@@ -142,6 +142,73 @@ export class CoursesService {
     return { enrolled: isEnrolled };
   }
 
+  async findUserEnrollments(userId: number) {
+    // Fetch all active enrollments for the user (free courses)
+    const enrollments = await this.prisma.enrollments.findMany({
+      where: {
+        user_id: userId,
+        status: enrollment_status.active,
+      },
+      include: {
+        courses: {
+          include: {
+            category: true,
+            course_topics: {
+              orderBy: { order: 'asc' },
+              include: {
+                lessons: {
+                  orderBy: { order: 'asc' },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { started_at: 'desc' },
+    });
+
+    // Fetch paid courses from successful payments
+    const paidCourses = await this.prisma.payments.findMany({
+      where: {
+        user_id: userId,
+        status: payment_status.success,
+        course_id: { not: null },
+      },
+      include: {
+        courses: {
+          include: {
+            category: true,
+            course_topics: {
+              orderBy: { order: 'asc' },
+              include: {
+                lessons: {
+                  orderBy: { order: 'asc' },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { created_at: 'desc' },
+      distinct: ['course_id'], // Avoid duplicates if multiple payments for same course
+    });
+
+    // Combine and format the results
+    const allEnrollments = [
+      ...enrollments,
+      ...paidCourses.map(payment => ({
+        id: payment.id,
+        user_id: payment.user_id,
+        course_id: payment.course_id,
+        status: 'active' as const,
+        started_at: payment.created_at,
+        courses: payment.courses,
+      })),
+    ];
+
+    return allEnrollments;
+  }
+
   async createCourse(createCourseDto: CreateCourseDto) {
     const {
       tagIds,

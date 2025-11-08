@@ -49,7 +49,7 @@ const navItems: NavItem[] = [
   },
   {
     title: 'Courses',
-    href: '/courses',
+    href: '/dashboard/my-courses',
     icon: BookOpen,
   },
   {

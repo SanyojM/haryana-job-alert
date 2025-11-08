@@ -184,7 +184,7 @@ const ProfilePage: NextPage = () => {
       <div className="max-w-7xl mx-auto">
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white border-2 border-gray-200 hover:shadow-lg transition-shadow">
+          <Card className="bg-white border border-gray-300 hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-2 bg-blue-100 rounded-lg">
@@ -196,7 +196,7 @@ const ProfilePage: NextPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-2 border-gray-200 hover:shadow-lg transition-shadow">
+          <Card className="bg-white border border-gray-300 hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-2 bg-green-100 rounded-lg">
@@ -208,7 +208,7 @@ const ProfilePage: NextPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-2 border-gray-200 hover:shadow-lg transition-shadow">
+          <Card className="bg-white border border-gray-300 hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-2 bg-yellow-100 rounded-lg">
@@ -220,7 +220,7 @@ const ProfilePage: NextPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white border-2 border-gray-200 hover:shadow-lg transition-shadow">
+          <Card className="bg-white border border-gray-300 hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-2 bg-purple-100 rounded-lg">
@@ -234,7 +234,7 @@ const ProfilePage: NextPage = () => {
         </div>
 
         {/* Recent Activity Section */}
-        <Card className="bg-white rounded-2xl border-4 border-gray-200/90 shadow-sm mb-8">
+        <Card className="bg-white rounded-2xl border border-gray-300 shadow-sm mb-8">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle className="text-2xl flex items-center gap-2">
@@ -321,8 +321,19 @@ const ProfilePage: NextPage = () => {
         </Card>
 
         {/* Quick Links Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/dashboard/results')}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="border border-gray-300 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/dashboard/my-courses')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <BookOpen className="w-8 h-8 text-indigo-600" />
+                <ArrowRight className="w-5 h-5 text-gray-400" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">My Courses</h3>
+              <p className="text-sm text-gray-600">View your enrolled courses and continue learning</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border border-gray-300 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/dashboard/results')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <Award className="w-8 h-8 text-blue-600" />
@@ -333,7 +344,7 @@ const ProfilePage: NextPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/dashboard/payments')}>
+          <Card className="border border-gray-300 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/dashboard/payments')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <CreditCard className="w-8 h-8 text-green-600" />
@@ -344,7 +355,7 @@ const ProfilePage: NextPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/dashboard/my-files')}>
+          <Card className="border border-gray-300 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/dashboard/my-files')}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <Download className="w-8 h-8 text-purple-600" />

@@ -141,6 +141,7 @@ const AdminFilesManagement: React.FC = () => {
       if (type === 'file') {
         setFormData({ ...formData, file_url: response.publicUrl });
       } else {
+        console.log('Thumbnail upload response:', response);
         setFormData({ ...formData, thumbnail_url: response.publicUrl });
       }
 

@@ -236,7 +236,7 @@ export default function Header() {
                             <div className="text-sm text-gray-600 pl-3">
                               {user.email || "No Email"}
                             </div>
-                            <hr className="my-1" />
+                            <hr className="my-1 text-gray-300" />
                             <Link
                               href="/dashboard"
                               className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 text-sm font-medium text-gray-700 whitespace-nowrap"
@@ -251,7 +251,7 @@ export default function Header() {
                               <User className="w-4 h-4" />
                               <span>Profile</span>
                             </Link>
-                            <hr className="my-1" />
+                            <hr className="my-1 text-gray-300" />
                             <button
                               onClick={() => logout()} // Call your logout function
                               className="flex items-center gap-3 p-2 rounded-md hover:bg-red-50 text-sm font-medium text-red-600 w-full whitespace-nowrap"
@@ -320,7 +320,7 @@ export default function Header() {
                         </Avatar>
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-60 p-2 bg-gray-100 rounded-3xl mt-5 mr-4">
+                    <DropdownMenuContent className="w-60 p-2 bg-gray-100 border-gray-300 rounded-3xl mt-5 mr-4">
                       <div className="flex flex-col space-y-1 border-2 border-gray-200 rounded-2xl bg-white">
                         <div className="font-bold p-3 pb-0.5">
                           {user.full_name || "User"}
@@ -328,7 +328,7 @@ export default function Header() {
                         <div className="text-sm text-gray-600 pl-3 truncate">
                           {user.email || "No Email"}
                         </div>
-                        <hr className="my-1" />
+                        <hr className="my-1 text-gray-300" />
                         <DropdownMenuItem asChild>
                           <Link
                             href="/dashboard"
@@ -347,7 +347,7 @@ export default function Header() {
                             <span>Profile</span>
                           </Link>
                         </DropdownMenuItem>
-                        <hr className="my-1" />
+                        <hr className="my-1 text-gray-300" />
                         <DropdownMenuItem
                           variant="destructive"
                           onClick={() => logout()}

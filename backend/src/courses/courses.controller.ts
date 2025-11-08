@@ -46,6 +46,18 @@ export class CoursesController {
   // ======================================
 
   @UseGuards(JwtAuthGuard) // Protect with JWT authentication
+  @Get('user/enrollments')
+  getUserEnrollments(
+    @Req() req: Request, // Inject the request object
+  ) {
+    const user = req.user as any;
+    if (!user || !user.id) {
+      throw new BadRequestException('User information not found in request.');
+    }
+    return this.coursesService.findUserEnrollments(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard) // Protect with JWT authentication
   @Get(':id/check-enrollment')
   checkEnrollment(
     @Param('id', ParseIntPipe) id: number,
