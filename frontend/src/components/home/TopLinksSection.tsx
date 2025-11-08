@@ -34,9 +34,9 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
               passHref
               legacyBehavior
             >
-              <a className="inline-flex items-center justify-center text-gray-700 font-medium hover:scale-105 hover:text-gray-900 transition-transform duration-200">
+              <a className="inline-flex items-center justify-center text-gray-700 font-semibold hover:scale-105 hover:text-gray-900 transition-transform duration-200">
                 <CheckCircle2 className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
-                <span className="whitespace-nowrap underline decoration-gray-300 transition-all text-sm text-center">
+                <span className="whitespace-nowrap underline decoration-gray-300 transition-all text-md text-center">
                   {category.name}
                 </span>
                 <ArrowUpRight className="min-w-4 min-h-4 w-4 h-4 text-gray-400 ml-1" />
