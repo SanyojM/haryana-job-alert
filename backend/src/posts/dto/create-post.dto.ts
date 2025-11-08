@@ -24,6 +24,7 @@ export class CreatePostDto {
   
   @Transform(({ value }) => parseInt(value)) // Add this
   @IsInt()
+  @IsOptional()
   template_id: number;
 
   @IsString()
