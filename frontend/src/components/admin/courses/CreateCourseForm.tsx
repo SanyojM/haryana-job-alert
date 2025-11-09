@@ -300,8 +300,8 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                             </RadioGroup>
 
                             {pricingModel === 'paid' && (
-                                <div className="grid grid-cols-2 gap-4 pt-4">
-                                     <div className="space-y-2">
+                                <div className="grid grid-cols-12 gap-4 pt-4 w-full">
+                                     <div className="space-y-2 col-span-3">
                                         <Input
                                             id="regular-price"
                                             label='Regular Price (₹)'
@@ -312,7 +312,7 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                                         />
                                          {(status === 'draft' && pricingModel === 'paid') && <p className="text-xs text-gray-500">Required for publishing</p>}
                                     </div>
-                                     <div className="space-y-2">
+                                     <div className="space-y-2 col-span-3">
                                         <Input id="sale-price" label='Sale Price (₹, Optional)' type="number" value={salePrice} onChange={(e) => setSalePrice(e.target.value)} min="0" step="any" />
                                     </div>
                                 </div>
