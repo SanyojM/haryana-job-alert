@@ -56,7 +56,7 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
     const [salePrice, setSalePrice] = useState<string>(initialData?.sale_price?.toString() || "");
     const [categoryId, setCategoryId] = useState<string | undefined>(initialData?.category_id?.toString());
     const [selectedTags, setSelectedTags] = useState<Set<string>>(
-        new Set(initialData?.tags?.map(t => t.tag.id.toString()) || [])
+        new Set(initialData?.tags?.map(t => t?.tag?.id?.toString()) || [])
     );
     const [selectedAuthors, setSelectedAuthors] = useState<Set<string>>(
         new Set(initialData?.authors?.map(a => a.id.toString()) || [])

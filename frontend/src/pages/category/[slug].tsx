@@ -249,9 +249,8 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
             ) : (
               <div className="space-y-4">
                 {processedPosts.map((post, index) => {
-                  const logoText = getLogoText(post.title);
                   return (
-                    <div key={post.id} className="bg-white group transition-all duration-200 rounded-lg shadow-xl border-gray-400 overflow-hidden relative">
+                    <Link href={`/posts/${post.slug}`} key={post.id} className="block bg-white group transition-all duration-200 rounded-lg shadow-xl border-gray-200 overflow-hidden relative">
                       <div className="flex flex-row justify-between items-end md:items-center gap-4 px-4 py-2 w-full h-full">
                         <div className="flex-grow">
                           <div className="flex items-center gap-2 mb-1">
@@ -283,25 +282,23 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                           </div>
                         </div>
                         <div className="hidden sm:block w-auto flex-shrink-0">
-                          <Link
-                            href={`/posts/${post.slug}`}
+                          <div
                             className='shine bg-gradient-to-r from-red-600 to-gray-800 text-white md:px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 flex items-center justify-center gap-2 group mt-auto text-sm md:text-md'
                           >
                             Learn More
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                          </Link>
+                          </div>
                         </div>
                         <div className="inline sm:hidden mb-4">
-                          <Link
-                            href={`/posts/${post.slug}`}
+                          <div
                             className='bg-gradient-to-r from-green-600 to-gray-800 text-white font-semibold text-center flex items-center justify-center min-w-7 min-h-7 w-7 h-7 p-1 rounded'
                           >
                             <Eye className="w-4 h-4" />
-                          </Link>
+                          </div>
 
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>

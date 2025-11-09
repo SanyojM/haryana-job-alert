@@ -3,9 +3,10 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
-import { ArrowUpRight, User } from "lucide-react";
+import { ArrowUpRight, User, Search, Filter, X } from "lucide-react";
 import BannerHeader from "@/components/shared/BannerHeader";
 import Image from "next/image";
+import { useState, useMemo } from "react";
 
 export type MockSeries = {
   id: string;
@@ -55,6 +56,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
   const getLogoText = (categoryName?: string) => {
     if (!categoryName) return 'MT';
     return categoryName.charAt(0).toUpperCase();
@@ -81,11 +85,44 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
       return mockSeries.thumbnail_url || ''
     }
 
+  // Extract unique categories from series
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set<string>();
+    series.forEach(s => {
+      if (s.mock_categories?.name) {
+        uniqueCategories.add(s.mock_categories.name);
+      }
+    });
+    return Array.from(uniqueCategories).sort();
+  }, [series]);
+
+  // Filter series based on search and category
+  const filteredSeries = useMemo(() => {
+    return series.filter(s => {
+      // Search filter
+      const matchesSearch = searchQuery.trim() === "" || 
+        s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.mock_categories?.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Category filter
+      const matchesCategory = selectedCategory === "all" || 
+        s.mock_categories?.name === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [series, searchQuery, selectedCategory]);
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("all");
+  };
+
   return (
     <div className="bg-white min-h-screen">
       <Header />
       <main className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3">
             All Mock Test Series
           </h1>
@@ -94,13 +131,116 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
           </p>
         </div>
 
-        {series.length === 0 ? (
+        {/* Search and Filter Section */}
+        <div className="mb-8 space-y-4">
+          {/* Search Bar */}
+          <div className="relative max-w-2xl mx-auto">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search mock test series..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors text-gray-800"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                aria-label="Clear search"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className="flex items-center gap-2 text-gray-600 font-medium">
+              <Filter className="w-4 h-4" />
+              <span className="text-sm">Filter by:</span>
+            </div>
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                selectedCategory === "all"
+                  ? "bg-indigo-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              All Categories
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                  selectedCategory === category
+                    ? "bg-indigo-600 text-white shadow-md"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {/* Active Filters Display */}
+          {(searchQuery || selectedCategory !== "all") && (
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <span className="text-sm text-gray-600">Active filters:</span>
+              {searchQuery && (
+                <span className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
+                  Search: &quot;{searchQuery}&quot;
+                  <button onClick={() => setSearchQuery("")} aria-label="Remove search filter">
+                    <X className="w-4 h-4" />
+                  </button>
+                </span>
+              )}
+              {selectedCategory !== "all" && (
+                <span className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                  Category: {selectedCategory}
+                  <button onClick={() => setSelectedCategory("all")} aria-label="Remove category filter">
+                    <X className="w-4 h-4" />
+                  </button>
+                </span>
+              )}
+              <button
+                onClick={clearFilters}
+                className="text-sm text-indigo-600 hover:text-indigo-800 font-medium underline"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
+
+          {/* Results Count */}
+          <div className="text-center text-sm text-gray-600">
+            Showing {filteredSeries.length} of {series.length} test series
+          </div>
+        </div>
+
+        {filteredSeries.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-500 text-lg">No mock test series available at the moment.</p>
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Search className="w-10 h-10 text-gray-400" />
+            </div>
+            <p className="text-gray-500 text-lg mb-2">No mock test series found</p>
+            <p className="text-gray-400 text-sm mb-4">
+              Try adjusting your search or filters
+            </p>
+            {(searchQuery || selectedCategory !== "all") && (
+              <button
+                onClick={clearFilters}
+                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {series.map((s) => {
+            {filteredSeries.map((s) => {
               const testCount = getTestCount(s);
               const categorySlug = s.mock_categories?.slug || 'category';
               const detailUrl = `/mock-tests/${categorySlug}/${s.slug}`;

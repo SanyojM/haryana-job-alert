@@ -137,7 +137,7 @@ export default function Header() {
               theharyana<span className="text-[#fdf500]">jobalert</span>.com
             </div>
 
-            <a href='https://softricity.in' className="text-white shine inline-flex items-center rounded-xl h-8 text-xs px-1 sm:text-sm absolute top-17 sm:top-24 left-63 sm:left-[87vw]">
+            <a href='https://softricity.in' className="text-white shine inline-flex items-center rounded-xl h-8 text-xs px-1 sm:text-sm absolute top-17 sm:top-24 left-63 sm:left-[85vw]">
               <span className="lg:inline hidden">Powered by</span> <img src="/softricity.png" alt="" className='ml-0 sm:ml-2 inline h-15 w-[100px] object-cover' />
             </a>
           </div>

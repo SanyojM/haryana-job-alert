@@ -208,6 +208,11 @@ body {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
   body {
     @apply bg-background text-foreground;
@@ -224,13 +229,8 @@ body {
 
 @layer utilities {
   .scrollbar-hide {
-    /* IE and Edge */
     -ms-overflow-style: none;
-
-    /* Firefox */
     scrollbar-width: none;
-
-    /* Safari and Chrome */
     &::-webkit-scrollbar {
       display: none;
     }

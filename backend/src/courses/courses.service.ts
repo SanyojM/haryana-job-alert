@@ -232,6 +232,21 @@ export class CoursesService {
       throw new BadRequestException('Sale price must be less than regular price.');
     }
 
+    // Validate tags exist if provided
+    if (tagIds && tagIds.length > 0) {
+      const existingTags = await this.prisma.course_tags.findMany({
+        where: {
+          id: { in: tagIds }
+        }
+      });
+      
+      if (existingTags.length !== tagIds.length) {
+        const foundTagIds = existingTags.map(t => Number(t.id));
+        const missingTagIds = tagIds.filter(id => !foundTagIds.includes(id));
+        throw new BadRequestException(`Tag(s) with ID(s) ${missingTagIds.join(', ')} not found`);
+      }
+    }
+
     const slug = slugify(createCourseDto.title);
     const total_duration_sec = timeToSeconds(total_duration_hhmm);
 
@@ -392,7 +407,20 @@ export class CoursesService {
       }
 
       // Handle Tags (replace existing)
-      if (tagIds) {
+      if (tagIds && tagIds.length > 0) {
+        // First, verify all tags exist
+        const existingTags = await tx.course_tags.findMany({
+          where: {
+            id: { in: tagIds }
+          }
+        });
+        
+        if (existingTags.length !== tagIds.length) {
+          const foundTagIds = existingTags.map(t => Number(t.id));
+          const missingTagIds = tagIds.filter(id => !foundTagIds.includes(id));
+          throw new BadRequestException(`Tag(s) with ID(s) ${missingTagIds.join(', ')} not found`);
+        }
+
         await tx.course_course_tags.deleteMany({ where: { course_id: id } });
         data.course_course_tags = {
           create: tagIds.map((tagId) => ({
