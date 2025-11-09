@@ -131,9 +131,9 @@ const CourseSection: React.FC<CoursesHomePageProps> = ({ courses }) => {
 
                 <div className="text-center mt-12">
                     <Link href="/courses">
-                        <span className="bg-gray-100 border-2 border-gray-300 rounded-xl px-12 py-3 font-semibold text-gray-800 hover:bg-gray-100 hover:border-gray-400 transition-all shadow-sm">
+                        <Button variant="bordered" className="bg-gray-100 border-2 border-gray-300 rounded-xl px-12 py-3 font-semibold text-gray-800 hover:bg-gray-100 hover:border-gray-400 transition-all shadow-sm">
                             View More
-                        </span>
+                        </Button>
                     </Link>
                 </div>
                 <div className='mt-10 md:hidden'>

@@ -5,7 +5,6 @@ import { BookCopy, Library, FileText, LayoutDashboard, Users, UserCheck } from '
 import Link from 'next/link';
 import { Button } from '@heroui/button';
 
-// 1. Define an interface for the props our page will receive
 interface AdminDashboardProps {
   courseCount: number;
   seriesCount: number;
@@ -17,7 +16,6 @@ interface AdminDashboardProps {
   recentCourses: { id: string; title: string; slug: string }[];
 }
 
-// 2. A simple helper component for displaying each stat
 const StatCard = ({ title, value, icon }: { title: string, value: number, icon: React.ReactNode }) => (
   <Card className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -30,7 +28,6 @@ const StatCard = ({ title, value, icon }: { title: string, value: number, icon: 
   </Card>
 );
 
-// 3. Your page component now receives the counts as props
 const AdminIndex: NextPage<AdminDashboardProps> = ({ 
   courseCount, 
   seriesCount, 
@@ -110,7 +107,7 @@ const AdminIndex: NextPage<AdminDashboardProps> = ({
                                 <li key={course.id} className="py-3 flex justify-between items-center">
                                     <p className="text-sm font-medium text-gray-900">{course.title}</p>
                                     <Link href={`/admin/courses/${course.id}`} passHref>
-                                        <Button as="a" variant="light" size="sm">Manage</Button>
+                                        <Button variant="light" size="sm">Manage</Button>
                                     </Link>
                                 </li>
                             )) : (
@@ -124,23 +121,15 @@ const AdminIndex: NextPage<AdminDashboardProps> = ({
     );
 }
 
-// 4. Use getServerSideProps to fetch data before the page loads
 export const getServerSideProps: GetServerSideProps = async () => {
 
   try {
-    // Fetch all data in parallel
     const [courses, mockSeries, mockTests, posts] = await Promise.all([
       api.get('/courses'), 
       api.get('/mock-series'),
       api.get('/mock-tests'),
       api.get('/posts'),
     ]);
-
-    // --- DEBUGGING ---
-    // Add this line to see the *exact* structure of your data
-    // in your server terminal.
-    console.log("Fetched Data:", { courses, mockSeries, mockTests, posts });
-    // --- END DEBUGGING ---
 
     const courseData = courses.data || courses;
     const seriesData = mockSeries.data || mockSeries;
@@ -159,16 +148,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
         title: post.title
     }));
     
-    // Assuming courses are also sorted by newness (or just grabbing first 5)
     const recentCourses = courseData.slice(0, 5).map((course: any) => ({
         id: course.id,
         title: course.title,
         slug: course.slug
     }));
 
-    // --- POTENTIAL FIX ---
-    // If your data is nested (e.g., in a 'data' property),
-    // you must access it like this:
     return {
       props: {
         courseCount: courses.data ? courses.data.length : courses.length,
@@ -184,7 +169,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   } catch (error) {
     console.error("Failed to fetch dashboard data:", error);
-    // Return 0 counts on failure so the page doesn't crash
     return {
       props: {
         courseCount: 0,
