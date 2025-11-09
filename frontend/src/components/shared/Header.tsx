@@ -310,6 +310,7 @@ export default function Header() {
                     <Menu className="w-5 h-5" />
                   )}
                 </button>
+                <div className="flex items-center">
                 {isLoggedIn ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -381,6 +382,14 @@ export default function Header() {
                     />
                   </button>
                 )}
+                <button
+                  onClick={() => setIsSearchDialogOpen(true)}
+                  className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md transition-colors"
+                  aria-label="Search posts"
+                  >
+                  <Search className="w-5 h-5" />
+                </button>
+                  </div>
               </div>
             </div>
           </div>
