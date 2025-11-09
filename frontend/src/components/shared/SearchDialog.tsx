@@ -164,8 +164,8 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                         Search <br /> karo...
                     </div>
                     <img src="/poweredBy.jpg" alt="" className="absolute bottom-5 h-12 right-0" />
-                    <h1 className="text-[40px] playfair !font-semibold text-center text-white z-10">
-                    Haryana <span className="text-[#f7f900]">job alert</span>
+                    <h1 className="text-[40px] text-nowrap playfair !font-semibold text-center text-white z-10">
+                    Haryana <span className="text-[#f7f900] text-nowrap">job alert</span>
                     </h1>
 
                     <div className="flex items-center text-white text-sm mt-3 z-10">
