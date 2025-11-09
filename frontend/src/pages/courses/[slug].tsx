@@ -15,6 +15,7 @@ import { useAuth } from "@/context/AuthContext"; // Import useAuth
 import { useRouter } from "next/router"; // Import useRouter
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Download, ExternalLink, FileText, MonitorPlay } from 'lucide-react'; // Import Button for mobile enroll
+import { AuthDialog } from "@/components/auth/AuthDialog"; // Import AuthDialog
 // --- MODIFICATION END ---
 
 
@@ -100,6 +101,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
     const { user, token, isLoading: isAuthLoading } = useAuth();
     const router = useRouter();
     const [isProcessingEnrollment, setIsProcessingEnrollment] = useState(false);
+    const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false); // Add auth dialog state
     
     // Initialize state from server prop, default to false.
     const [isEnrolled, setIsEnrolled] = useState(course.isEnrolled || false);
@@ -166,8 +168,8 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
         setError(null); // Assuming you add an error state if needed
 
         if (!user) {
-            router.push(`/auth/login?redirect=${router.asPath}`);
             setIsProcessingEnrollment(false);
+            setIsAuthDialogOpen(true); // Open auth dialog instead of redirecting
             return;
         }
 
@@ -344,6 +346,12 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                     </aside> */}
                 </div>
             </div>
+            
+            {/* Auth Dialog */}
+            <AuthDialog
+                open={isAuthDialogOpen}
+                onOpenChange={setIsAuthDialogOpen}
+            />
             
             <Footer />
         </div>
