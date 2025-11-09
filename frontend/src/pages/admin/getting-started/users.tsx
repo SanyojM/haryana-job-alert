@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
+import { api } from '@/lib/api'; 
+import { useAuth } from '@/context/AuthContext'; 
 import { Card, CardBody } from "@heroui/card";
 import { 
   Table, 
@@ -19,45 +21,76 @@ import {
 import { Chip } from "@heroui/chip";
 import { Trash2, UserCog, ChevronDown } from 'lucide-react';
 
-// 1. Define the User type (based on your API docs)
 type User = {
-  id: string;
-  fullName: string;
+  id: number;
+  full_name: string;
   email: string;
-  role: 'admin' | 'user'; // Assuming 'user' is the other role
+  role: 'admin' | 'student';
 };
 
-// 2. Create dummy data
-const DUMMY_USERS: User[] = [
-  { id: '1', fullName: 'Sahil Mor', email: 'sahil@example.com', role: 'admin' },
-  { id: '2', fullName: 'John Doe', email: 'john.doe@example.com', role: 'user' },
-  { id: '3', fullName: 'Jane Smith', email: 'jane.smith@example.com', role: 'user' },
-  { id: '4', fullName: 'Admin User', email: 'admin@example.com', role: 'admin' },
-];
+interface AdminUsersPageProps {
+  initialUsers: User[];
+}
 
-// 3. Create the Page Component
-const AdminUsersPage: NextPage = () => {
-  const [users, setUsers] = useState<User[]>(DUMMY_USERS);
+export const getServerSideProps: GetServerSideProps = async () => { 
+  try {
+    const token = localStorage.getItem('authToken'); 
 
-  // Handle changing the user's role (updates local state for now)
-  const handleRoleChange = (userId: string, newRole: 'admin' | 'user') => {
+    if (!token) {
+      console.error('No auth token found in cookies');
+      return { props: { initialUsers: [] } };
+    }
+
+    const users = await api.get('/users', token); 
+    
+    return { props: { initialUsers: users } };
+  } catch (error) {
+    console.error('Failed to fetch users:', error);
+    return { props: { initialUsers: [] } };
+  }
+};
+
+const AdminUsersPage: NextPage<AdminUsersPageProps> = ({ initialUsers }) => {
+  const [users, setUsers] = useState<User[]>(initialUsers);
+  const { token } = useAuth();
+
+  const handleRoleChange = async (userId: number, newRole: 'admin' | 'student') => {
+    const authToken = token || undefined;
+    const oldUsers = users; 
+
     setUsers(prevUsers =>
       prevUsers.map(user =>
         user.id === userId ? { ...user, role: newRole } : user
       )
     );
-    // In a real app, you would also make an API call here
-    // e.g., api.put(`/users/${userId}/role`, { role: newRole }, token)
-    console.log(`Changed user ${userId} to ${newRole}`);
+
+    try {
+      await api.put(`/users/${userId}`, { role: newRole }, authToken);
+      console.log(`Changed user ${userId} to ${newRole}`);
+
+    } catch (err: unknown) {
+      console.error('Error updating role:', err);
+      setUsers(oldUsers); 
+      alert(`Failed to update role: ${err instanceof Error ? err.message : "An unknown error occurred."}`);
+    }
   };
 
-  // Handle deleting a user (updates local state for now)
-  const handleDeleteUser = (userId: string) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-      // In a real app, you would also make an API call here
-      // e.g., api.delete(`/users/${userId}`, token)
+  const handleDeleteUser = async (userId: number) => {
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    
+    const authToken = token || undefined;
+    const oldUsers = users; 
+      
+    setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+
+    try {
+      await api.delete(`/users/${userId}`, authToken);
       console.log(`Deleted user ${userId}`);
+
+    } catch (err: unknown) {
+      console.error('Error deleting user:', err);
+      setUsers(oldUsers); 
+      alert(`Failed to delete user: ${err instanceof Error ? err.message : "An unknown error occurred."}`);
     }
   };
 
@@ -74,9 +107,16 @@ const AdminUsersPage: NextPage = () => {
               <TableColumn className="text-right">Actions</TableColumn>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
+              {users.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={4} className="text-center text-gray-500">
+        No users found.
+      </TableCell>
+    </TableRow>
+  ) : (
+              users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.fullName}</TableCell>
+                  <TableCell className="font-medium">{user.full_name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <Chip 
@@ -99,10 +139,10 @@ const AdminUsersPage: NextPage = () => {
                       </DropdownTrigger>
                       <DropdownMenu 
                         aria-label="Change role"
-                        onAction={(key) => handleRoleChange(user.id, key as 'admin' | 'user')}
+                        onAction={(key) => handleRoleChange(user.id, key as 'admin' | 'student')}
                       >
                         <DropdownItem key="admin">Admin</DropdownItem>
-                        <DropdownItem key="user">User</DropdownItem>
+                        <DropdownItem key="student">Student</DropdownItem> 
                       </DropdownMenu>
                     </Dropdown>
 
@@ -118,7 +158,8 @@ const AdminUsersPage: NextPage = () => {
 
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
             </TableBody>
           </Table>
         </CardBody>
