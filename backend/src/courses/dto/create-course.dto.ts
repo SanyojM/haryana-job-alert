@@ -64,19 +64,26 @@ export class CreateCourseDto {
 
   @Transform(({ value }) => {
     if (typeof value === 'string') {
-      return value.split(',').map(Number);
+      // Handle empty string case
+      if (value.trim() === '') {
+        return [];
+      }
+      return value.split(',').map(Number).filter(n => !isNaN(n) && n > 0);
     }
     return value; // Assume it's already an array if not string (e.g., from raw JSON update)
   })
   @IsArray()
   @IsInt({ each: true })
-  @ArrayNotEmpty()
   @IsOptional()
   tagIds?: number[]; // IDs for course_tags
 
   @Transform(({ value }) => {
     if (typeof value === 'string') {
-      return value.split(',').map(Number);
+      // Handle empty string case
+      if (value.trim() === '') {
+        return [];
+      }
+      return value.split(',').map(Number).filter(n => !isNaN(n) && n > 0);
     }
     return value;
   })
