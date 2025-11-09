@@ -40,7 +40,7 @@ const navLinks = [
   { name: "Latest Jobs", href: "/category/latest-jobs" },
   { name: "Yojna", href: "/category/yojna" },
   { name: "Offline Forms", href: "/offline-forms" },
-  { name: "Online Forms", href: "/online-forms" },
+  { name: "Courses", href: "/courses" },
   { name: "Mock Test", href: "/mock-tests" },
 ];
 
@@ -204,12 +204,6 @@ export default function Header() {
                                </Link>
                              ))
                          )}
-                         <Link
-                           href="/courses"
-                           className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                         >
-                           Courses
-                         </Link>
                        </div>
                      </HoverCardContent>
                   </HoverCard>
@@ -428,13 +422,6 @@ export default function Header() {
                 </CollapsibleTrigger>
                  <CollapsibleContent className="mt-1">
                    <div className="ml-4 space-y-1">
-                     <Link
-                       href="/courses"
-                       className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                       onClick={() => setIsMenuOpen(false)}
-                     >
-                       Courses
-                     </Link>
                      {categories?.length === 0 ? (
                        <div className="px-3 py-2 text-sm text-gray-500">
                          Loading...
