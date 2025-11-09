@@ -15,11 +15,17 @@ interface MidCardProps {
   title: string;
   description: string;
   posts: Post[];
-  index: number; 
+  index: number;
+  categorySlug: string;
 }
 
 // Reusable component for a single card
-const MidCard = ({ title, description, posts, index }: MidCardProps) => (
+const MidCard = ({ title, description, posts, index, categorySlug }: MidCardProps) => {
+  const maxPosts = 25;
+  const displayedPosts = posts.slice(0, maxPosts);
+  const hasMorePosts = posts.length > maxPosts;
+
+  return (
     <div className="flex flex-col h-full">
         {(() => {
           const gradientOptions = [
@@ -42,7 +48,7 @@ const MidCard = ({ title, description, posts, index }: MidCardProps) => (
         </div>
         <div className="bg-white shadow-lg py-6 px-4 rounded-b-2xl flex-grow">
             <ul className="space-y-4">
-                {posts.map(post => (
+                {displayedPosts.map(post => (
                     <li key={post.id}>
                         <Link href={`/posts/${post.slug}`} legacyBehavior>
                             <a className="flex items-start gap-2 text-gray-700 hover:text-indigo-600 group text-xs md:text-sm">
@@ -60,9 +66,21 @@ const MidCard = ({ title, description, posts, index }: MidCardProps) => (
                     <li className="text-gray-500">No posts available</li>
                 )}
             </ul>
+
+            {hasMorePosts && (
+                <div className="mt-6 text-center">
+                    <Link href={`/category/${categorySlug}`} legacyBehavior>
+                        <a className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg">
+                            View More
+                            <ArrowRight className="w-4 h-4" />
+                        </a>
+                    </Link>
+                </div>
+            )}
         </div>
     </div>
-);
+  );
+};
 
 
 export default function MidCardSection({ categories, posts }: MidCardSectionProps) {
@@ -76,6 +94,7 @@ export default function MidCardSection({ categories, posts }: MidCardSectionProp
               title={category.name}
               description={category.description || `Latest updates on ${category.name}`}
               index={index}
+              categorySlug={category.name.toLowerCase().replace(/\s+/g, '-')}
               posts={posts.filter(post => post.category_id?.toString() === category.id.toString()) || []}
             />
           ))}

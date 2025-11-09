@@ -28,7 +28,7 @@ export type Course = {
     total_duration_hhmm?: string | null;
     category?: CourseCategory; 
     authors?: User[]; 
-    tags?: { tag: CourseTag }[];
+    tags?: ({ tag: CourseTag } | CourseTag)[]; // Support both nested and flat structures
 };
 
 interface CreateCourseFormProps {
@@ -48,25 +48,67 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
 
     const isEditMode = !!initialData;
 
-    const [title, setTitle] = useState(initialData?.title || "");
-    const [description, setDescription] = useState(initialData?.description || "");
-    const [introVideoUrl, setIntroVideoUrl] = useState(initialData?.intro_video_url || "");
-    const [pricingModel, setPricingModel] = useState<'free' | 'paid'>(initialData?.pricing_model || 'free');
-    const [regularPrice, setRegularPrice] = useState<string>(initialData?.regular_price?.toString() || "");
-    const [salePrice, setSalePrice] = useState<string>(initialData?.sale_price?.toString() || "");
+    const [title, setTitle] = useState(initialData?.title ?? "");
+    const [description, setDescription] = useState(initialData?.description ?? "");
+    const [introVideoUrl, setIntroVideoUrl] = useState(initialData?.intro_video_url ?? "");
+    const [pricingModel, setPricingModel] = useState<'free' | 'paid'>(initialData?.pricing_model ?? 'free');
+    const [regularPrice, setRegularPrice] = useState<string>(initialData?.regular_price?.toString() ?? "");
+    const [salePrice, setSalePrice] = useState<string>(initialData?.sale_price?.toString() ?? "");
     const [categoryId, setCategoryId] = useState<string | undefined>(initialData?.category_id?.toString());
     const [selectedTags, setSelectedTags] = useState<Set<string>>(
-        new Set(initialData?.tags?.map(t => t?.tag?.id?.toString()) || [])
+        new Set(initialData?.tags?.map(t => {
+            // Handle both {tag: {id}} and {id} structures
+            const tagId = 'tag' in t ? t.tag.id : t.id;
+            return tagId?.toString();
+        }).filter(Boolean) ?? [])
     );
     const [selectedAuthors, setSelectedAuthors] = useState<Set<string>>(
-        new Set(initialData?.authors?.map(a => a.id.toString()) || [])
+        new Set(initialData?.authors?.map(a => a.id.toString()).filter(Boolean) ?? [])
     );
-    const [totalDuration, setTotalDuration] = useState(initialData?.total_duration_hhmm || "");
-    const [status, setStatus] = useState<'draft' | 'published'>(initialData?.status || 'draft');
-    const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(initialData?.thumbnail_url || null);
+    const [totalDuration, setTotalDuration] = useState(initialData?.total_duration_hhmm ?? "");
+    const [status, setStatus] = useState<'draft' | 'published'>(initialData?.status ?? 'draft');
+    const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(initialData?.thumbnail_url ?? null);
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Update form fields when initialData changes (for edit mode)
+    useEffect(() => {
+        if (initialData) {
+            console.log('Initial data loaded:', initialData); // Debug log
+            setTitle(initialData.title ?? "");
+            setDescription(initialData.description ?? "");
+            setIntroVideoUrl(initialData.intro_video_url ?? "");
+            setPricingModel(initialData.pricing_model ?? 'free');
+            setRegularPrice(initialData.regular_price?.toString() ?? "");
+            setSalePrice(initialData.sale_price?.toString() ?? "");
+            setCategoryId(initialData.category_id?.toString());
+            
+            // Parse tags with better logging
+            const tagIds = initialData.tags?.map(t => {
+                console.log('Tag object:', t);
+                // Tags can be either {id, name} or {tag: {id, name}} depending on the endpoint
+                const tagId = 'tag' in t ? t.tag.id : t.id;
+                return tagId?.toString();
+            }).filter(Boolean) ?? [];
+            console.log('Parsed tag IDs:', tagIds);
+            setSelectedTags(new Set(tagIds));
+            
+            // Parse authors
+            const authorIds = initialData.authors?.map(a => {
+                console.log('Author object:', a);
+                return a.id.toString();
+            }).filter(Boolean) ?? [];
+            console.log('Parsed author IDs:', authorIds);
+            setSelectedAuthors(new Set(authorIds));
+            
+            setTotalDuration(initialData.total_duration_hhmm ?? "");
+            setStatus(initialData.status ?? 'draft');
+            setThumbnailPreview(initialData.thumbnail_url ?? null);
+            
+            console.log('Category ID:', initialData.category_id?.toString()); // Debug log
+        }
+    }, [initialData]);
 
     useEffect(() => {
         const loadAuthors = async () => {
@@ -100,7 +142,7 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
             };
             reader.readAsDataURL(file);
         } else {
-            setThumbnailPreview(initialData?.thumbnail_url || null);
+            setThumbnailPreview(initialData?.thumbnail_url ?? null);
         }
     };
 
@@ -172,8 +214,10 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
         formData.append('category_id', categoryId); 
         if (selectedTags.size > 0) {
             formData.append('tagIds', Array.from(selectedTags).join(','));
+        } else {
+            formData.append('tagIds', ''); // Send empty string if no tags selected
         }
-         formData.append('authorIds', Array.from(selectedAuthors).join(',')); 
+        formData.append('authorIds', Array.from(selectedAuthors).join(',')); 
         if (totalDuration) formData.append('total_duration_hhmm', totalDuration);
         formData.append('status', status);
 
@@ -195,6 +239,7 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
 
             router.push('/admin/courses');
         } catch (err: unknown) {
+            console.error('Course save error:', err); // Add logging
             setError(err instanceof Error ? err.message : `Failed to ${isEditMode ? 'update' : 'create'} course.`);
         } finally {
             setIsLoading(false);
@@ -218,19 +263,19 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                                 <Textarea
                                     id="course-description"
                                     label="Description"
-                                    value={description || ''}
+                                    value={description ?? ''}
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={5}
                                 />
                                 {status === 'draft' && <p className="text-xs text-gray-500">Required for publishing</p>}
                             </div>
                              <div className="space-y-2">
-                                <Input id="intro-video-url" label='Intro Video URL (YouTube)' value={introVideoUrl || ''} onChange={(e) => setIntroVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                                <Input id="intro-video-url" label='Intro Video URL (YouTube)' value={introVideoUrl ?? ''} onChange={(e) => setIntroVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                             </div>
                             <div className="space-y-2">
                                 <Input
                                     id="total-duration"
-                                    value={totalDuration || ''}
+                                    value={totalDuration ?? ''}
                                     label='Total Duration'
                                     onChange={(e) => setTotalDuration(e.target.value)}
                                     placeholder="HH:MM (e.g., 02:30)"
@@ -284,9 +329,12 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                         <CardBody className="space-y-4">
                             <div className="space-y-2">
                                 <Select 
-                                    label='Status' 
-                                    value={status} 
-                                    onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
+                                    label='Status'
+                                    selectedKeys={[status]}
+                                    onSelectionChange={(keys) => {
+                                        const selected = Array.from(keys)[0];
+                                        setStatus(selected as 'draft' | 'published');
+                                    }}
                                 >
                                     <SelectItem key="draft">Draft</SelectItem>
                                     <SelectItem key="published">Published</SelectItem>
@@ -325,10 +373,13 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                         </CardHeader>
                         <CardBody>
                             <Select 
-                                label="Category" // Add label
+                                label="Category"
                                 placeholder="Choose a category..."
-                                value={categoryId} 
-                                onChange={(e) => setCategoryId(e.target.value)} 
+                                selectedKeys={categoryId ? [categoryId] : []}
+                                onSelectionChange={(keys) => {
+                                    const selected = Array.from(keys)[0];
+                                    setCategoryId(selected?.toString());
+                                }}
                                 required
                             >
                                 {categories.map(category => ( 
@@ -345,15 +396,19 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                             <h2 className="text-lg font-semibold">Tags</h2>
                         </CardHeader>
                         <CardBody className="space-y-2 max-h-48 overflow-y-auto">
-                            {tags.map(tag => (
-                                <Checkbox 
-                                    key={tag.id}
-                                    isSelected={selectedTags.has(tag.id.toString())} 
-                                    onChange={() => handleTagChange(tag.id.toString())}
-                                >
-                                    {tag.name}
-                                </Checkbox>
-                            ))}
+                            {tags.map(tag => {
+                                const tagIdStr = tag.id.toString();
+                                const isSelected = selectedTags.has(tagIdStr);
+                                return (
+                                    <Checkbox 
+                                        key={tag.id}
+                                        isSelected={isSelected}
+                                        onChange={() => handleTagChange(tagIdStr)}
+                                    >
+                                        {tag.name}
+                                    </Checkbox>
+                                );
+                            })}
                             {tags.length === 0 && <p className="text-sm text-gray-500 text-center">No tags created yet.</p>}
                         </CardBody>
                     </Card>

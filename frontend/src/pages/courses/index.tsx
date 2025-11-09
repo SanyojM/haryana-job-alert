@@ -92,7 +92,7 @@ const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
     return (
         <div className="bg-white min-h-screen">
             <Header />
-            <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-4 py-8 mt-5">
                 <div className="text-center mb-8">
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Available Courses</h1>
                     <p className="text-gray-600 text-lg">
@@ -101,7 +101,7 @@ const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
                 </div>
 
                 {/* Search and Filter Section */}
-                <div className="mb-8 space-y-4">
+                <div className="mb-2 space-y-4">
                     {/* Search Bar */}
                     <div className="relative max-w-2xl mx-auto">
                         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -126,14 +126,15 @@ const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
                     {/* Category and Pricing Filters */}
                     <div className="flex flex-col gap-4">
                         {/* Category Filter */}
-                        <div className="flex flex-wrap items-center justify-center gap-3">
-                            <div className="flex items-center gap-2 text-gray-600 font-medium">
+                        <div className="flex flex-nowrap items-center justify-center gap-3">
+                            <div className="flex flex-nowrap items-center gap-2 text-gray-600 font-medium">
                                 <Filter className="w-4 h-4" />
-                                <span className="text-sm">Category:</span>
+                                <span className="text-sm text-nowrap">Category:</span>
                             </div>
-                            <button
+                            <div className="max-w-180 overflow-x-auto flex space-x-2 flex-nowrap">
+                                <button
                                 onClick={() => setSelectedCategory("all")}
-                                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                                className={`px-4 py-2 rounded-lg font-medium text-nowrap text-sm transition-all ${
                                     selectedCategory === "all"
                                         ? "bg-indigo-600 text-white shadow-md"
                                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -145,7 +146,7 @@ const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
                                 <button
                                     key={category}
                                     onClick={() => setSelectedCategory(category)}
-                                    className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                                    className={`px-4 py-2 rounded-lg font-medium text-nowrap text-sm transition-all ${
                                         selectedCategory === category
                                             ? "bg-indigo-600 text-white shadow-md"
                                             : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -154,87 +155,45 @@ const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
                                     {category}
                                 </button>
                             ))}
+                            </div>
                         </div>
 
                         {/* Pricing Filter */}
-                        <div className="flex flex-wrap items-center justify-center gap-3">
-                            <div className="flex items-center gap-2 text-gray-600 font-medium">
-                                <span className="text-sm">Pricing:</span>
-                            </div>
+                        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 mt-8">
                             <button
                                 onClick={() => setSelectedPricing("all")}
                                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
                                     selectedPricing === "all"
-                                        ? "bg-indigo-600 text-white shadow-md"
+                                        ? "bg-black text-white shadow-md"
                                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                 }`}
                             >
-                                All Courses
+                                ALL
                             </button>
                             <button
                                 onClick={() => setSelectedPricing("free")}
                                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
                                     selectedPricing === "free"
-                                        ? "bg-green-600 text-white shadow-md"
+                                        ? "bg-black text-white shadow-md"
                                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                 }`}
                             >
-                                Free Only
+                                FREE
                             </button>
                             <button
                                 onClick={() => setSelectedPricing("paid")}
                                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
                                     selectedPricing === "paid"
-                                        ? "bg-purple-600 text-white shadow-md"
+                                        ? "bg-black text-white shadow-md"
                                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                 }`}
                             >
-                                Paid Only
+                                PAID
                             </button>
                         </div>
                     </div>
 
-                    {/* Active Filters Display */}
-                    {(searchQuery || selectedCategory !== "all" || selectedPricing !== "all") && (
-                        <div className="flex items-center justify-center gap-3 flex-wrap">
-                            <span className="text-sm text-gray-600">Active filters:</span>
-                            {searchQuery && (
-                                <span className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
-                                    Search: &quot;{searchQuery}&quot;
-                                    <button onClick={() => setSearchQuery("")} aria-label="Remove search filter">
-                                        <X className="w-4 h-4" />
-                                    </button>
-                                </span>
-                            )}
-                            {selectedCategory !== "all" && (
-                                <span className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
-                                    Category: {selectedCategory}
-                                    <button onClick={() => setSelectedCategory("all")} aria-label="Remove category filter">
-                                        <X className="w-4 h-4" />
-                                    </button>
-                                </span>
-                            )}
-                            {selectedPricing !== "all" && (
-                                <span className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                                    Pricing: {selectedPricing === "free" ? "Free" : "Paid"}
-                                    <button onClick={() => setSelectedPricing("all")} aria-label="Remove pricing filter">
-                                        <X className="w-4 h-4" />
-                                    </button>
-                                </span>
-                            )}
-                            <button
-                                onClick={clearFilters}
-                                className="text-sm text-indigo-600 hover:text-indigo-800 font-medium underline"
-                            >
-                                Clear all
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Results Count */}
-                    <div className="text-center text-sm text-gray-600">
-                        Showing {filteredCourses.length} of {courses.length} courses
-                    </div>
+                    
                 </div>
 
                 {filteredCourses.length === 0 ? (
@@ -256,9 +215,9 @@ const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
                         )}
                     </div>
                 ) : (
-                    <div className="flex overflow-x-auto scrollbar-hide gap-3 py-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 scrollbar-hide gap-5 py-2">
                         {filteredCourses.map((course) => (
-                        <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col flex-shrink-0 w-[70%] md:w-[32%] shadow-sm">
+                        <div key={course.id} className="bg-white p-2 rounded-2xl overflow-hidden flex flex-col flex-shrink-0 shadow-sm">
                             <div className="relative">
                                 <Image
                                     src={course?.thumbnail_url || ''}
@@ -272,19 +231,15 @@ const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
 
                             <div className="py-5 px-1 flex flex-col flex-grow justify-between">
                                 <div className="flex justify-between items-start mb-2 flex-col sm:flex-row">
-                                    <h3 className="md:text-md text-sm font-bold text-gray-800 leading-tight">
+                                    <h3 className="text-xl font-bold text-gray-800 leading-tight">
                                         {course?.title}
                                     </h3>
-                                    <div className="flex items-center gap-1 text-sm text-gray-600 flex-shrink-0 ml-2">
-                                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                                        <span>{course?.rating} ({course?.reviews})</span>
-                                    </div>
                                 </div>
                                 <p className="md:text-sm text-xs text-gray-500 mb-3">{course?.description}</p>
 
                                 <div className="flex items-center gap-2 mb-4">
-                                    <Image src={course.authors?.[0]?.avatar_url || ''} width={40} height={40} alt={course.authors?.[0]?.full_name || 'Instructor'} className="w-7 h-7 rounded-full" unoptimized />
-                                    <span className="text-sm text-gray-700">By {course.authors.map(name => name.full_name) || 'Unknown Instructor'}</span>
+                                    <Image src={'/logo.png'} width={40} height={40} alt={course.authors?.[0]?.full_name || 'Instructor'} className="w-9 h-9 rounded-full" unoptimized />
+                                    <span className="text-sm text-gray-700">By {course.authors.map(name => name.full_name ).join(', ') || 'Unknown Instructor'}</span>
                                 </div>
 
                                 <div className="flex md:items-center gap-3 mb-5 flex-col sm:flex-row">
@@ -323,6 +278,11 @@ const CoursesHomePage: NextPage<CoursesHomePageProps> = ({ courses }) => {
                     ))}
                 </div>
                 )}
+
+                {/* Results Count */}
+                <div className="text-center text-sm text-gray-600 mt-5">
+                    Showing {filteredCourses.length} of {courses.length} courses
+                </div>
             </main>
             <Footer />
         </div>

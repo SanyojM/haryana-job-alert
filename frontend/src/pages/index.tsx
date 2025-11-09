@@ -109,7 +109,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, series, courses }) => {
             <FaqSection />
             </div>
           <div className="lg:col-span-1 ml-18">
-            <Sidebar />
+            <Sidebar courses={courses} />
           </div>
         </div>
         <div>

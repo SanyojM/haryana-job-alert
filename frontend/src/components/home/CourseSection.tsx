@@ -81,16 +81,12 @@ const CourseSection: React.FC<CoursesHomePageProps> = ({ courses }) => {
                                     <h3 className="md:text-md text-sm font-bold text-gray-800 leading-tight">
                                         {course.title}
                                     </h3>
-                                    <div className="flex items-center gap-1 text-sm text-gray-600 flex-shrink-0 ml-2">
-                                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                                        <span>{course.rating} ({course.reviews})</span>
-                                    </div>
                                 </div>
                                 <p className="md:text-sm text-xs text-gray-500 mb-3 line-clamp-2">{course.description}</p> {/* Added line-clamp */}
 
                                 <div className="flex items-center gap-2 mb-4">
                                     <Image 
-                                      src={course.authors?.[0]?.avatar_url || '/default-avatar.png'} // Added fallback
+                                      src={'/logo.png'} // Added fallback
                                       width={40} height={40} 
                                       alt={course.authors?.[0]?.full_name || 'Author'} // Added fallback
                                       className="w-7 h-7 rounded-full" 
@@ -124,7 +120,7 @@ const CourseSection: React.FC<CoursesHomePageProps> = ({ courses }) => {
                                     >
                                         View Course
                                     </Link>
-                                    <button className="p-3 rounded-lg bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-500 transition-colors">
+                                    <button title='Heart' className="p-3 rounded-lg bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-500 transition-colors">
                                         <Heart className="w-5 h-5" />
                                     </button>
                                 </div>
@@ -135,9 +131,9 @@ const CourseSection: React.FC<CoursesHomePageProps> = ({ courses }) => {
 
                 <div className="text-center mt-12">
                     <Link href="/courses">
-                        <Button as="a" variant="bordered" className="bg-gray-100 border-2 border-gray-300 rounded-xl px-12 py-3 font-semibold text-gray-800 hover:bg-gray-100 hover:border-gray-400 transition-all shadow-sm">
+                        <span className="bg-gray-100 border-2 border-gray-300 rounded-xl px-12 py-3 font-semibold text-gray-800 hover:bg-gray-100 hover:border-gray-400 transition-all shadow-sm">
                             View More
-                        </Button>
+                        </span>
                     </Link>
                 </div>
                 <div className='mt-10 md:hidden'>
