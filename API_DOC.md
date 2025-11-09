@@ -39,6 +39,34 @@ Handles fetching user information (primarily for admin purposes).
     ]
     ```
 
+### Get All Users (Admin)
+
+-   **Route:** `GET /users`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Retrieves a list of *all* registered users (both students and admins), ordered by creation date.
+-   **Returns:** An array of user objects (excluding password hashes).
+
+### Update User Details (Admin)
+
+-   **Route:** `PUT /users/:id`
+-   **Authentication:** **JWT Required** with **`admin`** role.
+-   **Description:** Updates details for a specific user, including their role, name, email, or password.
+-   **URL Parameters:**
+    -   `id` (number): The ID of the user to update.
+-   **Request Body:** `application/json` (All fields are optional)
+    ```json
+    {
+      "full_name": "New Name",
+      "email": "new.email@example.com",
+      "role": "student",
+      "password": "a-new-strong-password"
+    }
+    ```
+-   **Returns:** The updated user object (excluding the password hash).
+-   **Errors:**
+    -   `404 Not Found`: If the user ID does not exist.
+    -   `409 Conflict`: If the new email is already in use by another user.
+
 ## 🔐 Auth API
 
 Handles user authentication, including signup, login, and profile management.
