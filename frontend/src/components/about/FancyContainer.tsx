@@ -69,22 +69,7 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
                       </span>
                   </button>
                   <div className="flex items-center my-6 sm:my-0">
-                    <div className="flex -space-x-3">
-                        <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 1" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
-                        <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 2" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
-                        <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 3" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
-                        <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 4" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
-                    </div>
-                    <div className="ml-4 text-center">
-                        <div className="flex text-yellow-300">
-                            <Star size={16} fill="currentColor" />
-                            <Star size={16} fill="currentColor" />
-                            <Star size={16} fill="currentColor" />
-                            <Star size={16} fill="currentColor" />
-                            <Star size={16} fill="currentColor" />
-                        </div>
-                        <p className="text-xs font-medium">Join us now</p>
-                    </div>
+                    <img src="/loved.jpg" alt="" className="h-10"/>
                 </div>
 
               </div>
@@ -153,22 +138,7 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
                       </span>
                   </button>
                   <div className="flex items-center my-6 sm:my-0">
-                    <div className="flex -space-x-3">
-                        <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 1" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
-                        <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 2" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
-                        <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 3" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
-                        <Image src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1064&auto=format&fit=crop&ixlib-rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="User 4" width={32} height={32} className="rounded-full border-2 border-white/50 object-cover" />
-                    </div>
-                    <div className="ml-4 text-center">
-                        <div className="flex text-yellow-300">
-                            <Star size={16} fill="currentColor" />
-                            <Star size={16} fill="currentColor" />
-                            <Star size={16} fill="currentColor" />
-                            <Star size={16} fill="currentColor" />
-                            <Star size={16} fill="currentColor" />
-                        </div>
-                        <p className="text-xs font-medium">Join us now</p>
-                    </div>
+                    <img src="/loved.jpg" alt="" className="h-10"/>
                 </div>
 
               </div>

@@ -33,6 +33,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { api } from "@/lib/api";
 import { AuthDialog } from "@/components/auth/AuthDialog";
+import { SearchDialog } from "./SearchDialog";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -47,6 +48,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+  const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const currentPath = usePathname();
   const { logout } = useAuth();
@@ -125,20 +127,20 @@ export default function Header() {
             // @ts-ignore
             fetchpriority="high"
           >
-            <div className="absolute top-6 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
+            <div className="absolute top-13 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-3xl sm:text-4xl font-bold text-white z-10 flex items-center">
                 <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
                 <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
               </h1>
-              <img src="/header-arrow.jpg" alt="" className="h-4 w-30 sm:w-40 object-cover -mt-2 sm:-mt-3 -mr-10 sm:mr-0" />
+              <img src="/header-arrow.jpg" alt="" className="h-4 w-30 sm:w-40 object-cover -mt-2 sm:-mt-3 -mr-10 sm:mr-0 lg:block hidden" />
             </div>
 
             <div className="absolute lg:block playfair text-xl !font-light hidden top-14 text-white left-[65vw] z-20">
               theharyana<span className="text-[#fdf500]">jobalert</span>.com
             </div>
 
-            <a href='https://softricity.in' className="text-white shine inline-flex items-center rounded-xl h-8 text-xs px-1 sm:text-sm absolute top-17 sm:top-24 left-63 sm:left-[85vw]">
-              <span className="lg:inline hidden">Powered by</span> <img src="/softricity.png" alt="" className='ml-0 sm:ml-2 inline h-15 w-[100px] object-cover' />
+            <a href='https://softricity.in' className="text-white shine inline-flex items-center rounded-xl h-8 text-xs px-1 sm:text-sm absolute top-4 sm:top-24 left-1/2 translate-x-[-50%] sm:translate-x-0 sm:left-[85vw]">
+              <span className="lg:inline hidden">Powered by</span> <img src="/softricity.png" alt="" className='ml-0 sm:ml-2 inline h-7 sm:h-15 w-23 sm:w-[100px] object-cover' />
             </a>
           </div>
         </div>
@@ -281,12 +283,13 @@ export default function Header() {
                         />
                       </button>
                     )}
-                    <Link
-                      href="#"
-                      className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md"
+                    <button
+                      onClick={() => setIsSearchDialogOpen(true)}
+                      className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md transition-colors"
+                      aria-label="Search posts"
                     >
                       <Search className="w-5 h-5" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -307,6 +310,7 @@ export default function Header() {
                     <Menu className="w-5 h-5" />
                   )}
                 </button>
+                <div className="flex items-center">
                 {isLoggedIn ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -378,6 +382,14 @@ export default function Header() {
                     />
                   </button>
                 )}
+                <button
+                  onClick={() => setIsSearchDialogOpen(true)}
+                  className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md transition-colors"
+                  aria-label="Search posts"
+                  >
+                  <Search className="w-5 h-5" />
+                </button>
+                  </div>
               </div>
             </div>
           </div>
@@ -457,6 +469,12 @@ export default function Header() {
         <AuthDialog
           open={isAuthDialogOpen}
           onOpenChange={setIsAuthDialogOpen}
+        />
+
+        {/* Search Dialog */}
+        <SearchDialog
+          open={isSearchDialogOpen}
+          onOpenChange={setIsSearchDialogOpen}
         />
       </header>
     </>

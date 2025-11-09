@@ -155,14 +155,15 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
           </div>
 
           {/* Category Filter */}
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center gap-2 text-gray-600 font-medium">
+          <div className="flex flex-nowrap items-center justify-center gap-3">
+            <div className="flex flex-nowrap items-center gap-2 text-gray-600 font-medium">
               <Filter className="w-4 h-4" />
-              <span className="text-sm">Filter by:</span>
+              <span className="text-sm text-nowrap">Filter by:</span>
             </div>
-            <button
+            <div className="w-180 max-w-180 overflow-x-auto flex space-x-2 whitespace-nowrap">
+              <button
               onClick={() => setSelectedCategory("all")}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+              className={`px-4 py-2 rounded-lg font-medium text-sm text-nowrap transition-all ${
                 selectedCategory === "all"
                   ? "bg-indigo-600 text-white shadow-md"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -174,7 +175,7 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                className={`px-4 py-2 rounded-lg font-medium text-sm text-nowrap transition-all ${
                   selectedCategory === category
                     ? "bg-indigo-600 text-white shadow-md"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -183,40 +184,7 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
                 {category}
               </button>
             ))}
-          </div>
-
-          {/* Active Filters Display */}
-          {(searchQuery || selectedCategory !== "all") && (
-            <div className="flex items-center justify-center gap-3 flex-wrap">
-              <span className="text-sm text-gray-600">Active filters:</span>
-              {searchQuery && (
-                <span className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
-                  Search: &quot;{searchQuery}&quot;
-                  <button onClick={() => setSearchQuery("")} aria-label="Remove search filter">
-                    <X className="w-4 h-4" />
-                  </button>
-                </span>
-              )}
-              {selectedCategory !== "all" && (
-                <span className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
-                  Category: {selectedCategory}
-                  <button onClick={() => setSelectedCategory("all")} aria-label="Remove category filter">
-                    <X className="w-4 h-4" />
-                  </button>
-                </span>
-              )}
-              <button
-                onClick={clearFilters}
-                className="text-sm text-indigo-600 hover:text-indigo-800 font-medium underline"
-              >
-                Clear all
-              </button>
             </div>
-          )}
-
-          {/* Results Count */}
-          <div className="text-center text-sm text-gray-600">
-            Showing {filteredSeries.length} of {series.length} test series
           </div>
         </div>
 
@@ -331,6 +299,11 @@ const MockTestsHomePage: NextPage<MockTestsHomePageProps> = ({ series }) => {
             })}
           </div>
         )}
+
+        {/* Results Count */}
+        <div className="text-center text-sm text-gray-600 mt-3">
+          Showing {filteredSeries.length} of {series.length} test series
+        </div>
       </main>
       <Footer />
     </div>

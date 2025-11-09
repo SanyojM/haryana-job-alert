@@ -1,24 +1,48 @@
 import AdBanner from "./AdBanner";
 import CourseSection from "../sidebar/CourseSection";
 import HaryanaYojnaSection from "../sidebar/HaryanaYojnaSection";
-import { cn } from "@/lib/utils"; // 1. Import the cn utility
+import { cn } from "@/lib/utils";
 
-// 2. Define the props interface
-interface SidebarProps {
-  className?: string;
+// Define the PublicCourse interface
+interface CourseCategory {
+  id: number | string;
+  name: string;
 }
 
-// 3. Accept className as a prop
-export default function Sidebar({ className }: SidebarProps) {
+interface PublicCourse {
+  id: number | string;
+  title: string;
+  slug: string;
+  thumbnail_url: string | null;
+  description?: string | null;
+  pricing_model: 'free' | 'paid';
+  regular_price?: number | null;
+  sale_price?: number | null;
+  category?: CourseCategory;
+  authors: { full_name: string; avatar_url: string }[];
+  tags: { tag: { name: string } }[];
+  enrolled_users_count?: number;
+  lesson_count?: number;
+  total_duration_hhmm?: string | null;
+  rating: number;
+  reviews: number;
+  offerEndsSoon?: boolean;
+}
+
+interface SidebarProps {
+  className?: string;
+  courses?: PublicCourse[];
+}
+
+export default function Sidebar({ className, courses = [] }: SidebarProps) {
     return (
-        // 4. Use cn to merge default classes with the passed prop
         <aside className={cn(
-            "w-full hidden lg:flex flex-col gap-6", // Your default classes
-            className  // Your conditional classes
+            "w-full hidden lg:flex flex-col gap-6",
+            className
         )}>
             <HaryanaYojnaSection />
             {/* <AdBanner text="Google Ad Section" className="h-88" /> */}
-            <CourseSection />
+            <CourseSection courses={courses} />
             {/* <AdBanner text="Google Ad Section" className="h-64" /> */}
             {/* <AdBanner text="Google Ad Section" className="h-220" /> */}
             {/* <AdBanner text="Google Ad Section" className="h-422" /> */}

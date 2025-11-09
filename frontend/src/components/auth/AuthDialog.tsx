@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -124,7 +125,8 @@ export function AuthDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="min-w-[300px] sm:min-w-[800px] bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] border-0 rounded-3xl shadow-lg overflow-hidden [&>button]:hidden p-3 sm:p-6">
+      <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-lg z-50" />
+      <DialogContent className="min-w-[300px] sm:min-w-[800px] bg-gradient-to-b from-[#1c1e47] via-[#2b2d6c] to-[#34387e] border-0 rounded-3xl shadow-lg [&>button]:hidden p-3 sm:p-6">
         <DialogTrigger >
           <div className="text-white text-2xl font-light hover:text-gray-300 transition-colors">
             <X
@@ -148,6 +150,7 @@ export function AuthDialog({
           </DialogTrigger>
         </div>
         <div className="grid grid-cols-1 sm:[grid-template-columns:1.5fr_1fr] gap-4">
+          <img src="/baccha.jpg" alt="" className="absolute w-30 -right-29.5 bottom-3" />
           <div>
             <div className="grid grid-cols-3 items-center">
               <div className="flex flex-row sm:flex-col sm:ml-5 sm:col-span-2 sm:mt-4">
