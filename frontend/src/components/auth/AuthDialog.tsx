@@ -150,7 +150,7 @@ export function AuthDialog({
           </DialogTrigger>
         </div>
         <div className="grid grid-cols-1 sm:[grid-template-columns:1.5fr_1fr] gap-4">
-          <img src="/baccha.jpg" alt="" className="absolute w-30 -right-29.5 bottom-3" />
+          <img src="/baccha.jpg" alt="" className="absolute w-30 -right-29.5 bottom-3 lg:block hidden" />
           <div>
             <div className="grid grid-cols-3 items-center">
               <div className="flex flex-row sm:flex-col sm:ml-5 sm:col-span-2 sm:mt-4">

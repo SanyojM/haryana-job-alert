@@ -151,7 +151,6 @@ const CourseLearnPage: NextPage<CourseLearnPageProps> = ({ slug }) => {
                 <main className="col-span-12 lg:col-span-9 flex flex-col bg-white overflow-y-auto">
                     {/* Enhanced Video Player Area */}
                     <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black relative">
-                        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
                         <LessonContent lesson={selectedLesson} />
                     </div>
 
