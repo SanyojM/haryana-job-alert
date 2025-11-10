@@ -40,7 +40,7 @@ const navLinks = [
   { name: "Latest Jobs", href: "/category/latest-jobs" },
   { name: "Yojna", href: "/category/yojna" },
   { name: "Offline Forms", href: "/offline-forms" },
-  { name: "Courses", href: "/courses" },
+  { name: "Results", href: "/category/results" },
   { name: "Mock Test", href: "/mock-tests" },
 ];
 
@@ -127,7 +127,7 @@ export default function Header() {
             // @ts-ignore
             fetchpriority="high"
           >
-            <div className="absolute top-15 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
+            <div className="absolute top-10 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-3xl sm:text-4xl font-bold text-white z-10 flex items-center">
                 <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
                 <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
@@ -138,10 +138,10 @@ export default function Header() {
             <div className="absolute lg:block playfair text-xl !font-light hidden top-14 text-white left-[65vw] z-20">
               theharyana<span className="text-[#fdf500]">jobalert</span>.com
             </div>
-
+{/* 
             <a href='https://softricity.in' className="text-white shine inline-flex items-center rounded-xl h-8 text-xs px-1 sm:text-sm absolute top-4 sm:top-24 left-1/2 translate-x-[-50%] sm:translate-x-0 sm:left-[85vw]">
               <span className="lg:inline hidden">Powered by</span> <img src="/softricity.png" alt="" className='ml-0 sm:ml-2 inline h-7 sm:h-15 w-23 sm:w-[100px] object-cover' />
-            </a>
+            </a> */}
           </div>
         </div>
 
@@ -190,7 +190,7 @@ export default function Header() {
                            categories
                              .filter((cat) => {
                                const name = (cat.name || "").toLowerCase();
-                               return name !== "yojna" && name !== "latest jobs";
+                               return name !== "yojna" && name !== "latest jobs" && name !== "results";
                              })
                              .map((category) => (
                                <Link
@@ -430,7 +430,7 @@ export default function Header() {
                        categories
                          ?.filter((cat) => {
                            const name = (cat.name || "").toLowerCase();
-                           return name !== "yojna" && name !== "latest jobs";
+                           return name !== "yojna" && name !== "latest jobs" && name !== "results";
                          })
                          .map((category) => (
                            <Link

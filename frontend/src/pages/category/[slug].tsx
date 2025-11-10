@@ -136,7 +136,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
       </Head>
 
       <Header />
-      <main className="max-w-6xl mx-auto md:mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4">
+      <main className="max-w-6xl mx-auto md:mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4 mb-10">
         <div className="lg:col-span-3">
           <Breadcrumb className="mb-6">
             <BreadcrumbList>
@@ -259,14 +259,30 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500 mb-1">
                             {post.post_tags && post.post_tags.length > 0 && (
                               <div className="flex flex-wrap mt-2">
-                                {post.post_tags.slice(0, 2).map((pt) => (
-                                  <span
-                                    key={(pt as any).tags.id}
-                                    className='text-xs text-gray-500'
-                                  >
-                                    {(pt as any).tags.name}
-                                  </span>
-                                ))}
+                                {post.post_tags
+                                  .map(pt => (pt as any).tags.name)
+                                  .map((tagName: string) => {
+                                    const styles = [
+                                      "text-xs bg-pink-100 text-pink-800",
+                                      "text-xs bg-blue-100 text-blue-800",
+                                      "text-xs bg-green-100 text-green-800",
+                                      "text-xs bg-yellow-100 text-yellow-800",
+                                      "text-xs bg-indigo-100 text-indigo-800",
+                                      "text-xs bg-purple-100 text-purple-800",
+                                      "text-xs bg-amber-100 text-amber-800",
+                                      "text-xs bg-rose-100 text-rose-800"
+                                    ];
+                                    const hash = Array.from(tagName).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+                                    const cls = styles[hash % styles.length];
+                                    return (
+                                      <span
+                                        key={tagName}
+                                        className={`${cls} px-2 py-1 rounded-full mr-2 mb-2`}
+                                      >
+                                        {tagName}
+                                      </span>
+                                    );
+                                  })}
                               </div>
                             )}
                             {post.created_at && (

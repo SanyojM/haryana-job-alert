@@ -104,7 +104,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, series, courses }) => {
             <MockTestSection series={series} />
             {/* <AdBanner text="Google Ads Section" className="h-32" /> */}
             {/* <CurrentAffairsSection /> */}
-            <CourseSection courses={courses} />
+            {/* <CourseSection courses={courses} /> */}
             <AboutSection />
             <FaqSection />
             </div>

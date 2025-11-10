@@ -42,7 +42,7 @@ export default function Sidebar({ className, courses = [] }: SidebarProps) {
         )}>
             <HaryanaYojnaSection />
             {/* <AdBanner text="Google Ad Section" className="h-88" /> */}
-            <CourseSection courses={courses} />
+            {/* <CourseSection courses={courses} /> */}
             {/* <AdBanner text="Google Ad Section" className="h-64" /> */}
             {/* <AdBanner text="Google Ad Section" className="h-220" /> */}
             {/* <AdBanner text="Google Ad Section" className="h-422" /> */}
