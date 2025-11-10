@@ -19,8 +19,8 @@ export default function Document() {
           gtag('config', 'G-Y96FVJBE7W');
           `}
         </Script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225"
-     crossorigin="anonymous"></script>
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225"
+     crossOrigin="anonymous"></Script>
       </Head>
       <body>
         <Main />
