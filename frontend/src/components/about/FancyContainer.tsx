@@ -78,7 +78,7 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
         </div>
       </div>
 
-      <div
+      {/* <div
         className={`relative p-10 max-w-5xl mx-auto min-h-[350px] h-[436px] md:h-[0] sm:h-[0] bg-gradient-to-r from-[#93291e] to-[#ed213a] rounded-[50px] ${className}`}
         >
         <div className="absolute top-0 -right-[10px] w-[80px] h-[100px] bg-white rounded-bl-[50px]" />
@@ -145,7 +145,7 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
           </div>
           <img src="/js.png" alt="" className="w-[150px] md:w-[330px] sm:w-[330px] h-[150px] sm:h-[310px] -mt-12 sm:mt-0 object-cover self-end" />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
