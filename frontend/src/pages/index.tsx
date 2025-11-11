@@ -114,7 +114,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, series, courses }) => {
         </div>
         <div>
           {/* <ProfileCard /> */}
-          <FancyContainer/>
+          {/* <FancyContainer/> */}
         </div>
       </main>
       <Footer />

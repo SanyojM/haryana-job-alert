@@ -8,7 +8,7 @@ export default function ContactUsPage() {
         <div className="bg-white">
             <Header />
             <section className="py-12 px-4 md:px-0 container mx-auto max-w-5xl">
-                <FancyContainer />
+                {/* <FancyContainer /> */}
                 <div>
                     <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center mb-10">
                         Contact Us

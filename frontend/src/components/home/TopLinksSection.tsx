@@ -14,18 +14,18 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
   const [showSignupForm, setShowSignupForm] = useState(false);
   const { user } = useAuth();
   return (
-    <section className="bg-white pb-8 px-4 sm:px-6 lg:px-8 mt-0">
+    <section className="bg-white pb-2 px-2 sm:px-6 lg:px-8 mt-0">
       <div className="max-w-5xl mx-auto text-center">
-        <div className="flex items-center justify-center gap-4 mb-6 mt-8 sm:-mt-6">
+        <div className="flex items-center justify-center gap-4 mb-6 mt-0 sm:-mt-6 px-6 sm:px-0 -space-x-6 sm:space-x-0">
 
-        <img src="/leftarrow.png" alt="" className='inline w-17 h-12 object-cover mt-10' />
+        <img src="/leftarrow.png" alt="" className='inline w-17 h-12 object-cover mt-10 sm:rotate-0 rotate-[-30deg]' />
         <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
           Haryana <span className="text-red-500">Job</span> Alert is a <span className="text-red-500">FREE</span> Website to get
         </h1>
-        <img src="/rightarrow.png" alt="" className='inline w-17 h-12 object-cover mt-10' />
+        <img src="/rightarrow.png" alt="" className='inline w-17 h-12 object-cover mt-10 sm:rotate-0 rotate-[30deg]' />
         </div>
 
-        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-2 justify-center">
+        <div className="flex flex-wrap gap-x-3 gap-y-2 justify-center">
           {/* Map over the dynamic categories to create links */}
           {categories.map((category) => (
             <Link
@@ -34,18 +34,18 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
               passHref
               legacyBehavior
             >
-              <a className="inline-flex items-center justify-center text-gray-700 font-semibold hover:scale-105 hover:text-gray-900 transition-transform duration-200">
+              <span className="inline-flex items-center justify-center text-gray-700 font-semibold hover:scale-105 hover:text-gray-900 transition-transform duration-200">
                 <CheckCircle2 className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" />
-                <span className="whitespace-nowrap underline decoration-gray-300 transition-all text-md text-center">
+                <span className="whitespace-nowrap underline decoration-gray-300 transition-all text-sm sm:text-md text-center">
                   {category.name}
                 </span>
-                <ArrowUpRight className="min-w-4 min-h-4 w-4 h-4 text-gray-400 ml-1" />
-              </a>
+                <ArrowUpRight className="min-w-4 min-h-4 w-4 h-4 text-gray-400" />
+              </span>
             </Link>
           ))}
         </div>
 
-        <p className="my-10 text-gray-800 font-semibold text-md text-center gap-2">
+        <p className="mt-10 hidden sm:block text-gray-800 font-semibold text-md text-center gap-2">
           You can freely use this website without registration or login
           <span className="relative inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full ml-2">
             <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-red-600 animate-ping"></span>
@@ -53,7 +53,7 @@ export default function TopLinksSection({ categories }: TopLinksSectionProps) {
           </span>
         </p>
 
-        <div className="mt-8 flex items-center justify-center gap-4">
+        <div className="mt-5 hidden sm:flex items-center justify-center gap-4">
           {
             user?.id ? 
 

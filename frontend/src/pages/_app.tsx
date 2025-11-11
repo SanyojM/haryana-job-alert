@@ -91,7 +91,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </HeroUIProvider>
       ) : (
         <main className={poppins.className}>
-        <FloatingSocials />
+        {/* <FloatingSocials /> */}
         <Component {...pageProps} />
         </main>
       )}

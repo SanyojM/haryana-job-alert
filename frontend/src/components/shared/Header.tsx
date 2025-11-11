@@ -94,7 +94,7 @@ export default function Header() {
     <>
       <style jsx>{`
         .marquee-content {
-          animation: marquee 30s linear infinite;
+          animation: marquee 15s linear infinite;
         }
         @keyframes marquee {
           from {
@@ -108,7 +108,7 @@ export default function Header() {
 
       <header className="bg-white relative h-45 sm:h-60">
         <div className="bg-black text-white py-1 overflow-hidden whitespace-nowrap text-xs">
-          <div className="marquee-content flex">
+          <div className="marquee-content flex flex-row-reverse">
             {carouselItems.map((item) => (
               <div
                 key={item.id}
@@ -122,17 +122,36 @@ export default function Header() {
 
         <div>
           <div
-            className="relative bg-center bg-cover h-37 sm:h-35 w-full"
+            className="relative bg-center bg-cover h-27 sm:h-35 w-full"
+            // className="relative bg-center bg-cover h-27 sm:h-35 w-full bg-gradient-to-br from-[#0C342B] to-[#1D6F50]"
             style={{ backgroundImage: "url('/header.jpg')" }}
             // @ts-ignore
             fetchpriority="high"
           >
-            <div className="absolute top-10 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
+            <ul className="circles">
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+            </ul>
+            <div className="absolute top-6 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-3xl sm:text-4xl font-bold text-white z-10 flex items-center">
                 <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
                 <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
               </h1>
               <img src="/header-arrow.jpg" alt="" className="h-4 w-30 sm:w-40 object-cover -mt-2 sm:-mt-3 -mr-10 sm:mr-0 lg:block hidden" />
+
+              <span className="sm:hidden relative inline-flex -top-12 -right-16 items-center justify-center px-2.5 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full ml-2 ">
+                <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-red-600 animate-ping"></span>
+                LIVE
+              </span>
             </div>
 
             <div className="absolute lg:block playfair text-xl !font-light hidden top-14 text-white left-[65vw] z-20">

@@ -4,14 +4,14 @@ import { Post } from '@/pages/admin/posts'; // Import the Post type
 
 // An array of colors to cycle through for a dynamic but consistent look
 const colors = [
-  'from-[#5055CA] to-[#8B90F8]',
-  'from-[#4B90A9] to-[#7E9CC7]',
-  'from-[#222627] to-[#414245]',
+  'from-[#9B2821] to-[#EB2139]',
   'from-[#0C342B] to-[#1D6F50]',
-  'from-[#EB2139] to-[#9B2821]',
-  'from-[#0C342B] to-[#1D6F50]',
-  'from-[#4B90A9] to-[#7E9CC7]',
-  'from-[#EB2139] to-[#9B2821]',
+  'from-[#1c1e47] via-[#2b2d6c] to-[#34387e]',
+  'from-pink-500 to-purple-500',
+  'from-blue-600 to-indigo-500',
+  'from-[#f12711] to-[#f5af19]',
+  'from-[#4025CA] to-[#6b50d8]',
+  'from-teal-700 to-teal-500',
 ];
 
 const features = [
@@ -26,7 +26,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
   return (
     <section className="bg-white px-2">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6 mb-12">
+        <div className="grid grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6">
           {/* We now map over the 'posts' from the props */}
           {posts.slice(0, 8).map((post, index) => ( // Show up to 8 posts
             <Link
@@ -35,7 +35,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
               passHref
               legacyBehavior>
               <a
-                className={`shine relative py-2 sm:py-5 px-2 rounded-xl flex items-center justify-center text-white overflow-hidden shadow-lg hover:scale-105 transition-transform text-center duration-300 bg-gradient-to-r ${colors[index % colors.length]} ${index >= 6 ? 'hidden lg:flex' : ''}`} // Hide posts 7 and 8 on mobile
+                className={`shine relative py-4 sm:py-5 px-2 rounded-lg sm:rounded-xl flex items-center justify-center text-white overflow-hidden shadow-lg hover:scale-105 transition-transform text-center duration-300 bg-gradient-to-r ${colors[index % colors.length]} ${index >= 6 ? 'hidden lg:flex' : ''}`} // Hide posts 7 and 8 on mobile
               >
                 <div className="relative z-10">
                   <h3 className="font-semibold text-[12px] md:text-[15px] leading-tight text-wrap">{post.title}</h3>
@@ -49,7 +49,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
           ))}
         </div>
 
-        <div className="bg-[#0d0625] rounded-full px-2 py-4 shadow-xl hidden md:block">
+        <div className="bg-[#0d0625] rounded-full px-2 py-4 shadow-xl hidden md:block mt-8">
             <div className="flex items-center justify-between gap-4 px-4">
                 {features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-3 text-white justify-center w-full">
