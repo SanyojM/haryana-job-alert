@@ -28,25 +28,25 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6">
           {/* We now map over the 'posts' from the props */}
-          {posts.slice(0, 8).map((post, index) => ( // Show up to 8 posts
+            {posts.slice(0, 8).map((post, index) => ( // Show up to 8 posts
             <Link
               key={post.id}
               href={`/posts/${post.slug}`} // Use the dynamic slug for the link
               passHref
               legacyBehavior>
               <a
-                className={`shine relative py-4 sm:py-5 px-2 rounded-lg sm:rounded-xl flex items-center justify-center text-white overflow-hidden shadow-lg hover:scale-105 transition-transform text-center duration-300 bg-gradient-to-r ${colors[index % colors.length]} ${index >= 6 ? 'hidden lg:flex' : ''}`} // Hide posts 7 and 8 on mobile
+              className={`shine relative py-4 sm:py-5 px-2 rounded-lg sm:rounded-xl flex items-center justify-center text-white overflow-hidden shadow-lg hover:scale-105 transition-transform text-center duration-300 bg-gradient-to-r ${colors[index % colors.length]} ${index >= 6 ? 'hidden lg:flex' : ''}`} // Hide posts 7 and 8 on mobile
               >
-                <div className="relative z-10">
-                  <h3 className="font-semibold text-[12px] md:text-[15px] leading-tight text-wrap">{post.title}</h3>
-                  {/* The 'count' property doesn't exist on our dynamic posts, so it's removed */}
-                </div>
-                <div className="absolute top-1 right-1 w-5 h-5 bg-white/20 rounded-full items-center justify-center group-hover:opacity-100 transition-opacity sm:flex hidden">
-                  <ArrowUpRight className="w-4 h-4 text-white" />
-                </div>
+              <div className="relative z-10">
+                <h3 className="font-semibold text-[12px] md:text-[15px] leading-tight overflow-hidden line-clamp-3 md:line-clamp-2">{post.title}</h3>
+                {/* The 'count' property doesn't exist on our dynamic posts, so it's removed */}
+              </div>
+              <div className="absolute top-1 right-1 w-5 h-5 bg-white/20 rounded-full items-center justify-center group-hover:opacity-100 transition-opacity sm:flex hidden">
+                <ArrowUpRight className="w-4 h-4 text-white" />
+              </div>
               </a>
             </Link>
-          ))}
+            ))}
         </div>
 
         <div className="bg-[#0d0625] rounded-full px-2 py-4 shadow-xl hidden md:block mt-8">
