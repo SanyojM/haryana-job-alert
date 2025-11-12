@@ -41,7 +41,7 @@ const navLinks = [
   { name: "Yojna", href: "/category/yojna" },
   { name: "Offline Forms", href: "/offline-forms" },
   { name: "Results", href: "/category/results" },
-  { name: "Mock Test", href: "/mock-tests" },
+  { name: "Admit Cards", href: "/category/admit-cards" },
 ];
 
 export default function Header() {
@@ -209,7 +209,7 @@ export default function Header() {
                            categories
                              .filter((cat) => {
                                const name = (cat.name || "").toLowerCase();
-                               return name !== "yojna" && name !== "latest jobs" && name !== "results";
+                               return name !== "yojna" && name !== "latest jobs" && name !== "results" && name !== "admit cards";
                              })
                              .map((category) => (
                                <Link
@@ -449,7 +449,7 @@ export default function Header() {
                        categories
                          ?.filter((cat) => {
                            const name = (cat.name || "").toLowerCase();
-                           return name !== "yojna" && name !== "latest jobs" && name !== "results";
+                           return name !== "yojna" && name !== "latest jobs" && name !== "results" && name !== "admit cards";
                          })
                          .map((category) => (
                            <Link
