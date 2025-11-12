@@ -49,7 +49,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
             ))}
         </div>
 
-        <div className="bg-[#0d0625] rounded-full px-2 py-4 shadow-xl hidden md:block mt-8">
+        {/* <div className="bg-[#0d0625] rounded-full px-2 py-4 shadow-xl hidden md:block mt-8">
             <div className="flex items-center justify-between gap-4 px-4">
                 {features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-3 text-white justify-center w-full">
@@ -63,7 +63,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
                     </div>
                 ))}
             </div>
-        </div>
+        </div> */}
 
       </div>
     </section>
