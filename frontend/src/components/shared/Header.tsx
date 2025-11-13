@@ -48,6 +48,7 @@ const navLinks = [
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isStateOpen, setIsStateOpen] = useState(false);
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -453,8 +454,8 @@ export default function Header() {
         </nav>
 
         {isMenuOpen && (
-          <div className="lg:hidden bg-gray-100 shadow-lg absolute w-full z-999 origin-top-right top-45">
-            <div className="flex flex-col space-y-1 px-2 pt-2 pb-3">
+          <div className="lg:hidden bg-gray-100 shadow-lg absolute w-full z-999 origin-top-right top-45 p-2">
+            <div className="flex flex-col space-y-1 px-2 pt-2 pb-3 bg-white rounded-xl">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -508,6 +509,55 @@ export default function Header() {
                            </Link>
                          ))
                      )}
+                   </div>
+                 </CollapsibleContent>
+              </Collapsible>
+              <Collapsible
+                open={isStateOpen}
+                onOpenChange={setIsStateOpen}
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 whitespace-nowrap">
+                  <span>Select State</span>
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      isStateOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </CollapsibleTrigger>
+                 <CollapsibleContent className="mt-1">
+                   <div className="ml-4 space-y-1 flex flex-col">
+                     {[
+                          "Jammu and Kashmir",
+                          "Himachal Pradesh",
+                          "Punjab",
+                          "Haryana",
+                          "Uttarakhand",
+                          "Uttar Pradesh",
+                          "Rajasthan",
+                          "Madhya Pradesh",
+                          "Chhattisgarh",
+                          "Bihar",
+                          "Jharkhand",
+                          "Odisha",
+                          "West Bengal",
+                          "Assam",
+                          "Arunachal Pradesh",
+                          "Manipur",
+                          "Meghalaya",
+                          "Mizoram",
+                          "Nagaland",
+                          "Sikkim",
+                          "Tripura",
+                          "Gujarat",
+                        ].map((state) => (
+                          <Link
+                            key={state}
+                            href={`/category/latest-jobs?state=${encodeURIComponent(state.toLowerCase())}`}
+                            className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                          >
+                            {state}
+                          </Link>
+                        ))}
                    </div>
                  </CollapsibleContent>
               </Collapsible>
