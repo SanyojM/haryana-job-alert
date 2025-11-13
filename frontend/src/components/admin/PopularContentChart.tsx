@@ -20,6 +20,14 @@ interface PopularContentChartProps {
 }
 
 export const PopularContentChart: React.FC<PopularContentChartProps> = ({ data, title }) => {
+
+const formatYAxis = (tickItem: any) => {
+  if (typeof tickItem === 'string' && tickItem.length > 12) {
+    return `${tickItem.substring(0, 12)}...`;
+  }
+  return tickItem;
+};
+
   return (
     <Card className="bg-white border border-gray-200 rounded-xl shadow-sm">
       <CardHeader>
@@ -38,10 +46,11 @@ export const PopularContentChart: React.FC<PopularContentChartProps> = ({ data, 
               <YAxis
                 type="category"
                 dataKey="name"
-                width={200}
+                width={100}
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
+                tickFormatter={formatYAxis}
               />
               <Tooltip
                 cursor={{ fill: "#f3f4f6" }}

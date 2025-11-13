@@ -2,16 +2,16 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { api } from '@/lib/api';
 import { Card, CardHeader, CardBody } from "@heroui/card";
-import { 
-  BookCopy, 
-  Library, 
-  FileText, 
-  LayoutDashboard, 
-  Users, 
-  UserCheck, 
-  DollarSign, 
-  TrendingUp, 
-  PlusCircle, 
+import {
+  BookCopy,
+  Library,
+  FileText,
+  LayoutDashboard,
+  Users,
+  UserCheck,
+  DollarSign,
+  TrendingUp,
+  PlusCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@heroui/button';
@@ -27,6 +27,10 @@ interface KpiData {
   seriesCount: number;
   testCount: number;
   postCount: number;
+  totalCourseEnrollments: number;
+  totalSeriesEnrollments: number;
+  recentPosts: { id: string; title: string }[];
+  recentCourses: { id: string; title: string; slug: string }[];
   // totalUsers: number; // REMOVED
   totalRevenue: number; // Will be 0 for now
 }
@@ -88,18 +92,12 @@ const AdminIndex: NextPage<AdminDashboardProps> = ({
     <div className="p-4 md:p-8 bg-gray-50/50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-     
+
       </div>
 
       {/* KPI Cards Grid */}
       {/* We removed "Total Users" to prevent the auth error */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
-        <StatCard
-          title="Total Revenue"
-          value={kpis.totalRevenue}
-          icon={<DollarSign className="h-5 w-5 text-gray-500" />}
-          isCurrency
-        />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Courses"
           value={kpis.courseCount}
@@ -110,41 +108,52 @@ const AdminIndex: NextPage<AdminDashboardProps> = ({
           value={kpis.seriesCount}
           icon={<Library className="h-5 w-5 text-gray-500" />}
         />
-        {/* You can add back "Total Posts" or "Total Tests" here if you like */}
+        <StatCard
+          title="Mock Tests"
+          value={kpis.testCount}
+          icon={<FileText className="h-5 w-5 text-gray-500" />}
+        />
+        <StatCard
+          title="Total Posts"
+          value={kpis.postCount}
+          icon={<LayoutDashboard className="h-5 w-5 text-gray-500" />}
+        />
+        <StatCard
+          title="Course Enrollments"
+          value={kpis.totalCourseEnrollments}
+          icon={<Users className="h-5 w-5 text-gray-500" />}
+        />
+        <StatCard
+          title="Series Enrollments"
+          value={kpis.totalSeriesEnrollments}
+          icon={<UserCheck className="h-5 w-5 text-gray-500" />}
+        />
       </div>
 
       {/* Main Dashboard Layout (Charts + Activity) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        {/* Main Column (2/3 width) */}
-        <div className="lg:col-span-1 space-y-6">
-          <EnrollmentTrendChart data={enrollmentTrend} />
-        </div>
-
-          {/* We've changed this to "Recent Posts" */}
-          <Card className="bg-white border border-gray-200 rounded-xl shadow-sm">
-            <CardHeader>
-                <h3 className="text-lg font-semibold">Recent Posts</h3>
-            </CardHeader>
-            <CardBody>
-              <ul className="divide-y divide-gray-200">
-                {recentPosts?.length > 0 ? recentPosts.map(post => (
-                  <li key={post.id} className="py-3">
-                    <p className="text-sm font-medium text-gray-900">{post.title}</p>
-                  </li>
-                )) : (
-                  <p className="text-sm text-gray-500">No recent posts.</p>
-                )}
-              </ul>
-            </CardBody>
-          </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* We've changed this to "Recent Posts" */}
+        <Card className="bg-white border border-gray-200 rounded-xl shadow-sm">
+          <CardHeader>
+            <h3 className="text-lg font-semibold">Recent Posts</h3>
+          </CardHeader>
+          <CardBody>
+            <ul className="divide-y divide-gray-200">
+              {recentPosts?.length > 0 ? recentPosts.map(post => (
+                <li key={post.id} className="py-3">
+                  <p className="text-sm font-medium text-gray-900">{post.title}</p>
+                </li>
+              )) : (
+                <p className="text-sm text-gray-500">No recent posts.</p>
+              )}
+            </ul>
+          </CardBody>
+        </Card>
 
         {/* Sidebar Column (1/3 width) */}
+        <PopularContentChart data={popularCourses} title="Most Popular Courses" />
+        <PopularContentChart data={popularSeries} title="Most Popular Test Series" />
       </div>
-        <div className="grid grid-cols-2 gap-6 mt-6">
-          <PopularContentChart data={popularCourses} title="Most Popular Courses" />
-          <PopularContentChart data={popularSeries} title="Most Popular Test Series" />
-        </div>
     </div>
   );
 };
@@ -161,7 +170,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       mockTestsRes,
       postsRes,
     ] = await Promise.all([
-      api.get('/courses'), 
+      api.get('/courses'),
       api.get('/mock-series'),
       api.get('/mock-tests'),
       api.get('/posts'),
@@ -174,7 +183,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const mockSeries = getData(mockSeriesRes);
     const posts = getData(postsRes);
     const mockTests = getData(mockTestsRes);
-    // const users = getData(usersRes); // REMOVED
+    const totalCourseEnrollments = courses.reduce((sum: number, course: any) =>
+      sum + (course.enrolled_users_count || 0), 0
+    );
+
+    const totalSeriesEnrollments = mockSeries.reduce((sum: number, series: any) =>
+      sum + (series.enrolled_users_count || 0), 0
+    );
 
     // 2. Build the KPIs
     const kpis = {
@@ -182,8 +197,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
       seriesCount: mockSeries.length,
       testCount: mockTests.length,
       postCount: posts.length,
-      // totalUsers: users.length, // REMOVED
-      totalRevenue: 0, // We cannot calculate this from your current API
+      totalCourseEnrollments,
+      totalSeriesEnrollments,
     };
 
     // 3. Build the Popular Courses list
@@ -215,21 +230,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
         title: post.title,
       }));
 
-    // 6. DUMMY DATA for Enrollment Trend
-    // We must do this because we have no enrollment/payment history API
-    const enrollmentTrend = [
-      { date: 'Oct 12', Courses: 5, 'Test Series': 2 },
-      { date: 'Oct 13', Courses: 3, 'Test Series': 4 },
-      { date: 'Oct 14', Courses: 7, 'Test Series': 1 },
-      { date: 'Oct 15', Courses: 4, 'Test Series': 3 },
-      { date: 'Oct 16', Courses: 10, 'Test Series': 5 },
-      { date: 'Oct 17', Courses: 8, 'Test Series': 2 },
-    ];
-
     return {
       props: {
         kpis,
-        enrollmentTrend, // Sending dummy data
         popularCourses,
         popularSeries,
         recentPosts, // Changed from recentEnrollments
@@ -242,7 +245,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
       props: {
         kpis: { courseCount: 0, seriesCount: 0, testCount: 0, postCount: 0, totalRevenue: 0 },
-        enrollmentTrend: [],
         popularCourses: [],
         popularSeries: [],
         recentPosts: [],
