@@ -26,7 +26,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
   return (
     <section className="bg-white px-2">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-3 lg:grid-cols-4 gap-1 md:gap-6">
+        <div className="grid grid-cols-3 lg:grid-cols-4 gap-1 md:gap-2">
           {/* We now map over the 'posts' from the props */}
             {posts.slice(0, 8).map((post, index) => ( // Show up to 8 posts
             <Link

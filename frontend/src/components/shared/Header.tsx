@@ -9,6 +9,7 @@ import {
   LogOut,
   House,
   ChevronDown,
+  ArrowDown,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -223,6 +224,49 @@ export default function Header() {
                                </Link>
                              ))
                          )}
+                       </div>
+                     </HoverCardContent>
+                  </HoverCard>
+                  <HoverCard openDelay={0} closeDelay={200}>
+                    <HoverCardTrigger asChild>
+                      <button className="px-4 py-2 rounded-xl text-md font-medium transition-colors text-gray-600 hover:bg-gray-200 whitespace-nowrap">
+                        Select State <ChevronDown className="w-4 h-4 inline ml-1" />
+                      </button>
+                    </HoverCardTrigger>
+                     <HoverCardContent className="w-64 p-2 bg-gray-100 border border-gray-300 rounded-2xl mt-2 shadow-lg">
+                       <div className="bg-white grid gap-1 p-2 rounded-2xl shadow-lg">
+                        {[
+                          "Jammu and Kashmir",
+                          "Himachal Pradesh",
+                          "Punjab",
+                          "Haryana",
+                          "Uttarakhand",
+                          "Uttar Pradesh",
+                          "Rajasthan",
+                          "Madhya Pradesh",
+                          "Chhattisgarh",
+                          "Bihar",
+                          "Jharkhand",
+                          "Odisha",
+                          "West Bengal",
+                          "Assam",
+                          "Arunachal Pradesh",
+                          "Manipur",
+                          "Meghalaya",
+                          "Mizoram",
+                          "Nagaland",
+                          "Sikkim",
+                          "Tripura",
+                          "Gujarat",
+                        ].map((state) => (
+                          <Link
+                            key={state}
+                            href={`/category/latest-jobs?state=${encodeURIComponent(state.toLowerCase())}`}
+                            className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                          >
+                            {state}
+                          </Link>
+                        ))}
                        </div>
                      </HoverCardContent>
                   </HoverCard>

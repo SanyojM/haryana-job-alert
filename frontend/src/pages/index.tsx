@@ -94,7 +94,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, series, courses }) => {
             {loadingPosts ? (
               <div className="text-center py-10 text-gray-500">Loading posts...</div>
             ) : (
-              <PostsSection posts={posts.slice(0, 8)} />
+              <PostsSection posts={posts.filter(post => post?.categories?.name === "Latest Jobs").slice(0, 8)} />
             )}
             {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
             <MidCards 

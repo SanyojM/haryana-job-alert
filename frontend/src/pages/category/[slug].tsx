@@ -18,11 +18,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ArrowDownUp, ArrowRight, CalendarDays, Eye, ListFilter, Search } from "lucide-react";
 import AdBanner from "@/components/shared/AdBanner";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import BannerHeader from "@/components/shared/BannerHeader";
+import { useSearchParams } from "next/navigation";
 
 interface Category {
   id: number;
@@ -61,15 +62,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts }) => {
   console.log('Category:', category);
   console.log('Posts:', posts);
-
+// set state query from url into selectedTag
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
+  const params = useSearchParams();
   const [selectedTag, setSelectedTag] = useState("all");
-
+  
   const getLogoText = (categoryName?: string) => {
     if (!categoryName) return 'MT';
     return categoryName.charAt(0).toUpperCase();
   };
+
+  useEffect(() => {
+    const tagFromUrl = params.get('state');
+    if (tagFromUrl) {
+      setSelectedTag(tagFromUrl);
+    }
+  }, [params]);
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>();
@@ -86,7 +95,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
 
     if (selectedTag !== "all") {
       tempPosts = tempPosts.filter(post =>
-        post.post_tags?.some(pt => (pt as any).tags.name === selectedTag)
+        post.post_tags?.some(pt => (pt as any).tags.name.toLowerCase() === selectedTag.toLowerCase())
       );
     }
 
