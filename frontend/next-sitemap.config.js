@@ -5,4 +5,16 @@ module.exports = {
   sitemapSize: 7000,                  // Optional: splits if > 7000 URLs
   changefreq: 'daily',
   priority: 0.7,
+  exclude: ['/admin/*'],
+  additionalPaths: async (config) => {
+    const res = await fetch('https://haryana-job-alerts-backend.softricity.in/posts');
+    const posts = await res.json();
+
+    return posts.map((post) => ({
+      loc: `/posts/${post.slug}`, // the route
+      lastmod: post.createdAt || new Date().toISOString(),
+      changefreq: 'daily',
+      priority: 0.8,
+    }));
+  },
 };
