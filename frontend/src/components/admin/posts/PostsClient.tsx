@@ -94,9 +94,27 @@ export function PostsClient({ data }: { data: Post[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [categoryFilter, setCategoryFilter] = React.useState<string>("all")
+
+  // Get unique categories from data
+  const categories = React.useMemo(() => {
+    const uniqueCategories = new Set<string>();
+    data.forEach(post => {
+      if (post.categories?.name) {
+        uniqueCategories.add(post.categories.name);
+      }
+    });
+    return Array.from(uniqueCategories).sort();
+  }, [data]);
+
+  // Filter data based on category
+  const filteredData = React.useMemo(() => {
+    if (categoryFilter === "all") return data;
+    return data.filter(post => post.categories?.name === categoryFilter);
+  }, [data, categoryFilter]);
 
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     // UPDATED SECTION: Removed 'enableMultiSort: true'
     onSortingChange: setSorting,
@@ -117,7 +135,7 @@ export function PostsClient({ data }: { data: Post[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 py-4">
         <Input
           placeholder="Filter by title..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
@@ -126,6 +144,36 @@ export function PostsClient({ data }: { data: Post[] }) {
           }
           className="max-w-sm"
         />
+        
+        {/* Category Filter Dropdown */}
+        <Dropdown>
+          <DropdownTrigger asChild>
+            <Button className="min-w-[180px]">
+              {categoryFilter === "all" ? "All Categories" : categoryFilter}
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu>
+            <>
+              <DropdownItem
+                key="all"
+                onClick={() => setCategoryFilter("all")}
+              >
+                All Categories
+              </DropdownItem>
+              {categories.map((category) => (
+                <DropdownItem
+                  key={category}
+                  onClick={() => setCategoryFilter(category)}
+                >
+                  {category}
+                </DropdownItem>
+              ))}
+            </>
+          </DropdownMenu>
+        </Dropdown>
+
+        {/* Sort Dropdown */}
         <Dropdown>
           <DropdownTrigger asChild>
             <Button className="ml-auto">
@@ -133,31 +181,44 @@ export function PostsClient({ data }: { data: Post[] }) {
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanSort())
-              .map((column) => {
-                const sort = column.getIsSorted();
-
-                return (
-                  <DropdownItem
-                    key={column.id}
-                    className="capitalize"
-                    // UPDATED SECTION: Reverted to the simple 'toggleSorting'
-                    // This will replace the sort state, not add to it.
-                    onClick={() => column.toggleSorting()}
-                  >
-                    {column.id === 'categories.name' ? 'Category' : column.id === 'created_at' ? 'Date Created' : column.id}
-                    
-                    {/* UPDATED SECTION: Simplified the sort indicator */}
-                    {sort && (
-                      <span className="ml-2">
-                        {sort === 'asc' ? ' ↑' : ' ↓'}
-                      </span>
-                    )}
-                  </DropdownItem>
-                )
-              })}
+            <>
+              <DropdownItem
+                key="created_at_desc"
+                onClick={() => {
+                  table.getColumn("created_at")?.toggleSorting(true);
+                }}
+              >
+                Date Created (Newest First)
+                {table.getColumn("created_at")?.getIsSorted() === "desc" && " ✓"}
+              </DropdownItem>
+              <DropdownItem
+                key="created_at_asc"
+                onClick={() => {
+                  table.getColumn("created_at")?.toggleSorting(false);
+                }}
+              >
+                Date Created (Oldest First)
+                {table.getColumn("created_at")?.getIsSorted() === "asc" && " ✓"}
+              </DropdownItem>
+              <DropdownItem
+                key="title_asc"
+                onClick={() => {
+                  table.getColumn("title")?.toggleSorting(false);
+                }}
+              >
+                Title (A-Z)
+                {table.getColumn("title")?.getIsSorted() === "asc" && " ✓"}
+              </DropdownItem>
+              <DropdownItem
+                key="title_desc"
+                onClick={() => {
+                  table.getColumn("title")?.toggleSorting(true);
+                }}
+              >
+                Title (Z-A)
+                {table.getColumn("title")?.getIsSorted() === "desc" && " ✓"}
+              </DropdownItem>
+            </>
           </DropdownMenu>
         </Dropdown>
       </div>
