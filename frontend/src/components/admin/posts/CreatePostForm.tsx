@@ -223,7 +223,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
               </div>
 
               <div className="space-y-2">
-                <Input id="meta-keywords" label="Meta Keyword" value={metaKeywords} onChange={(e) => setMetaKeywords(e.target.value)} placeholder="comma, separated, keywords" />
+                <Textarea id="meta-keywords" label="Meta Keyword" value={metaKeywords} onChange={(e) => setMetaKeywords(e.target.value)} placeholder="comma, separated, keywords" />
               </div>
             </CardBody>
           </Card>
