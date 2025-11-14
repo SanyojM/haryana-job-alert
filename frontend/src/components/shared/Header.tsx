@@ -453,9 +453,11 @@ export default function Header() {
           </div>
         </nav>
 
+        <div className="px-3 relative flex justify-center">
+
         {isMenuOpen && (
-          <div className="lg:hidden bg-gray-100 shadow-lg absolute w-full z-999 origin-top-right top-45 p-2">
-            <div className="flex flex-col space-y-1 px-2 pt-2 pb-3 bg-white rounded-xl">
+          <div className="lg:hidden border border-gray-300 rounded-2xl bg-gray-100 shadow-lg absolute w-[93%] z-999 -top-11 p-2">
+            <div className="flex flex-col space-y-1 px-2 pt-2 pb-3 bg-white shadow-xl rounded-xl">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -554,6 +556,7 @@ export default function Header() {
                             key={state}
                             href={`/category/latest-jobs?state=${encodeURIComponent(state.toLowerCase())}`}
                             className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
+                            onClick={()=>setIsMenuOpen(false)}
                           >
                             {state}
                           </Link>
@@ -565,6 +568,7 @@ export default function Header() {
           </div>
         )}
 
+        </div>
         {/* Auth Dialog */}
         <AuthDialog
           open={isAuthDialogOpen}
