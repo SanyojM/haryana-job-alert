@@ -85,15 +85,9 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
   const [alreadyPurchased, setAlreadyPurchased] = useState<boolean>(false);
   const [checkingPurchase, setCheckingPurchase] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  const [showLoginPrompt, setShowLoginPrompt] = useState<boolean>(false);
-  
-  // Signup form state
-  const [showSignupForm, setShowSignupForm] = useState<boolean>(false);
-  const [fullName, setFullName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
-  const [showAuth, setShowAuth] = useState<boolean>(false);
+  const [showAuthDialog, setShowAuthDialog] = useState<boolean>(false);
+  const [fileUrl, setFileUrl] = useState<string>('');
+  const [downloading, setDownloading] = useState<boolean>(false);
   
   const { user } = useAuth();
   const router = useRouter();
@@ -120,6 +114,12 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
         const response = await api.get(`/files/${file.id}/check-purchase/${user.id}`);
         if (response.hasPurchased) {
           setAlreadyPurchased(true);
+          // Get the purchased file details to retrieve file_url
+          const purchasedFiles = await api.get(`/files/mine/${user.id}`);
+          const purchasedFile = purchasedFiles.find((p: any) => p.file_id === file.id);
+          if (purchasedFile?.file?.file_url) {
+            setFileUrl(purchasedFile.file.file_url);
+          }
         }
       } catch (error) {
         console.error('Error checking purchase:', error);
@@ -131,31 +131,9 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
     checkPurchase();
   }, [user, file]);
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSigningUp(true);
-    setError('');
-    
-    try {
-      await api.post('/auth/signup', { 
-        full_name: fullName, 
-        email, 
-        password 
-      });
-      
-      // After successful signup, close the signup form and user can login
-      setShowSignupForm(false);
-      alert('Account created successfully! Please login to continue.');
-    } catch (err: any) {
-      setError(err.message || 'Failed to create account. Please try again.');
-    } finally {
-      setIsSigningUp(false);
-    }
-  };
-
   const handlePurchase = async () => {
     if (!user) {
-      setShowSignupForm(true);
+      setShowAuthDialog(true);
       return;
     }
 
@@ -225,8 +203,27 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
     razorpay.open();
   };
 
-  const handleDownload = () => {
-    router.push('/dashboard/my-files');
+  const handleDownload = async () => {
+    if (fileUrl) {
+      // Direct download
+      setDownloading(true);
+      try {
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = file?.title || 'download';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error('Download error:', error);
+      } finally {
+        setDownloading(false);
+      }
+    } else {
+      // Fallback to dashboard
+      router.push('/dashboard/my-files');
+    }
   };
 
   const handleCopyLink = () => {
@@ -277,12 +274,12 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
               </div>
               <h2 className="text-3xl font-bold text-gray-800 mb-3">Purchase Successful!</h2>
               <p className="text-gray-600 text-lg mb-8">
-                You can now download this file from your purchases page.
+                Your purchase is complete! Go to your dashboard to download the file.
               </p>
               <div className="space-y-3">
                 <Button 
                   className="w-full h-12 bg-gradient-to-r from-blue-800 to-blue-500 hover:from-blue-700 hover:to-blue-400 text-white"
-                  onClick={handleDownload}
+                  onClick={() => router.push('/dashboard/my-files')}
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Go to My Downloads
@@ -316,15 +313,16 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
               </div>
               <h2 className="text-3xl font-bold text-gray-800 mb-3">Already Purchased</h2>
               <p className="text-gray-600 text-lg mb-8">
-                You've already purchased this file. Access it from your downloads page.
+                You've already purchased this file. Download it now or access it from your downloads page.
               </p>
               <div className="space-y-3">
                 <Button 
-                  className="w-full h-12 bg-gradient-to-r from-blue-800 to-blue-500 hover:from-blue-700 hover:to-blue-400 text-white"
+                  className="w-full h-12 bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white"
                   onClick={handleDownload}
+                  disabled={downloading}
                 >
                   <Download className="w-4 h-4 mr-2" />
-                  Go to My Downloads
+                  {downloading ? 'Downloading...' : 'Download File Now'}
                 </Button>
                 <Button 
                   variant="outline" 
@@ -364,10 +362,10 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
               ) : (
                 <Button 
                   className="flex items-center gap-2 h-10 bg-black border rounded-full"
-                  onClick={() => setShowSignupForm(true)}
+                  onClick={() => setShowAuthDialog(true)}
                 >
                   <UserPlus className="w-4 h-4" />
-                  Register
+                  Login / Register
                 </Button>
               )
             }
@@ -450,113 +448,12 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                     </Alert>
                   )}
 
-                  {/* Signup Form for Non-Logged-In Users */}
-                  {!user && showSignupForm ? (
-                    <div>
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-600 mb-4">Access to this purchase will be sent to this email</p>
-                      </div>
-                      
-                      <form onSubmit={handleSignup} className="space-y-4">
-                        <div>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Email Address"
-                            required
-                            disabled={isSigningUp}
-                            className="w-full"
-                          />
-                        </div>
-                        
-                        <div>
-                          <Input
-                            id="fullName"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            placeholder="Full Name"
-                            required
-                            disabled={isSigningUp}
-                            className="w-full"
-                          />
-                        </div>
-                        
-                        <div>
-                          <Input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Password (min 6 characters)"
-                            required
-                            disabled={isSigningUp}
-                            minLength={6}
-                            className="w-full"
-                          />
-                        </div>
-
-                        {/* Price Summary */}
-                        <div className="py-4 border-y border-gray-200 space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Sub Total</span>
-                            <span className="text-gray-900">
-                              {file.price === 0 ? '₹0' : `₹${file.price}`} 
-                            </span>
-                          </div>
-                          <div className="flex justify-between font-semibold">
-                            <span className="text-gray-900">Total</span>
-                            <span className="text-gray-900">
-                              {file.price === 0 ? '₹0' : `₹${file.price}`}
-                            </span>
-                          </div>
-                        </div>
-
-                        <Button
-                          type="submit"
-                          className="w-full bg-black hover:bg-gray-800 text-white h-12"
-                          disabled={isSigningUp}
-                        >
-                          {isSigningUp ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Creating Account...
-                            </>
-                          ) : (
-                            'Get it now →'
-                          )}
-                        </Button>
-                      </form>
-
-                      <div className="mt-4 pt-4 border-t border-gray-200 text-center">
-                        <p className="text-sm text-gray-600">
-                          Already have an account?{' '}
-                          <button onClick={()=> setShowAuth(true)} className="text-blue-600 hover:underline font-medium">
-                            Log in here
-                          </button>
-                        </p>
-                      </div>
-
-                      {/* Invite Network */}
-                      <div className="mt-6 pt-6 border-t border-gray-200">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">INVITE YOUR NETWORK</p>
-                        <Button variant="outline" className="w-full" onClick={handleCopyLink}>
-                          <FileText className="w-4 h-4 mr-2" />
-                          Copy link
-                        </Button>
-                      </div>
-                    </div>
-                  ) : !user ? (
+                  {/* Non-Logged-In User Purchase Prompt */}
+                  {!user ? (
                     // Show purchase form trigger for non-logged users
                     <div>
                       <div className="mb-4">
-                        <p className="text-sm text-gray-600 mb-4">Access to this purchase will be sent to this email</p>
-                        <Input
-                          placeholder="Email Address"
-                          disabled
-                          className="w-full mb-3"
-                        />
+                        <p className="text-sm text-gray-600 mb-4">To purchase this form you have to login or register on Haryana Job Alert</p>
                       </div>
 
                       {/* Price Summary */}
@@ -586,16 +483,63 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                             Checking...
                           </>
                         ) : (
-                          'Get it now →'
+                          'Register to Purchase →'
                         )}
                       </Button>
 
                       <p className="text-center text-xs text-gray-600 mt-3">
-                        Already have an account?{' '}
-                        <button onClick={() => setShowAuth(true)} className="text-blue-600 hover:underline font-medium">
-                          Log in here
-                        </button>
+                        Click the button above to login or create a new account
                       </p>
+
+                      {/* Invite Network */}
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-3">INVITE YOUR NETWORK</p>
+                        <Button variant="outline" className="w-full" onClick={handleCopyLink}>
+                          <FileText className="w-4 h-4 mr-2" />
+                          Copy link
+                        </Button>
+                      </div>
+                    </div>
+                  ) : alreadyPurchased && !checkingPurchase ? (
+                    // Already purchased - show download button
+                    <div>
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2 text-green-600 mb-4">
+                          <CheckCircle2 className="w-5 h-5" />
+                          <p className="text-sm font-medium">You own this file</p>
+                        </div>
+                        <Input
+                          value={user.email}
+                          disabled
+                          className="w-full mb-3"
+                        />
+                      </div>
+
+                      <Button
+                        className="w-full bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white h-12"
+                        onClick={handleDownload}
+                        disabled={downloading}
+                      >
+                        {downloading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Downloading...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-4 h-4 mr-2" />
+                            Download File Now
+                          </>
+                        )}
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        className="w-full mt-3 h-12"
+                        onClick={() => router.push('/dashboard/my-files')}
+                      >
+                        View All My Downloads
+                      </Button>
 
                       {/* Invite Network */}
                       <div className="mt-6 pt-6 border-t border-gray-200">
@@ -610,7 +554,7 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
                     // Logged-in user purchase form
                     <div>
                       <div className="mb-4">
-                        <p className="text-sm text-gray-600 mb-4">Access to this purchase will be sent to this email</p>
+                        <p className="text-sm text-gray-600 mb-4">To purchase this form you have to login or register on Haryana Job Alert</p>
                         <Input
                           value={user.email}
                           disabled
@@ -674,8 +618,8 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
       </main>
       {/* <Footer /> */}
       <AuthDialog
-        open={showAuth}
-        onOpenChange={setShowAuth}
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
       />
     </div>
   );

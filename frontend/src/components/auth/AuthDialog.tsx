@@ -22,6 +22,7 @@ interface AuthDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   defaultTab?: "login" | "signup";
+  redirectAfterLogin?: string; // Optional redirect path after successful login
 }
 
 const offers = [
@@ -32,6 +33,7 @@ export function AuthDialog({
   open,
   onOpenChange,
   defaultTab = "login",
+  redirectAfterLogin,
 }: AuthDialogProps) {
   const [activeTab, setActiveTab] = useState(defaultTab);
   const router = useRouter();
@@ -79,11 +81,14 @@ export function AuthDialog({
       setLoginEmail("");
       setLoginPassword("");
 
-      if(role === "admin") {
+      // Redirect if specified (e.g., after purchase)
+      if (redirectAfterLogin) {
+        router.push(redirectAfterLogin);
+      } else if (role === "admin") {
+        // Only auto-redirect admins to admin panel
         router.push("/admin");
-      } else {
-        router.push("/dashboard");
       }
+      // Regular users stay on current page unless redirectAfterLogin is set
 
     } catch (err: unknown) {
       setLoginError("Invalid email or password.");

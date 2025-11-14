@@ -351,6 +351,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
             <AuthDialog
                 open={isAuthDialogOpen}
                 onOpenChange={setIsAuthDialogOpen}
+                redirectAfterLogin="/dashboard"
             />
             
             <Footer />

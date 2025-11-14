@@ -96,14 +96,26 @@ export default function Header() {
     <>
       <style jsx>{`
         .marquee-content {
-          animation: marquee 15s linear infinite;
+          display: inline-flex;
+          min-width: max-content;
+          gap: 1rem;
+          animation: marquee 20s linear infinite;
+        }
+        .marquee-content > div {
+          flex: 0 0 auto;
         }
         @keyframes marquee {
-          from {
-            transform: translateX(0%);
+          0% {
+        transform: translateX(30%);
           }
-          to {
-            transform: translateX(-50%);
+          100% {
+        transform: translateX(calc(-100%));
+          }
+        }
+        @media (max-width: 640px) {
+          /* slower on mobile so all items have time to enter the viewport */
+          .marquee-content {
+        animation-duration: 28s;
           }
         }
       `}</style>
@@ -167,15 +179,9 @@ export default function Header() {
         </div>
 
         <nav className="lg:container mx-auto px-4 mt-2 sm:mt-5 relative bottom-12 sm:-top-15">
-          <div className="flex items-center justify-between h-20">
-            <Link href="/" className="flex-shrink-0">
-              {/* <img className="h-14 w-14 rounded-full" src="/logo.png" alt="Haryana Job Alert Logo" /> */}
-              {/* <h1 className="text-xl font-bold italic">
-                Haryana <span className="text-green-600">Job</span> Alert
-              </h1> */}
-            </Link>
+          <div className="flex items-center justify-center h-20">
 
-            <div className="hidden lg:flex items-center justify-center flex-1 mr-14 z-10">
+            <div className="hidden lg:flex items-center justify-center flex-1 z-10">
               <div className="p-2 rounded-xl border border-gray-300 bg-gray-100">
                 <div className="bg-white rounded-xl shadow-lg px-4 py-2 flex items-center space-x-2">
                   {navLinks.map((link) => (
@@ -225,49 +231,6 @@ export default function Header() {
                                </Link>
                              ))
                          )}
-                       </div>
-                     </HoverCardContent>
-                  </HoverCard>
-                  <HoverCard openDelay={0} closeDelay={200}>
-                    <HoverCardTrigger asChild>
-                      <button className="px-4 py-2 rounded-xl text-md font-medium transition-colors text-gray-600 hover:bg-gray-200 whitespace-nowrap">
-                        Select State <ChevronDown className="w-4 h-4 inline ml-1" />
-                      </button>
-                    </HoverCardTrigger>
-                     <HoverCardContent className="w-64 p-2 bg-gray-100 border border-gray-300 rounded-2xl mt-2 shadow-lg">
-                       <div className="bg-white grid gap-1 p-2 rounded-2xl shadow-lg">
-                        {[
-                          "Jammu and Kashmir",
-                          "Himachal Pradesh",
-                          "Punjab",
-                          "Haryana",
-                          "Uttarakhand",
-                          "Uttar Pradesh",
-                          "Rajasthan",
-                          "Madhya Pradesh",
-                          "Chhattisgarh",
-                          "Bihar",
-                          "Jharkhand",
-                          "Odisha",
-                          "West Bengal",
-                          "Assam",
-                          "Arunachal Pradesh",
-                          "Manipur",
-                          "Meghalaya",
-                          "Mizoram",
-                          "Nagaland",
-                          "Sikkim",
-                          "Tripura",
-                          "Gujarat",
-                        ].map((state) => (
-                          <Link
-                            key={state}
-                            href={`/category/latest-jobs?state=${encodeURIComponent(state.toLowerCase())}`}
-                            className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                          >
-                            {state}
-                          </Link>
-                        ))}
                        </div>
                      </HoverCardContent>
                   </HoverCard>
@@ -511,56 +474,6 @@ export default function Header() {
                            </Link>
                          ))
                      )}
-                   </div>
-                 </CollapsibleContent>
-              </Collapsible>
-              <Collapsible
-                open={isStateOpen}
-                onOpenChange={setIsStateOpen}
-              >
-                <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 whitespace-nowrap">
-                  <span>Select State</span>
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform ${
-                      isStateOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </CollapsibleTrigger>
-                 <CollapsibleContent className="mt-1">
-                   <div className="ml-4 space-y-1 flex flex-col">
-                     {[
-                          "Jammu and Kashmir",
-                          "Himachal Pradesh",
-                          "Punjab",
-                          "Haryana",
-                          "Uttarakhand",
-                          "Uttar Pradesh",
-                          "Rajasthan",
-                          "Madhya Pradesh",
-                          "Chhattisgarh",
-                          "Bihar",
-                          "Jharkhand",
-                          "Odisha",
-                          "West Bengal",
-                          "Assam",
-                          "Arunachal Pradesh",
-                          "Manipur",
-                          "Meghalaya",
-                          "Mizoram",
-                          "Nagaland",
-                          "Sikkim",
-                          "Tripura",
-                          "Gujarat",
-                        ].map((state) => (
-                          <Link
-                            key={state}
-                            href={`/category/latest-jobs?state=${encodeURIComponent(state.toLowerCase())}`}
-                            className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 whitespace-nowrap"
-                            onClick={()=>setIsMenuOpen(false)}
-                          >
-                            {state}
-                          </Link>
-                        ))}
                    </div>
                  </CollapsibleContent>
               </Collapsible>
