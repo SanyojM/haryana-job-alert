@@ -223,12 +223,12 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ initialCategories }) =>
       <Modal
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
-        className="bg-white p-2"
+        className="bg-white"
       >
         <ModalContent>
           <ModalHeader>Edit Category</ModalHeader>
           {editingCategory && (
-            <form onSubmit={handleUpdate} className="space-y-4 py-4">
+            <form onSubmit={handleUpdate} className="">
               <ModalBody>
                 <div className="space-y-2">
                   <Input

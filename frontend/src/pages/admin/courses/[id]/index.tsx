@@ -1,9 +1,11 @@
+"use client";
+
 import { useState, useEffect, useRef } from 'react';
 import type { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { PlusCircle, Edit, Trash2, GripVertical, Upload } from 'lucide-react'; // Added Upload
+import { PlusCircle, Edit, Trash2, GripVertical, Upload } from 'lucide-react';
 import {
     DragDropContext,
     Droppable,
@@ -12,20 +14,17 @@ import {
     ResponderProvided,
     DroppableProvided,
     DraggableProvided
-} from '@hello-pangea/dnd'; // Use @hello-pangea/dnd
+} from '@hello-pangea/dnd';
 import { Editor } from '@tinymce/tinymce-react';
 import type { Editor as TinyMCEEditor } from 'tinymce';
 
-// --- HeroUI Imports ---
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
-import { Modal, ModalContent, ModalHeader, ModalFooter } from "@heroui/modal";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
 import { Input, Textarea } from "@heroui/input";
-// --- End HeroUI Imports ---
 
 import type { Course } from '@/components/admin/courses/CreateCourseForm';
 
-// Define Topic and Lesson types based on API
 export type Lesson = {
     id: string;
     title: string;
@@ -44,13 +43,12 @@ export type Topic = {
     lessons: Lesson[];
 };
 
-// Extend Course type to include topics
 interface CourseWithContent extends Course {
     course_topics: Topic[];
 }
 
 interface ManageCourseContentPageProps {
-  courseId: string; // We only pass the ID from the server
+  courseId: string; 
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -58,11 +56,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (typeof id !== 'string') {
         return { notFound: true };
     }
-    // Only pass the ID prop
     return { props: { courseId: id } };
 };
 
-// We move the entire UI into a separate component to handle data loading
 const ManageCourseContentPage: NextPage<ManageCourseContentPageProps> = ({ courseId }) => {
     const { token, isLoading: isAuthLoading } = useAuth();
     const router = useRouter();
@@ -80,7 +76,6 @@ const ManageCourseContentPage: NextPage<ManageCourseContentPageProps> = ({ cours
                     
                     const courseData = await api.get(`/courses/id/${courseId}`, token);
                     
-                    // Ensure topics and lessons are sorted
                     const sortedTopics = (courseData.course_topics || []).sort((a: Topic, b: Topic) => a.order - b.order);
                     sortedTopics.forEach((topic: Topic) => {
                         if (topic.lessons) {
@@ -116,21 +111,16 @@ const ManageCourseContentPage: NextPage<ManageCourseContentPageProps> = ({ cours
          return <div className="flex h-screen items-center justify-center">Course not found.</div>;
     }
 
-    // Render the UI component once data is loaded
     return <ManageCourseContentUI initialCourse={course} />;
 };
 
-// This new component contains all the UI logic from your original file
 const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithContent }) => {
     const { token } = useAuth();
     const router = useRouter();
-    // State is initialized from the fetched data
     const [course, setCourse] = useState<CourseWithContent>(initialCourse);
     const [topics, setTopics] = useState<Topic[]>(initialCourse.course_topics || []);
     
-    // --- ADDED STATE for accordion ---
     const [openTopics, setOpenTopics] = useState<Set<string>>(new Set());
-    // --- END ADDED STATE ---
 
     const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
     const [editingTopic, setEditingTopic] = useState<Partial<Topic> | null>(null);
@@ -143,7 +133,6 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // --- ADDED FUNCTION to toggle accordion ---
     const toggleTopic = (topicId: string) => {
         setOpenTopics(prevOpenTopics => {
             const newOpenTopics = new Set(prevOpenTopics);
@@ -155,13 +144,11 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
             return newOpenTopics;
         });
     };
-    // --- END ADDED FUNCTION ---
 
     const reloadData = async () => {
         const authToken = token || undefined;
         try {
             const courseData = await api.get(`/courses/id/${course.id}`, authToken);
-            // Ensure sorting
             const sortedTopics = (courseData.course_topics || []).sort((a: Topic, b: Topic) => a.order - b.order);
             sortedTopics.forEach((topic: Topic) => {
                 if (topic.lessons) topic.lessons.sort((a,b) => a.order - b.order);
@@ -198,7 +185,7 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
             const payload = { title: editingTopic.title, description: editingTopic.description || null };
 
             await api[method](endpoint, payload, authToken);
-            await reloadData(); // Reload all data to ensure order is correct
+            await reloadData(); 
 
             setIsTopicModalOpen(false);
             setEditingTopic(null);
@@ -215,7 +202,7 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
         const authToken = token || undefined;
         try {
             await api.delete(`/courses/topics/${topicId}`, authToken);
-            await reloadData(); // Reload
+            await reloadData(); 
         } catch (err: unknown) {
             alert(`Failed to delete topic: ${err instanceof Error ? err.message : "Error"}`);
         } finally {
@@ -225,7 +212,6 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
 
     const openLessonModal = (topicId: string, lesson: Partial<Lesson> | null = null) => {
         setCurrentTopicIdForLesson(topicId);
-        // Set default duration to 0 if not provided
         setEditingLesson(lesson 
             ? { ...lesson, video_duration_sec: lesson.video_duration_sec || 0 } 
             : { title: '', description: '', video_url: '', video_duration_sec: 0 }
@@ -264,7 +250,6 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
         if (editingLesson.description) formData.append('description', editingLesson.description);
         if (editingLesson.video_url) formData.append('video_url', editingLesson.video_url);
         
-        // Ensure we send 0 if it's null or undefined
         formData.append('video_duration_sec', (editingLesson.video_duration_sec || 0).toString());
 
         const imageFile = featuredImageFileRef.current?.files?.[0];
@@ -277,14 +262,13 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                 ? `/courses/lessons/${editingLesson.id}`
                 : `/courses/topics/${currentTopicIdForLesson}/lessons`;
              const method = isEditMode ? 'PUT' : 'POST';
-            // Use api helper methods for FormData requests
             if (isEditMode) {
                 await api.putFormData(endpoint, formData, authToken);
             } else {
                 await api.postFormData(endpoint, formData, authToken);
             }
 
-            await reloadData(); // Reload data
+            await reloadData();
 
             setIsLessonModalOpen(false);
             setEditingLesson(null);
@@ -303,7 +287,7 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
         const authToken = token || undefined;
         try {
             await api.delete(`/courses/lessons/${lessonId}`, authToken);
-            await reloadData(); // Reload
+            await reloadData(); 
         } catch (err: unknown) {
             alert(`Failed to delete lesson: ${err instanceof Error ? err.message : "Error"}`);
         } finally {
@@ -322,7 +306,7 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
             const reorderedTopics = Array.from(topics);
             const [movedTopic] = reorderedTopics.splice(source.index, 1);
             reorderedTopics.splice(destination.index, 0, movedTopic);
-            setTopics(reorderedTopics); // Optimistic update
+            setTopics(reorderedTopics); 
 
             const orderedTopicIds = reorderedTopics.map(t => parseInt(t.id));
             try {
@@ -330,7 +314,7 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
             } catch (err) {
                 console.error("Failed to reorder topics:", err);
                 alert("Failed to save new topic order.");
-                setTopics(initialCourse.course_topics || []); // Revert
+                setTopics(initialCourse.course_topics || []); 
             }
         }
 
@@ -352,7 +336,7 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
 
             const updatedTopics = [...topics];
             updatedTopics[sourceTopicIndex] = { ...topic, lessons: reorderedLessons };
-            setTopics(updatedTopics); // Optimistic update
+            setTopics(updatedTopics); 
 
             const orderedLessonIds = reorderedLessons.map(l => parseInt(l.id));
             try {
@@ -360,7 +344,7 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
             } catch (err) {
                 console.error("Failed to reorder lessons:", err);
                 alert("Failed to save new lesson order.");
-                setTopics(initialCourse.course_topics || []); // Revert
+                setTopics(initialCourse.course_topics || []);
             }
         }
     };
@@ -391,7 +375,6 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                                                         <div {...providedDraggable.dragHandleProps}>
                                                             <GripVertical className="h-5 w-5 text-gray-500 cursor-grab" />
                                                         </div>
-                                                        {/* --- MODIFIED H2 --- */}
                                                         <h2 
                                                             className="text-lg font-medium cursor-pointer select-none"
                                                             onClick={() => toggleTopic(topic.id)}
@@ -412,7 +395,6 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                                                     </div>
                                                 </div>
                                                 
-                                                {/* --- MODIFIED CONTENT (Conditional Render) --- */}
                                                 {openTopics.has(topic.id) && (
                                                     <>
                                                         {topic.description && <p className="text-sm text-gray-500 mb-4">{topic.description}</p>}
@@ -450,7 +432,6 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                                                         </Droppable>
                                                     </>
                                                 )}
-                                                {/* --- END MODIFIED CONTENT --- */}
                                             </CardBody>
                                         </Card>
                                      )}
@@ -463,149 +444,139 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                 </Droppable>
             </DragDropContext>
 
-             {/* Topic Add/Edit Modal */}
             <Modal isOpen={isTopicModalOpen} onOpenChange={setIsTopicModalOpen} className='px-4'>
                  <ModalContent>
                     <ModalHeader className='pl-0'>{editingTopic?.id ? 'Edit Topic' : 'Add New Topic'}</ModalHeader>
-                    {editingTopic && (
-                        <form onSubmit={handleSaveTopic} className="space-y-4 py-4">
-                            <div className="space-y-2">
-                                <Input 
-                                    label="Title" 
-                                    id="topic-title" 
-                                    value={editingTopic.title || ''} 
-                                    // --- TS FIX ---
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingTopic({ ...editingTopic, title: e.target.value })} 
-                                    required 
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Textarea 
-                                    label="Description (Optional)" 
-                                    id="topic-description" 
-                                    value={editingTopic.description || ''} 
-                                    // --- TS FIX ---
-                                    onChange={(e) => setEditingTopic({ ...editingTopic, description: e.target.value })} 
-                                />
-                            </div>
-                            {error && <p className="text-sm text-red-600">{error}</p>}
-                            <ModalFooter>
-                                <Button type="button" variant="light" onPress={() => setIsTopicModalOpen(false)}>Cancel</Button>
-                                <Button type="submit" disabled={isLoading} className='bg-[#7828c8] text-white'>{isLoading ? 'Saving...' : 'Save Topic'}</Button>
-                            </ModalFooter>
-                        </form>
-                    )}
+                    <ModalBody className="max-h-[80vh] overflow-y-auto">
+                        {editingTopic && (
+                            <form id="topic-form" onSubmit={handleSaveTopic} className="space-y-4 py-4">
+                                <div className="space-y-2">
+                                    <Input 
+                                        label="Title" 
+                                        id="topic-title" 
+                                        value={editingTopic.title || ''} 
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingTopic({ ...editingTopic, title: e.target.value })} 
+                                        required 
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Textarea 
+                                        label="Description (Optional)" 
+                                        id="topic-description" 
+                                        value={editingTopic.description || ''} 
+                                        onChange={(e) => setEditingTopic({ ...editingTopic, description: e.target.value })} 
+                                    />
+                                </div>
+                                {error && <p className="text-sm text-red-600">{error}</p>}
+                            </form>
+                        )}
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button type="button" variant="light" onPress={() => setIsTopicModalOpen(false)}>Cancel</Button>
+                        <Button type="submit" form="topic-form" disabled={isLoading} className='bg-[#7828c8] text-white'>{isLoading ? 'Saving...' : 'Save Topic'}</Button>
+                    </ModalFooter>
                 </ModalContent>
             </Modal>
 
-            {/* --- REBUILT LESSON MODAL --- */}
             <Modal isOpen={isLessonModalOpen} onOpenChange={setIsLessonModalOpen} className='px-4'>
-                <ModalContent className="sm:max-w-5xl"> {/* Made modal wider */}
+                <ModalContent className="sm:max-w-5xl">
                     <ModalHeader className='flex flex-col pl-0'>
                         <span className='text-lg'>Lesson | Topic: {topics.find(t=>t.id === currentTopicIdForLesson)?.title}</span>
                     </ModalHeader>
-                    {editingLesson && (
-                        <form onSubmit={handleSaveLesson} className="py-4">
-                            {/* Two-column grid layout */}
-                            <div className="grid grid-cols-3 gap-6">
-                                
-                                {/* --- LEFT COLUMN --- */}
-                                <div className="col-span-3 lg:col-span-2 space-y-6">
-                                    <div className="space-y-2">
-                                        <Input 
-                                            label="Lesson Name" 
-                                            id="lesson-title" 
-                                            value={editingLesson.title || ''} 
-                                            // --- TS FIX ---
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingLesson({ ...editingLesson, title: e.target.value })} 
-                                            required 
-                                            className="text-lg" // Make title bigger
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        {/* This emulates the "Content" block */}
-                                        <label className="text-sm font-medium">Content</label>
-                                        <Editor
-                                            apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
-                                            value={editingLesson.description || ''}
-                                            onEditorChange={(content: string) => {
-                                                setEditingLesson({ ...editingLesson, description: content });
-                                            }}
-                                            init={{
-                                                height: 400,
-                                                menubar: true,
-                                                plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-                                                toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                                                content_style: 'body { font-family:Poppins,sans-serif; font-size:16px }'
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* --- RIGHT COLUMN --- */}
-                                <div className="col-span-3 lg:col-span-1 space-y-6">
-                                    {/* Featured Image Box */}
-                                    <div className="space-y-2 p-4 border border-gray-300 rounded-md">
-                                        <label className="text-sm font-medium">Featured Image</label>
-                                        <div className="flex flex-col items-center justify-center p-4 border border-gray-200 border-dashed rounded-md h-48">
-                                            {imagePreview ? (
-                                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-md"/>
-                                            ) : (
-                                                <div className="text-center text-gray-500">
-                                                    <Upload className="mx-auto h-8 w-8" />
-                                                    <p className="text-sm mt-2">Upload Image</p>
-                                                    <p className="text-xs">JPEG, PNG, GIF, WebP</p>
-                                                </div>
-                                            )}
+                    
+                    <ModalBody className="max-h-[80vh] overflow-y-auto">
+                        {editingLesson && (
+                            <form id="lesson-form" onSubmit={handleSaveLesson} className="py-4">
+                                <div className="grid grid-cols-3 gap-6">
+                                    
+                                    <div className="col-span-3 lg:col-span-2 space-y-6">
+                                        <div className="space-y-2">
+                                            <Input 
+                                                label="Lesson Name" 
+                                                id="lesson-title" 
+                                                value={editingLesson.title || ''} 
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingLesson({ ...editingLesson, title: e.target.value })} 
+                                                required 
+                                                className="text-lg"
+                                            />
                                         </div>
-                                        <Input
-                                            id="lesson-image"
-                                            type="file"
-                                            accept="image/*"
-                                            ref={featuredImageFileRef}
-                                            onChange={handleImageChange}
-                                            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                        />
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium">Content</label>
+                                            <Editor
+                                                apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
+                                                value={editingLesson.description || ''}
+                                                onEditorChange={(content: string) => {
+                                                    setEditingLesson({ ...editingLesson, description: content });
+                                                }}
+                                                init={{
+                                                    height: 400,
+                                                    menubar: true,
+                                                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+                                                    toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                                                    content_style: 'body { font-family:Poppins,sans-serif; font-size:16px }'
+                                                }}
+                                            />
+                                        </div>
                                     </div>
 
-                                    {/* Video Box */}
-                                    <div className="space-y-2 p-4 border border-gray-300 rounded-md">
-                                        <label className="text-sm font-medium">Video</label>
-                                        <Input 
-                                            label="Add from URL (YouTube, Optional)" 
-                                            id="lesson-video-url" 
-                                            value={editingLesson.video_url || ''} 
-                                            // --- TS FIX ---
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingLesson({ ...editingLesson, video_url: e.target.value })} 
-                                            placeholder="https://www.youtube.com/watch?v=..."
-                                        />
-                                        <Input 
-                                            label="Video Duration (in seconds)" 
-                                            id="lesson-duration" 
-                                            type="number"
-                                            value={editingLesson.video_duration_sec === null || editingLesson.video_duration_sec === undefined ? '' : String(editingLesson.video_duration_sec)}
-                                            // --- TS FIX ---
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                const num = parseInt(e.target.value);
-                                                setEditingLesson({ ...editingLesson, video_duration_sec: isNaN(num) ? null : num })
-                                            }}
-                                            placeholder="e.g., 300"
-                                        />
+                                    <div className="col-span-3 lg:col-span-1 space-y-6">
+                                        <div className="space-y-2 p-4 border border-gray-300 rounded-md">
+                                            <label className="text-sm font-medium">Featured Image</label>
+                                            <div className="flex flex-col items-center justify-center p-4 border border-gray-200 border-dashed rounded-md h-48">
+                                                {imagePreview ? (
+                                                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-md"/>
+                                                ) : (
+                                                    <div className="text-center text-gray-500">
+                                                        <Upload className="mx-auto h-8 w-8" />
+                                                        <p className="text-sm mt-2">Upload Image</p>
+                                                        <p className="text-xs">JPEG, PNG, GIF, WebP</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <Input
+                                                id="lesson-image"
+                                                type="file"
+                                                accept="image/*"
+                                                ref={featuredImageFileRef}
+                                                onChange={handleImageChange}
+                                                className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2 p-4 border border-gray-300 rounded-md">
+                                            <label className="text-sm font-medium">Video</label>
+                                            <Input 
+                                                label="Add from URL (YouTube, Optional)" 
+                                                id="lesson-video-url" 
+                                                value={editingLesson.video_url || ''} 
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingLesson({ ...editingLesson, video_url: e.target.value })} 
+                                                placeholder="https://www.youtube.com/watch?v=..."
+                                            />
+                                            <Input 
+                                                label="Video Duration (in seconds)" 
+                                                id="lesson-duration" 
+                                                type="number"
+                                                value={editingLesson.video_duration_sec === null || editingLesson.video_duration_sec === undefined ? '' : String(editingLesson.video_duration_sec)}
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                    const num = parseInt(e.target.value);
+                                                    setEditingLesson({ ...editingLesson, video_duration_sec: isNaN(num) ? null : num })
+                                                }}
+                                                placeholder="e.g., 300"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            {/* Error and Footer */}
-                            {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
-                            <ModalFooter className="sticky bottom-0 bg-white pt-4 border-t mt-6 -mx-6 px-6">
-                                <Button type="button" variant="light" onPress={() => setIsLessonModalOpen(false)}>Cancel</Button>
-                                <Button type="submit" disabled={isLoading} className='bg-[#7828C8] text-white'>{isLoading ? 'Saving...' : 'Save Lesson'}</Button>
-                            </ModalFooter>
-                        </form>
-                    )}
+                                
+                                {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
+                            </form>
+                        )}
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button type="button" variant="light" onPress={() => setIsLessonModalOpen(false)}>Cancel</Button>
+                        <Button type="submit" form="lesson-form" disabled={isLoading} className='bg-[#7828C8] text-white'>{isLoading ? 'Saving...' : 'Save Lesson'}</Button>
+                    </ModalFooter>
                 </ModalContent>
             </Modal>
-            {/* --- END REBUILT LESSON MODAL --- */}
         </div>
     );
 }

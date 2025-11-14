@@ -18,16 +18,17 @@ import {
 } from "@tanstack/react-table"
 // --- MODIFIED ICON IMPORT ---
 import { 
-    ArrowUpDown, 
+    // ArrowUpDown, // Removed, no longer used in headers
     ChevronDown, 
     PlusCircle, 
-    Eye,        // Added
-    Pencil,     // Added
-    Trash2      // Added
+    Eye,
+    Pencil,
+    Trash2
 } from "lucide-react"
 
 import { Button } from "@heroui/button"
-import { Checkbox } from "@heroui/checkbox"
+// --- REMOVED CHECKBOX IMPORT ---
+// import { Checkbox } from "@heroui/checkbox"
 import {  Dropdown,  DropdownTrigger, DropdownSection,  DropdownItem, DropdownMenu} from "@heroui/dropdown";
 import { Input } from "@heroui/input"
 import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@heroui/table";
@@ -51,36 +52,11 @@ export function CoursesClient({ data }: { data: Course[] }) {
     };
 
     const columns: ColumnDef<Course>[] = [
-        {
-            id: "select",
-            header: ({ table }) => (
-                <Checkbox
-                    isSelected={table.getIsAllPageRowsSelected()} // Changed 'checked' to 'isSelected'
-                    onChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    aria-label="Select all"
-                />
-            ),
-            cell: ({ row }) => (
-                <Checkbox
-                    isSelected={row.getIsSelected()} // Changed 'checked' to 'isSelected'
-                    onChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                />
-            ),
-            enableSorting: false,
-            enableHiding: false,
-        },
+        // --- REMOVED 'select' COLUMN ---
         {
             accessorKey: "title",
-            header: ({ column }) => (
-                <Button
-                    variant="ghost"
-                    onPress={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Title
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            ),
+            // --- UPDATED HEADER (PLAIN TEXT) ---
+            header: "Title",
             cell: ({ row }) => <div className="font-medium">{row.getValue("title")}</div>,
         },
         {
@@ -109,10 +85,11 @@ export function CoursesClient({ data }: { data: Course[] }) {
                  return <Chip color={status === 'published' ? 'default' : 'danger'} className={status === 'published' ? 'bg-green-400 text-green-900' : ''}>{status}</Chip>;
             }
         },
-        // --- MODIFIED ACTIONS COLUMN ---
         {
             id: "actions",
             enableHiding: false,
+            // --- UPDATED: Explicitly disable sorting for actions ---
+            enableSorting: false, 
             cell: ({ row }) => {
                 const course = row.original;
                 return (
@@ -143,13 +120,13 @@ export function CoursesClient({ data }: { data: Course[] }) {
                 );
             },
         },
-        // --- END MODIFIED ACTIONS COLUMN ---
     ];
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = React.useState({})
+    // --- REMOVED rowSelection STATE ---
+    // const [rowSelection, setRowSelection] = React.useState({})
 
     const table = useReactTable({
         data,
@@ -161,7 +138,8 @@ export function CoursesClient({ data }: { data: Course[] }) {
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
+        // --- REMOVED rowSelection HANDLER ---
+        // onRowSelectionChange: setRowSelection,
         initialState: {
             pagination: {
                 pageSize: 10, // Show 10 rows per page
@@ -171,7 +149,8 @@ export function CoursesClient({ data }: { data: Course[] }) {
             sorting,
             columnFilters,
             columnVisibility,
-            rowSelection,
+            // --- REMOVED rowSelection FROM STATE ---
+            // rowSelection,
         },
     })
 
@@ -187,39 +166,44 @@ export function CoursesClient({ data }: { data: Course[] }) {
                     className="max-w-sm"
                 />
                  <div className="flex items-center gap-2">
+                    {/* --- UPDATED DROPDOWN FOR SORTING --- */}
                     <Dropdown>
-                        {/* --- REMOVED 'asChild' prop --- */}
                         <DropdownTrigger> 
                             <Button variant="bordered" className="ml-auto">
-                                Columns <ChevronDown className="ml-2 h-4 w-4" />
+                                Sort by... <ChevronDown className="ml-2 h-4 w-4" />
                             </Button>
                         </DropdownTrigger>
                         <DropdownMenu>
                             {table
                                 .getAllColumns()
-                                .filter((column) => column.getCanHide())
+                                // --- UPDATED: Filter for sortable columns ---
+                                .filter((column) => column.getCanSort())
                                 .map((column) => {
+                                    const sort = column.getIsSorted();
                                     return (
-                                        // Note: Checkbox in DropdownItem might need custom styling
-                                        <DropdownItem key={column.id}>
-                                            <Checkbox
-                                                key={column.id}
-                                                className="capitalize"
-                                                isSelected={column.getIsVisible()} // Changed 'checked' to 'isSelected'
-                                                onChange={(value) =>
-                                                    column.toggleVisibility(!!value)
-                                                }
-                                            >
-                                                {/* Added label text */}
+                                        // --- UPDATED: Removed Checkbox, added sort logic ---
+                                        <DropdownItem 
+                                            key={column.id} 
+                                            className="capitalize"
+                                            onClick={() => column.toggleSorting()}
+                                        >
+                                            {/* Clean up column IDs for display */}
+                                            {column.id === 'category.name' ? 'Category' : 
+                                             column.id === 'pricing_model' ? 'Pricing' :
+                                             column.id}
+                                            
+                                            {/* Add sort direction indicator */}
+                                            {sort && (
                                                 <span className="ml-2">
-                                                    {column.id === 'category.name' ? 'Category' : column.id}
+                                                    {sort === 'asc' ? ' ↑' : ' ↓'}
                                                 </span>
-                                            </Checkbox>
+                                            )}
                                         </DropdownItem>
                                     )
                                 })}
                         </DropdownMenu>
                     </Dropdown>
+                    {/* --- END UPDATED DROPDOWN --- */}
                     <Button className="bg-[#7828C8] text-white" onPress={() => router.push('/admin/courses/new')}>
                          <PlusCircle className="mr-2 h-4 w-4" /> Create New Course
                     </Button>
@@ -228,7 +212,6 @@ export function CoursesClient({ data }: { data: Course[] }) {
             <div className="rounded-md bg-white">
                 <Table>
                     <TableHeader>
-                        {/* Map headers from the first headerGroup directly to TableColumn */}
                         {table.getHeaderGroups()[0].headers.map((header) => (
                             <TableColumn key={header.id}>
                                 {header.isPlaceholder
@@ -245,7 +228,7 @@ export function CoursesClient({ data }: { data: Course[] }) {
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
+                                    // --- REMOVED data-state FOR SELECTION ---
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
@@ -271,10 +254,8 @@ export function CoursesClient({ data }: { data: Course[] }) {
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-gray-500"> {/* Replaced muted-foreground */}
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
-                </div>
+                {/* --- REMOVED "row(s) selected" TEXT --- */}
+                <div className="flex-1"></div> {/* Added spacer */}
                 <div className="space-x-2">
                     <Button
                         variant="bordered"

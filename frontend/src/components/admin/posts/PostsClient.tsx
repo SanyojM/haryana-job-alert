@@ -1,10 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/router" // Correct import for Pages Router
+import { useRouter } from "next/router"
 import { api } from "@/lib/api"
 import { useAuth } from "@/context/AuthContext"
 import {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   SortingState,
@@ -19,11 +20,10 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@heroui/button"
-import { Checkbox } from "@heroui/checkbox"
 import {  Dropdown,  DropdownTrigger,  DropdownMenu,  DropdownSection,  DropdownItem} from "@heroui/dropdown";
 import { Input } from "@heroui/input"
 import {  Table,  TableHeader,  TableBody,  TableColumn,  TableRow,  TableCell} from "@heroui/table";
-import { Post } from "@/pages/admin/posts" // Ensure this path is correct
+import { Post } from "@/pages/admin/posts"
 
 export function PostsClient({ data }: { data: Post[] }) {
   const router = useRouter();
@@ -34,7 +34,7 @@ export function PostsClient({ data }: { data: Post[] }) {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
     try {
       await api.delete(`/posts/${postId}`, authToken);
-      router.reload(); // Refresh the page to show the updated list
+      router.reload();
     } catch (error) {
       alert("Failed to delete post.");
       console.error(error);
@@ -43,35 +43,8 @@ export function PostsClient({ data }: { data: Post[] }) {
 
   const columns: ColumnDef<Post>[] = [
     {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onValueChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onValueChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
       accessorKey: "title",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onPress={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
+      header: "Title",
       cell: ({ row }) => <div className="font-medium">{row.getValue("title")}</div>,
     },
     {
@@ -82,13 +55,16 @@ export function PostsClient({ data }: { data: Post[] }) {
     {
       accessorKey: "created_at",
       header: "Date Created",
+      sortDescFirst: true,
       cell: ({ row }) => (
         <div>{new Date(row.getValue("created_at")).toLocaleDateString()}</div>
       ),
     },
     {
       id: "actions",
+      header: "Actions",
       enableHiding: false,
+      enableSorting: false,
       cell: ({ row }) => {
         const post = row.original;
         return (
@@ -118,11 +94,11 @@ export function PostsClient({ data }: { data: Post[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
     data,
     columns,
+    // UPDATED SECTION: Removed 'enableMultiSort: true'
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -130,14 +106,14 @@ export function PostsClient({ data }: { data: Post[] }) {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
     },
   })
+
+  // UPDATED SECTION: Removed the complex 'handleSortToggle' function
 
   return (
     <div className="w-full">
@@ -153,26 +129,33 @@ export function PostsClient({ data }: { data: Post[] }) {
         <Dropdown>
           <DropdownTrigger asChild>
             <Button className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Sort by... <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
             {table
               .getAllColumns()
-              .filter((column) => column.getCanHide())
+              .filter((column) => column.getCanSort())
               .map((column) => {
+                const sort = column.getIsSorted();
+
                 return (
-                  <DropdownItem key={column.id} onSelect={(e) => e.preventDefault()}>
-                  <Checkbox
+                  <DropdownItem
+                    key={column.id}
                     className="capitalize"
-                    checked={column.getIsVisible()}
-                    onValueChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                    >
-                    {column.id}
-                  </Checkbox>
-                    </DropdownItem>
+                    // UPDATED SECTION: Reverted to the simple 'toggleSorting'
+                    // This will replace the sort state, not add to it.
+                    onClick={() => column.toggleSorting()}
+                  >
+                    {column.id === 'categories.name' ? 'Category' : column.id === 'created_at' ? 'Date Created' : column.id}
+                    
+                    {/* UPDATED SECTION: Simplified the sort indicator */}
+                    {sort && (
+                      <span className="ml-2">
+                        {sort === 'asc' ? ' ↑' : ' ↓'}
+                      </span>
+                    )}
+                  </DropdownItem>
                 )
               })}
           </DropdownMenu>
@@ -180,7 +163,6 @@ export function PostsClient({ data }: { data: Post[] }) {
       </div>
         <Table>
         <TableHeader>
-          {/* Map directly over the headers of the first headerGroup */}
           {table.getHeaderGroups()[0].headers.map((header) => (
             <TableColumn key={header.id}>
               {header.isPlaceholder
@@ -197,7 +179,6 @@ export function PostsClient({ data }: { data: Post[] }) {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -222,10 +203,6 @@ export function PostsClient({ data }: { data: Post[] }) {
           </TableBody>
         </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
           <Button
             size="sm"
