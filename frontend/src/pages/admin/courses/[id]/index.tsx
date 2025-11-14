@@ -381,6 +381,7 @@ const ManageCourseContentUI = ({ initialCourse }: { initialCourse: CourseWithCon
                                                         >
                                                             {topic.title}
                                                         </h2>
+                                                        
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <Button variant="light" size="sm" onPress={() => openTopicModal(topic)}>
