@@ -67,7 +67,7 @@ const MidCard = ({ title, description, posts, index, categorySlug }: MidCardProp
             {hasMorePosts && (
                 <div className="mt-6 text-center">
                     <Link href={`/category/${categorySlug}`} legacyBehavior>
-                        <a className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg">
+                        <a className="inline-flex text-xs items-center gap-2 px-5 py-2 bg-black text-white font-semibold rounded-lg shadow-md hover:shadow-lg">
                             View More
                             <ArrowRight className="w-4 h-4" />
                         </a>
