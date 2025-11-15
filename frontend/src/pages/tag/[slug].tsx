@@ -81,7 +81,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, categories
   const [sortOrder, setSortOrder] = useState("newest");
   const params = useSearchParams();
   const [selectedTag, setSelectedTag] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("Latest Jobs"); // Filter by Latest Jobs initially
+  const [selectedCategory, setSelectedCategory] = useState("all"); // Filter by Latest Jobs initially
   
   const getLogoText = (categoryName?: string) => {
     if (!categoryName) return 'MT';
