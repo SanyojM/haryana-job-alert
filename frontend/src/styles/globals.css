@@ -504,7 +504,7 @@ body {
   transform: scale(0.80);
   transform-origin: top left;
   width: 125%;
-  margin-bottom: -50%;
+  margin-bottom: -30%;
 }
 
 .rendering-area main {
