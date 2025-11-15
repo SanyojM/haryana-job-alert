@@ -94,7 +94,7 @@ export default function ContactUsPage() {
                                     <div>
                                         <h4 className="font-medium text-gray-800">Email</h4>
                                         <a href="mailto:test@softricity.in" className="md:text-lg text-sm text-gray-600 hover:text-indigo-600">
-                                            test@softricity.in
+                                            contact@theharyanajobalert.com
                                         </a>
                                     </div>
                                 </div>
@@ -102,8 +102,8 @@ export default function ContactUsPage() {
                                     <Phone className="w-6 h-6 text-indigo-600 flex-shrink-0 mt-1" />
                                     <div>
                                         <h4 className="font-medium text-gray-800">Phone</h4>
-                                        <a href="tel:+911234567890" className="md:text-lg text-sm text-gray-600 hover:text-indigo-600">
-                                            +91 1234567890
+                                        <a href="tel:+918814099576" className="md:text-lg text-sm text-gray-600 hover:text-indigo-600">
+                                            +91 88140 99576
                                         </a>
                                     </div>
                                 </div>
@@ -112,13 +112,12 @@ export default function ContactUsPage() {
                                     <div>
                                         <h4 className="font-medium text-gray-800">Address</h4>
                                         <p className="md:text-lg text-sm text-gray-600">
-                                            Israna, Panipat, Haryana
+                                            Panipat, Haryana, India
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
