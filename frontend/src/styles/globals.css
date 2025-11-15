@@ -488,13 +488,12 @@ body {
 
 .rendering-area table {
   overflow-x: scroll;
-  display: block;
-  width: 100%;
-  border-collapse: collapse;
 }
 
-.rendering-area tbody{
-  width: 100%;
+
+.rendering-area tr {
+  width: 200px!important;
+  overflow: hidden;
 }
 
 .rendering-area td {
