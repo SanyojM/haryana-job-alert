@@ -124,9 +124,12 @@ export default function HaryanaYojnaSection() {
         </div>
 
         <div className="text-center mt-8 mb-10">
-          <button className="bg-gray-100 border-2 border-gray-300 rounded-xl w-full py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 hover:border-gray-400 transition-all ">
+          <Link
+            href="/category/yojna"
+            className="bg-gray-100 border-2 border-gray-300 rounded-xl w-full py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 hover:border-gray-400 transition-all block"
+          >
             View all Yojna
-          </button>
+          </Link>
         </div>
 
         {/* <AdBanner text="Google Ad Section" className="h-88" /> */}
