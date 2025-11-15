@@ -118,7 +118,7 @@ export default function CourseHeader({
         {/* ... (your ratings block) ... */}
         <div className=" bg-white text-gray-800 rounded-lg flex flex-col sm:flex-row items-center gap-4 max-w-2xl shadow-lg mx-auto sm:mx-0 sm:ml-6 lg:ml-18">
             <div className="shine flex-shrink-0 bg-gradient-to-r from-[#982920] to-[#fb3d3d] p-6 rounded-l-md">
-                <Image src="/logo.png" alt="Logo" width={60} height={60} className="rounded-sm bg-none" />
+                <Image src="/logo.jpg" alt="Logo" width={60} height={60} className="rounded-sm bg-none" />
             </div>
             <div className="flex-grow text-center sm:text-left">
                 <p className="text-gray-700 leading-tight">Access the best and the latest top content from <span className="text-red-600 font-bold">Haryana Job Alert</span></p>

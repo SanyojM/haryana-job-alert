@@ -93,10 +93,9 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
         formData.append('template_id', templateId);
     }
     
+    // Always send tags field, even if empty (for update operations)
     const tagsString = Array.from(selectedTags).join(',');
-    if (tagsString) {
-        formData.append('tags', tagsString);
-    }
+    formData.append('tags', tagsString);
     
     if (metaTitle) formData.append('meta_title', metaTitle);
     if (metaDescription) formData.append('meta_description', metaDescription);

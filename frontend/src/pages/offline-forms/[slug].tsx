@@ -346,7 +346,7 @@ const SingleFilePage: React.FC<SingleFilePageProps> = ({ file: initialFile }) =>
       <main className="container mx-auto sm:px-4 p-0 py-8 max-w-5xl">
         <div className="flex justify-between items-center mb-4">
           <Link href="/" className="flex justify-center items-center gap-2 text-gray-300 p-1 pr-3 rounded-full border">
-            <img src="/logo.png" alt="" className='w-8 h-8 rounded-full' />
+            <img src="/logo.jpg" alt="" className='w-8 h-8 rounded-full' />
             <span className="text-md font-medium">Haryana Job Alerts</span>
           </Link>
           <div className="flex items-center gap-2">

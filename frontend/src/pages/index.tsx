@@ -41,45 +41,26 @@ interface PublicCourse extends Omit<Course, 'tags' | 'authors'> {
 
 interface HomePageProps {
   posts: Post[];
-  categories: Category[]; // Add categories to the props
-  series: MockSeries[]; // Add series to the props
+  categories: Category[];
+  series: MockSeries[];
   courses: PublicCourse[];
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const [categories, series, course] = await Promise.all([
+    const [categories, posts] = await Promise.all([
       api.get('/categories'),
-      api.get('/mock-series'),
-      api.get('/courses?status=published'),
+      api.get(`/posts/latest?category=${encodeURIComponent('Latest Jobs')}&limit=8`),
     ]);
 
-    const courses = course.data || course;
-    return { props: { categories, series, courses } };
+    return { props: { categories, posts, series: [], courses: [] } };
   } catch (error) {
     console.error("Failed to fetch data for homepage:", error);
-    return { props: { categories: [], series: [], courses: [] } };
+    return { props: { categories: [], posts: [], series: [], courses: [] } };
   }
 };
 
-const HomePage: NextPage<HomePageProps> = ({ categories, series, courses }) => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loadingPosts, setLoadingPosts] = useState(true);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await api.get('/posts');
-        setPosts(res);
-      } catch (err) {
-        console.error("Failed to fetch posts:", err);
-      } finally {
-        setLoadingPosts(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
+const HomePage: NextPage<HomePageProps> = ({ categories, posts, series, courses }) => {
   return (
     <div className="bg-white overflow-x-hidden">
       <Head>
@@ -91,25 +72,16 @@ const HomePage: NextPage<HomePageProps> = ({ categories, series, courses }) => {
       <main className="md:p-4 container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
             <div className="lg:col-span-3 flex flex-col gap-6">
-            {loadingPosts ? (
-              <div className="text-center py-10 text-gray-500">Loading posts...</div>
-            ) : (
-              <PostsSection posts={posts.filter(post => post?.categories?.name === "Latest Jobs").slice(0, 8)} />
-            )}
+            <PostsSection posts={posts} />
             {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
             <MidCards 
               categories={categories}
-              posts={posts}
             />
-            {/* <MockTestSection series={series} /> */}
-            {/* <AdBanner text="Google Ads Section" className="h-32" /> */}
-            {/* <CurrentAffairsSection /> */}
-            {/* <CourseSection courses={courses} /> */}
             <AboutSection />
             <FaqSection />
             </div>
           <div className="lg:col-span-1 ml-18">
-            <Sidebar courses={courses} />
+            <Sidebar/>
           </div>
         </div>
         <div>

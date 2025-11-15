@@ -32,7 +32,7 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
 
         <div className="absolute -bottom-3 left-3 flex justify-between items-center">
           <div className="rounded-full p-4">
-              <img src="/logo.png" alt="" className="w-15" />
+              <img src="/logo.jpg" alt="" className="w-15" />
           </div>
           <div className="rounded-full flex justify-center items-center bg-black w-15 h-15 z-90">
             <a href="https://whatsapp.com/channel/0029VbBbS0R7T8bTQRa9230i">
@@ -101,7 +101,7 @@ const FancyContainer: React.FC<FancyContainerProps> = ({ className = "" }) => {
 
         <div className="absolute -bottom-3 left-3 flex justify-between items-center">
           <div className="rounded-full p-4">
-              <img src="/logo.png" alt="" className="w-15" />
+              <img src="/logo.jpg" alt="" className="w-15" />
           </div>
           <div className="rounded-full flex justify-center items-center bg-black w-15 h-15 z-90">
             <a href="https://whatsapp.com/channel/0029VbBbS0R7T8bTQRa9230i">

@@ -4,6 +4,8 @@ const API_BASE_URL = 'https://haryana-job-alerts-backend.softricity.in';
 const getHeaders = (token?: string) => {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
   };
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -15,6 +17,7 @@ export const api = {
   get: async (endpoint: string, token?: string) => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: getHeaders(token),
+      cache: 'no-store',
     });
     if (!response.ok) {
       let errorData;

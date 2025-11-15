@@ -66,11 +66,35 @@ export class PostsService {
     await this.findOne(id);
     const { tags, ...postData } = updatePostDto;
 
-    return this.prisma.posts.update({
-      where: { id },
-      data: {
-        ...postData,
-      },
+    return this.prisma.$transaction(async (tsx) => {
+      // Delete existing tag associations if tags field is present (even if empty array)
+      if (tags !== undefined) {
+        await tsx.post_tags.deleteMany({
+          where: { post_id: id },
+        });
+      }
+
+      // Update the post and create new tag associations
+      return tsx.posts.update({
+        where: { id },
+        data: {
+          ...postData,
+          post_tags: tags && tags.length > 0
+            ? {
+                create: tags.map((tagId) => ({
+                  tags: {
+                    connect: { id: tagId },
+                  },
+                })),
+              }
+            : undefined,
+        },
+        include: {
+          categories: true,
+          post_templates: true,
+          post_tags: { include: { tags: true } },
+        },
+      });
     });
   }
 

@@ -3,11 +3,12 @@ import AdBanner from '../shared/AdBanner';
 import { Post } from '@/pages/admin/posts'; // Import the Post type
 import Link from 'next/link';
 import { Category } from '@/pages/admin/getting-started/categories';
+import { useEffect, useState } from 'react';
+import { api } from '@/lib/api';
 
 // Define the props for the main section component
 interface MidCardSectionProps {
   categories: Category[];
-  posts: Post[];
 }
 
 // Define the props for a single card
@@ -17,10 +18,12 @@ interface MidCardProps {
   posts: Post[];
   index: number;
   categorySlug: string;
+  loading: boolean;
 }
 
 // Reusable component for a single card
-const MidCard = ({ title, description, posts, index, categorySlug }: MidCardProps) => {
+const MidCard = ({ title, description, posts, index, categorySlug, loading }: MidCardProps) => {
+
   const maxPosts = 25;
   const displayedPosts = posts.slice(0, maxPosts);
   const hasMorePosts = posts.length > maxPosts;
@@ -47,7 +50,13 @@ const MidCard = ({ title, description, posts, index, categorySlug }: MidCardProp
             {description}
         </div>
         <div className="bg-white shadow-lg py-6 px-2 sm:px-4 rounded-b-2xl flex-grow">
-            <ul className="space-y-4">
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              </div>
+            ) : (
+              <>
+                <ul className="space-y-4">
                 {displayedPosts.map(post => (
                     <li key={post.id}>
                         <Link href={`/posts/${post.slug}`} legacyBehavior>
@@ -74,25 +83,75 @@ const MidCard = ({ title, description, posts, index, categorySlug }: MidCardProp
                     </Link>
                 </div>
             )}
+              </>
+            )}
         </div>
     </div>
   );
 };
 
 
-export default function MidCardSection({ categories, posts }: MidCardSectionProps) {
+export default function MidCardSection({ categories }: MidCardSectionProps) {
+  const [categoryPosts, setCategoryPosts] = useState<Record<string, Post[]>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAllPosts = async () => {
+      try {
+        setLoading(true);
+        const postsMap: Record<string, Post[]> = {};
+        
+        await Promise.all(
+          categories.map(async (category) => {
+            try {
+              const posts = await api.get(`/posts/category/${category.id}`);
+              postsMap[category.id] = posts;
+            } catch (error) {
+              console.error(`Failed to fetch posts for category ${category.id}:`, error);
+              postsMap[category.id] = [];
+            }
+          })
+        );
+        
+        setCategoryPosts(postsMap);
+      } catch (error) {
+        console.error('Failed to fetch category posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (categories.length > 0) {
+      fetchAllPosts();
+    }
+  }, [categories]);
+
+  const categoryOrder = ['Latest Jobs', 'Yojna', 'Results', 'Admit cards', 'Documents', 'Answer Keys'];
+  
+  const sortedCategories = [...categories].sort((a, b) => {
+    const indexA = categoryOrder.indexOf(a.name);
+    const indexB = categoryOrder.indexOf(b.name);
+    
+    if (indexA === -1 && indexB === -1) return 0;
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    
+    return indexA - indexB;
+  });
+
   return (
     <section className="bg-white pb-12 pt-0 sm:pt-5 px-2 sm:px-0">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8">
-          {categories.map((category, index) => (
+          {sortedCategories.map((category, index) => (
             <MidCard 
               key={category.id}
               title={category.name}
               description={category.description || `Latest updates on ${category.name}`}
               index={index}
               categorySlug={category.name.toLowerCase().replace(/\s+/g, '-')}
-              posts={posts.filter(post => post.category_id?.toString() === category.id.toString()) || []}
+              posts={categoryPosts[category.id] || []}
+              loading={loading}
             />
           ))}
         </div>

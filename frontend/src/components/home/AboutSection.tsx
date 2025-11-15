@@ -8,27 +8,17 @@ export default function AboutSection() {
 
         <div className="space-y-8">
           <div>
-            <h3 className="md:text-2xl text-lg font-bold text-gray-900 mb-3">
-              Sarkari results 10+2 latest job
-            </h3>
             <p className="md:text-lg text-sm text-gray-600 leading-relaxed">
-              The most recent Sarkari Work, Sarkari Test result, online and offline forms, admit
-              card, syllabus, admission, answer key, scholarship, and notifications can all be
-              found here. If you want the latest updates related to Sarkari jobs on Haryana Job
-              Alert such as admit card notices, government exams, results, board updates, Bihar
-              10th result, and more, you can visit the Sarkari Result 10+2 Latest Job page regularly.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-3">
-              Sarkari results
-            </h3>
-            <p className="md:text-lg text-sm text-gray-600 leading-relaxed">
-              Haryana Job Alert is among the most popular websites in India that provides
-              details about Sarkari work exams, Sarkari result 2025, and other related updates.
-              It is a trusted portal where many job seekers find information about government
-              job openings, admit cards, exam schedules, and results.
+              The Haryana Job Alert is India’s reliable platform for fast and accurate Government <hr className="mb-3 opacity-0" />Job Alerts, Sarkari Exam Notifications, Results, Admit Cards, Offline Forms, Sarkari Yojana updates, and Government Scheme information.
+<hr className="mb-3 opacity-0" />We serve students preparing for government exams, aspirants appearing for entrance tests, and every citizen seeking verified scheme-related updates.
+<hr className="mb-3 opacity-0" />Our mission is to make every government opportunity accessible, understandable, and timely, ensuring no student or citizen misses important information that can shape their future.
+<hr className="mb-3 opacity-0" />With a strong commitment to accuracy, speed, and clarity, we stand apart through:
+<hr className="mb-3 opacity-0" />100% verified updates from official sources
+<hr className="mb-3 opacity-0" />Instant notifications on jobs, results, and exams
+<hr className="mb-3 opacity-0" />Simple, student-friendly information
+<hr className="mb-3 opacity-0" />All categories under one roof—jobs, exams, results, admit cards, forms & schemes
+<hr className="mb-3 opacity-0" />Zero misinformation policy
+<hr className="mb-3 opacity-0" />At The Haryana Job Alert, we work every day to keep India informed, aware, and empowered.
             </p>
           </div>
         </div>

@@ -31,7 +31,7 @@ export default function ContactUsPage() {
                                     id="name"
                                     name="name"
                                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3"
-                                    placeholder="John Doe"
+                                    placeholder="👉 Enter your full name"
                                 />
                             </div>
                             <div>
@@ -43,7 +43,7 @@ export default function ContactUsPage() {
                                     id="email"
                                     name="email"
                                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3"
-                                    placeholder="you@example.com"
+                                    placeholder="👉 Enter your email address"
                                 />
                             </div>
                             <div>
@@ -55,7 +55,7 @@ export default function ContactUsPage() {
                                     id="subject"
                                     name="subject"
                                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3"
-                                    placeholder="Question about a job post"
+                                    placeholder="👉 Write the subject of your query"
                                 />
                             </div>
                             <div>
@@ -67,7 +67,7 @@ export default function ContactUsPage() {
                                     name="message"
                                     rows={5}
                                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3"
-                                    placeholder="Your message..."
+                                    placeholder="👉 Type your message here…"
                                 ></textarea>
                             </div>
                             <div>

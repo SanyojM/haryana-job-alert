@@ -103,7 +103,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
         </div> */}
 
         <h1 className="text-3xl font-bold my-8 text-center">
-          Statewise Vacancies
+          Statewise Notifications
         </h1>
 
         <div className="bg-white">
@@ -157,9 +157,7 @@ export default function PostsSection({ posts }: { posts: Post[] }) {
                   {states.map((state, idx) => (
                     <Link
                       key={state}
-                      href={`/category/latest-jobs?state=${encodeURIComponent(
-                        state.toLowerCase()
-                      )}`}
+                      href={`/tag/${encodeURIComponent(state.toLowerCase().replace(/\s+/g, '-'))}`}
                       className={`px-3 mb-0 py-2 rounded-lg flex-1 text-center text-sm font-medium transition-colors bg-gradient-to-b text-white truncate
                         ${colors[idx % colors.length]}
                         ${idx >= 6 && idx < 12 ? "hidden lg:block peer-checked:block" : ""}

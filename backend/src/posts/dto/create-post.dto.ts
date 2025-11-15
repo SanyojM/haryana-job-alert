@@ -35,10 +35,12 @@ export class CreatePostDto {
   @IsOptional()
   thumbnail_url?: string;
 
-  @Transform(({ value }) => value.split(',').map(Number)) // Add this
+  @Transform(({ value }) => {
+    if (!value || value === '') return undefined;
+    return value.split(',').map(Number);
+  })
   @IsArray()
   @IsInt({ each: true })
-  @ArrayNotEmpty()
   @IsOptional()
   tags?: number[];
 

@@ -39,7 +39,7 @@ export default function Footer() {
           <div className="md:col-span-5 lg:col-span-6">
             {/* Kept your brand logo and name */}
             <div className="flex items-center gap-3 mb-4">
-                <img src="/logo.png" alt="Logo" height={40} width={40} className="w-10 h-10 rounded-full" />
+                <img src="/logo.jpg" alt="Logo" height={40} width={40} className="w-10 h-10 rounded-full" />
                 <h2 className="text-2xl font-bold text-white">Haryana Job Alert</h2>
             </div>
             {/* Added description from image */}

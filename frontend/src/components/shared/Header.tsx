@@ -157,7 +157,7 @@ export default function Header() {
             </ul>
             <div className="absolute top-6 sm:top-6 left-[45vw] translate-x-[-50%] sm:left-[48vw] flex flex-col items-end">
               <h1 className="text-3xl sm:text-4xl font-bold text-white z-10 flex items-center">
-                <img src="/header-logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2" />
+                <img src="/logo.jpg" alt="" className="inline w-9 sm:w-13 mr-2.5" />
                 <div className="text-nowrap">Haryana <span className="text-[#fdf500] text-nowrap">Job Alert</span></div>
               </h1>
               <img src="/header-arrow.jpg" alt="" className="h-4 w-30 sm:w-40 object-cover -mt-2 sm:-mt-3 -mr-10 sm:mr-0 lg:block hidden" />
