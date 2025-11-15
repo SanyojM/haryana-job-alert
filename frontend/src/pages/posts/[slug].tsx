@@ -78,12 +78,12 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             <div className="lg:col-span-3">
-                <article>
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
-                    <div 
-                        className="prose max-w-none" 
-                        dangerouslySetInnerHTML={{ __html: post.content_html || '' }}
-                    />
+                <article className="text-sm md:text-base h-max-content">
+                  {/* <h1 className="text-2xl md:text-3xl font-bold mb-4">{post.title}</h1> */}
+                  <div 
+                    className="prose max-w-none overflow-x-auto p-0 rendering-area" 
+                    dangerouslySetInnerHTML={{ __html: post.content_html || '' }}
+                  />
                 </article>
             </div>
             <aside>

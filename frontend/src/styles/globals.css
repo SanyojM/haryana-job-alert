@@ -485,3 +485,28 @@ body {
 		border-radius: 50%;
 	}
 }
+
+.rendering-area table {
+  overflow-x: scroll;
+  display: block;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rendering-area td {
+  border: 1px solid black; padding: 12px;;
+}
+
+.rendering-area {
+  transform: scale(0.80);
+  transform-origin: top left;
+  width: 125%;
+  margin-bottom: -100%;
+}
+
+.rendering-area main {
+  padding: 0px!important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

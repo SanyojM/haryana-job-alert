@@ -34,7 +34,7 @@ export default function HaryanaYojnaSection() {
       try {
         setIsLoading(true);
         const posts = await api.get('/categories/slug/yojna/posts'); // Ensure your API returns an array
-        setAllPosts(Array.isArray(posts.posts) ? posts.posts : []);
+        setAllPosts(Array.isArray(posts.posts) ? posts.posts.slice(0, 12) : []);
         setError(null);
       } catch (err) {
         console.error("Failed to fetch posts:", err);
