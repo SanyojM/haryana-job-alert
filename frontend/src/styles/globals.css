@@ -493,6 +493,10 @@ body {
   border-collapse: collapse;
 }
 
+.rendering-area tbody{
+  width: 100%;
+}
+
 .rendering-area td {
   border: 1px solid black; padding: 12px;;
 }
