@@ -10,6 +10,7 @@ import {
   UseInterceptors, // Add this
   UploadedFile,     // Add this
   BadRequestException, // Add this
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express'; // Add this
 import { PostsService } from './posts.service';
@@ -77,6 +78,25 @@ export class PostsController {
   @Get('category/:id')
   findByCategory(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.findByCategory(id);
+  }
+
+  // Find posts by tag name (case-insensitive)
+  @Get('tag/:name')
+  findByTagName(@Param('name') name: string) {
+    return this.postsService.findByTagName(name);
+  }
+
+  // Latest posts by category (case-insensitive name match) with optional limit
+  @Get('latest')
+  findLatestByCategory(
+    @Query('category') category: string,
+    @Query('limit') limit?: string,
+  ) {
+    const take = Number.isFinite(Number(limit)) ? Number(limit) : 8;
+    if (!category || !category.trim()) {
+      throw new BadRequestException('Query param "category" is required');
+    }
+    return this.postsService.findLatestByCategory(category, take);
   }
 
   @Delete(':id')

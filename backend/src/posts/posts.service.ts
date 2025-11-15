@@ -104,6 +104,49 @@ export class PostsService {
     return posts;
   }
 
+  async findByTagName(tagName: string) {
+    const posts = await this.prisma.posts.findMany({
+      where: {
+        post_tags: {
+          some: {
+            tags: {
+              name: { equals: tagName, mode: 'insensitive' },
+            },
+          },
+        },
+      },
+      include: {
+        categories: true,
+        post_templates: true,
+        post_tags: { include: { tags: true } },
+      },
+      orderBy: { created_at: 'desc' },
+    });
+
+    return posts;
+  }
+
+  async findLatestByCategory(categoryName: string, limit = 8) {
+    const posts = await this.prisma.posts.findMany({
+      where: {
+        categories: {
+          is: {
+            name: { equals: categoryName, mode: 'insensitive' },
+          },
+        },
+      },
+      include: {
+        categories: true,
+        post_templates: true,
+        post_tags: { include: { tags: true } },
+      },
+      orderBy: { created_at: 'desc' },
+      take: limit,
+    });
+
+    return posts;
+  }
+
   async remove(id: number) {
     await this.findOne(id);
     return this.prisma.$transaction(async (tsx) => {
