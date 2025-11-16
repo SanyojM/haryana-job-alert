@@ -126,11 +126,11 @@ export default function Footer() {
               Copyright @Haryana Job Alert – All Rights Reserved © 2025
             </p>
             {/* Kept your developer credit on the right */}
-            <div className="flex-shrink-0">
+            {/* <div className="flex-shrink-0">
                 <a href="https://softricity.in" className="inline-flex items-center gap-2 text-sm font-bold text-white">
                    <Image src="/softrcity.png" alt="Softricity Logo" className="w-36 h-10 rounded object-cover" width={1920} height={1080} />
                 </a>
-            </div>
+            </div> */}
         </div>
       </div>
     </footer>
