@@ -36,7 +36,7 @@ export class CreatePostDto {
   thumbnail_url?: string;
 
   @Transform(({ value }) => {
-    if (!value || value === '') return undefined;
+    if (!value || value === '') return [];
     return value.split(',').map(Number);
   })
   @IsArray()

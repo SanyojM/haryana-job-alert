@@ -67,8 +67,8 @@ export class PostsService {
     const { tags, ...postData } = updatePostDto;
 
     return this.prisma.$transaction(async (tsx) => {
-      // Delete existing tag associations if tags field is present (even if empty array)
-      if (tags !== undefined) {
+      // Delete existing tag associations if tags array is provided (including empty array)
+      if (Array.isArray(tags)) {
         await tsx.post_tags.deleteMany({
           where: { post_id: id },
         });
