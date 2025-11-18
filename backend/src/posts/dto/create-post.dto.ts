@@ -20,6 +20,7 @@ export class CreatePostDto {
 
   @Transform(({ value }) => parseInt(value)) // Add this
   @IsInt()
+  @IsOptional()
   category_id: number;
   
   @Transform(({ value }) => parseInt(value)) // Add this
