@@ -6,6 +6,7 @@ import { Post } from "@/pages/admin/posts";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import Sidebar from "@/components/shared/Sidebar";
+import { YojnaPost } from "@/components/sidebar/HaryanaYojnaSection";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -37,7 +38,8 @@ interface Category {
 interface CategoryPageProps {
   category: Category;
   posts: Post[];
-categories: Category[];
+  categories: Category[];
+  yojnaPosts: YojnaPost[];
   totalPosts: number;
 }
 
@@ -47,8 +49,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     // Convert slug to tag name (e.g., 'haryana-police' -> 'haryana police')
     const tagName = decodeURIComponent(String(slug)).replace(/-/g, ' ');
-    const categories = await api.get('/categories');
-    const posts = await api.get(`/posts/tag/${encodeURIComponent(tagName)}`);
+    const [categories, posts, yojnaData] = await Promise.all([
+      api.get('/categories'),
+      api.get(`/posts/tag/${encodeURIComponent(tagName)}`),
+      api.get('/categories/slug/yojna/posts?limit=12'),
+    ]);
+
+    const yojnaPosts = yojnaData?.posts || [];
 
     // Build a minimal category-like object for UI reuse
     const category = {
@@ -65,6 +72,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         category,
         posts,
         categories,
+        yojnaPosts,
       }))
     };
   } catch (error) {
@@ -73,7 +81,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 };
 
-const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, categories }) => {
+const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, categories, yojnaPosts }) => {
   console.log('Category:', categories);
   console.log('Posts:', posts);
 // set state query from url into selectedTag
@@ -456,7 +464,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, categories
         <div className="lg:col-span-1">
           {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
           <div className="mt-12 ml-12">
-            <Sidebar />
+            <Sidebar yojnaPosts={yojnaPosts} />
           </div>
         </div>
       </main>

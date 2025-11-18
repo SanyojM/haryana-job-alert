@@ -3,7 +3,6 @@ import '@/styles/main.css';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
-import { YojnaProvider } from '@/context/YojnaContext';
 import AdminLayout from '@/components/admin/AdminLayout'; // Corrected import
 import { ReactNode, useEffect, useState } from 'react'; // Import useEffect
 import { HashLoader } from 'react-spinners'; // Loading spinner
@@ -77,27 +76,25 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <AuthProvider>
-      <YojnaProvider>
-        {loading && (
-          <div className="max-h-screen min-h-screen max-w-screen min-w-screen fixed top-0 right-0 bg-white/60 flex justify-center items-center z-[999]">
-          <div className="bg-white h-40 w-40 rounded-2xl flex items-center justify-center shadow-lg">
-            <HashLoader color="#10B981" size={80} />
-          </div>
+      {loading && (
+        <div className="max-h-screen min-h-screen max-w-screen min-w-screen fixed top-0 right-0 bg-white/60 flex justify-center items-center z-[999]">
+        <div className="bg-white h-40 w-40 rounded-2xl flex items-center justify-center shadow-lg">
+          <HashLoader color="#10B981" size={80} />
         </div>
-        )}
-        {router.pathname.startsWith('/admin') ? (
-        <HeroUIProvider>
-          <AdminAuthGuard>
-            <Component {...pageProps} />
-          </AdminAuthGuard>
-        </HeroUIProvider>
-        ) : (
-          <main className={poppins.className}>
-          {/* <FloatingSocials /> */}
+      </div>
+      )}
+      {router.pathname.startsWith('/admin') ? (
+      <HeroUIProvider>
+        <AdminAuthGuard>
           <Component {...pageProps} />
-          </main>
-        )}
-      </YojnaProvider>
+        </AdminAuthGuard>
+      </HeroUIProvider>
+      ) : (
+        <main className={poppins.className}>
+        {/* <FloatingSocials /> */}
+        <Component {...pageProps} />
+        </main>
+      )}
     </AuthProvider>
   );
 }

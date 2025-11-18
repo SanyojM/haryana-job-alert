@@ -6,6 +6,7 @@ import { Post } from "@/pages/admin/posts";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import Sidebar from "@/components/shared/Sidebar";
+import { YojnaPost } from "@/components/sidebar/HaryanaYojnaSection";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -37,6 +38,7 @@ interface Category {
 interface CategoryPageProps {
   category: Category;
   posts: Post[];
+  yojnaPosts: YojnaPost[];
   totalPosts: number;
 }
 
@@ -44,12 +46,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { slug } = context.params!;
 
   try {
-    const data = await api.get(`/categories/slug/${slug}/posts`);
+    const [data, yojnaData] = await Promise.all([
+      api.get(`/categories/slug/${slug}/posts`),
+      api.get('/categories/slug/yojna/posts?limit=12'),
+    ]);
+
+    const yojnaPosts = yojnaData?.posts || [];
 
     return {
       props: JSON.parse(JSON.stringify({
         category: data.category,
         posts: data.posts,
+        yojnaPosts,
         totalPosts: data.totalPosts
       }))
     };
@@ -59,7 +67,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 };
 
-const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts }) => {
+const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, yojnaPosts, totalPosts }) => {
   console.log('Category:', category);
   console.log('Posts:', posts);
 // set state query from url into selectedTag
@@ -333,7 +341,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, totalPosts
         <div className="lg:col-span-1">
           {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
           <div className="mt-12 ml-12">
-            <Sidebar />
+            <Sidebar yojnaPosts={yojnaPosts} />
           </div>
         </div>
       </main>

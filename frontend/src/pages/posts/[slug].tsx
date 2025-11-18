@@ -6,6 +6,7 @@ import { Post } from "@/pages/admin/posts";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import Sidebar from "@/components/shared/Sidebar";
+import { YojnaPost } from "@/components/sidebar/HaryanaYojnaSection";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,20 +19,27 @@ import BannerHeader from "@/components/shared/BannerHeader";
 
 interface PostPageProps {
   post: Post;
+  yojnaPosts: YojnaPost[];
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { slug } = context.params!;
   try {
-    const post = await api.get(`/posts/slug/${slug}`);
-    return { props: { post } };
+    const [post, yojnaData] = await Promise.all([
+      api.get(`/posts/slug/${slug}`),
+      api.get('/categories/slug/yojna/posts?limit=12'),
+    ]);
+
+    const yojnaPosts = yojnaData?.posts || [];
+
+    return { props: { post, yojnaPosts } };
   } catch (error) {
     console.error(`Failed to fetch post with slug ${slug}:`, error);
     return { notFound: true };
   }
 };
 
-const PostPage: NextPage<PostPageProps> = ({ post }) => {
+const PostPage: NextPage<PostPageProps> = ({ post, yojnaPosts }) => {
   const categorySlug = post.categories?.name.toLowerCase().replace(/\s+/g, '-') || 'uncategorized';
 
   return (
@@ -87,7 +95,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
                 </article>
             </div>
             <aside>
-                <Sidebar />
+                <Sidebar yojnaPosts={yojnaPosts} />
             </aside>
         </div>
       </main>

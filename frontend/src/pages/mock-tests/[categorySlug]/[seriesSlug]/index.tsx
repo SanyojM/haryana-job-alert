@@ -3,6 +3,7 @@ import { api } from "@/lib/api";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import Sidebar from "@/components/shared/Sidebar";
+import { YojnaPost } from "@/components/sidebar/HaryanaYojnaSection";
 import TestHeader from "@/components/mock-test/TestHeader";
 import TestLists from "@/components/mock-test/TestLists";
 import FaqSection from "@/components/home/FaqSection";
@@ -48,25 +49,30 @@ interface MockTestPageProps {
   series: MockSeriesDetails;
   categories: MockSeries[]
   mockCategories: any[];
+  yojnaPosts: YojnaPost[];
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { categorySlug, seriesSlug } = context.params!;
   try {
-    const [mockCategories, categories, series] = await Promise.all([
+    const [mockCategories, categories, series, yojnaData] = await Promise.all([
         api.get("/mock-categories"),
         api.get('/mock-series'),
-        api.get(`/mock-series/slug/${categorySlug}/${seriesSlug}`)
+        api.get(`/mock-series/slug/${categorySlug}/${seriesSlug}`),
+        api.get('/categories/slug/yojna/posts?limit=12'),
     ]);
-    return { props: { mockCategories, categories, series } };
+
+    const yojnaPosts = yojnaData?.posts || [];
+
+    return { props: { mockCategories, categories, series, yojnaPosts } };
   } catch (error) {
     console.error(`Failed to fetch mock series with slug /${categorySlug}/${seriesSlug}:`, error);
     console.error("Failed to fetch data for homepage:", error);
-    return { props: { mockCategories: [], categories: [], series: [] } };
+    return { props: { mockCategories: [], categories: [], series: [], yojnaPosts: [] } };
   }
 };
 
-const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories, mockCategories }) => {
+const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories, mockCategories, yojnaPosts }) => {
   console.log("series", mockCategories)
   const testsInSeries = series.mock_series_tests.map(join => ({
     ...join.test,
@@ -111,7 +117,7 @@ const MockTestSeriesPage: NextPage<MockTestPageProps> = ({ series, categories, m
             <FaqSection />
           </main>
           <aside className="space-y-8 col-span-1 ml-12">
-            <Sidebar />
+            <Sidebar yojnaPosts={yojnaPosts} />
           </aside>
         </div>
       </div>

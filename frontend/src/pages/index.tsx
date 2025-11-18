@@ -7,6 +7,7 @@ import { Category } from "@/pages/admin/getting-started/categories"; // Import t
 import Header from '@/components/shared/Header';
 import Sidebar from '@/components/shared/Sidebar';
 import Footer from '@/components/shared/Footer';
+import { YojnaPost } from '@/components/sidebar/HaryanaYojnaSection';
 import ProfileCard from '@/components/home/ProfileCard';
 import AdBanner from '@/components/shared/AdBanner';
 import AboutSection from '@/components/home/AboutSection';
@@ -55,26 +56,30 @@ interface HomePageProps {
   posts: Post[];
   categories: Category[];
   categoriesWithPosts: CategoryWithPosts[];
+  yojnaPosts: YojnaPost[];
   series: MockSeries[];
   courses: PublicCourse[];
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const [categories, posts, categoriesWithPosts] = await Promise.all([
+    const [categories, posts, categoriesWithPosts, yojnaData] = await Promise.all([
       api.get('/categories'),
       api.get(`/posts/latest?category=${encodeURIComponent('Latest Jobs')}&limit=8`),
       api.get('/posts/summary?limit=25'),
+      api.get('/categories/slug/yojna/posts?limit=12'),
     ]);
 
-    return { props: { categories, posts, categoriesWithPosts, series: [], courses: [] } };
+    const yojnaPosts = yojnaData?.posts || [];
+
+    return { props: { categories, posts, categoriesWithPosts, yojnaPosts, series: [], courses: [] } };
   } catch (error) {
     console.error("Failed to fetch data for homepage:", error);
-    return { props: { categories: [], posts: [], categoriesWithPosts: [], series: [], courses: [] } };
+    return { props: { categories: [], posts: [], categoriesWithPosts: [], yojnaPosts: [], series: [], courses: [] } };
   }
 };
 
-const HomePage: NextPage<HomePageProps> = ({ categories, posts, categoriesWithPosts, series, courses }) => {
+const HomePage: NextPage<HomePageProps> = ({ categories, posts, categoriesWithPosts, yojnaPosts, series, courses }) => {
   return (
     <div className="bg-white overflow-x-hidden">
       <Head>
@@ -95,7 +100,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, posts, categoriesWithPo
             <FaqSection />
             </div>
           <div className="lg:col-span-1 ml-18">
-            <Sidebar/>
+            <Sidebar yojnaPosts={yojnaPosts} />
           </div>
         </div>
         <div>

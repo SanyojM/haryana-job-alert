@@ -1,6 +1,6 @@
 import AdBanner from "./AdBanner";
 import CourseSection from "../sidebar/CourseSection";
-import HaryanaYojnaSection from "../sidebar/HaryanaYojnaSection";
+import HaryanaYojnaSection, { YojnaPost } from "../sidebar/HaryanaYojnaSection";
 import { cn } from "@/lib/utils";
 
 // Define the PublicCourse interface
@@ -32,15 +32,16 @@ interface PublicCourse {
 interface SidebarProps {
   className?: string;
   courses?: PublicCourse[];
+  yojnaPosts?: YojnaPost[];
 }
 
-export default function Sidebar({ className, courses = [] }: SidebarProps) {
+export default function Sidebar({ className, courses = [], yojnaPosts = [] }: SidebarProps) {
     return (
         <aside className={cn(
             "w-full hidden lg:flex flex-col gap-6",
             className
         )}>
-            <HaryanaYojnaSection />
+            <HaryanaYojnaSection posts={yojnaPosts} />
             {/* <AdBanner text="Google Ad Section" className="h-88" /> */}
             {/* <CourseSection courses={courses} /> */}
             {/* <AdBanner text="Google Ad Section" className="h-64" /> */}

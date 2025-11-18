@@ -1,43 +1,23 @@
 import { ArrowUpRight, Bookmark, Send } from 'lucide-react';
-import AdBanner from '../shared/AdBanner'; // Assuming this path is correct
 import Image from 'next/image';
-import { useEffect } from 'react';
-import { api } from '@/lib/api'; // Assuming this path is correct
 import Link from 'next/link';
-import { useYojna } from '@/context/YojnaContext';
 
-export default function HaryanaYojnaSection() {
-  const { yojnaPosts, setYojnaPosts, isLoading, setIsLoading } = useYojna();
+export type YojnaPost = {
+  id: string;
+  title: string;
+  slug: string;
+  created_at: string;
+  thumbnail_url?: string | null;
+  categories: {
+    name: string;
+  } | null;
+};
 
-  useEffect(() => {
-    // Only fetch if posts haven't been loaded yet
-    if (yojnaPosts.length === 0) {
-      const fetchPosts = async () => {
-        try {
-          setIsLoading(true);
-          const response = await api.get('/categories/slug/yojna/posts?limit=12');
-          const postsArray = Array.isArray(response.posts) ? response.posts : [];
-          setYojnaPosts(postsArray);
-        } catch (err) {
-          console.error("Failed to fetch posts:", err);
-          setYojnaPosts([]);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+interface HaryanaYojnaSectionProps {
+  posts: YojnaPost[];
+}
 
-      fetchPosts();
-    }
-  }, [yojnaPosts.length, setYojnaPosts, setIsLoading]);
-
-  if (isLoading) {
-    return (
-      <section className="bg-white p-4">
-        <div className="text-center text-gray-500">Loading Yojna...</div>
-      </section>
-    );
-  }
-
+export default function HaryanaYojnaSection({ posts }: HaryanaYojnaSectionProps) {
   return (
     <section className="bg-white">
       <div className="">
@@ -46,8 +26,8 @@ export default function HaryanaYojnaSection() {
         </h2>
 
         <div className="grid grid-cols-1 gap-8">
-          {yojnaPosts.length > 0 ? (
-            yojnaPosts.map((post) => {
+          {posts.length > 0 ? (
+            posts.map((post) => {
               const thumbnailUrl = post.thumbnail_url;
 
               return (
