@@ -14,6 +14,7 @@ import {Select, SelectItem} from "@heroui/select"; // Fixed import
 import { Checkbox } from "@heroui/checkbox";
 import type { Post } from "@/pages/admin/posts";
 import type { Category, PostTemplate, Tag } from "@/pages/admin/posts/new";
+import { form } from "@heroui/theme";
 
 interface CreatePostFormProps {
   initialData?: Post;
@@ -88,6 +89,8 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
     formData.append('slug', slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''));
     if (categoryId) {
       formData.append('category_id', categoryId);
+    } else {
+      formData.append('category_id', ''); // Send empty if not selected
     }
     formData.append('content_html', finalContentHtml);
     
