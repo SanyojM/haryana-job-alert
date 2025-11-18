@@ -1,68 +1,39 @@
 import { ArrowUpRight, Bookmark, Send } from 'lucide-react';
 import AdBanner from '../shared/AdBanner'; // Assuming this path is correct
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { api } from '@/lib/api'; // Assuming this path is correct
 import Link from 'next/link';
-
-// Your Post type definition
-export type Post = {
-  id: string;
-  title: string;
-  slug: string;
-  published_at: string | null;
-  created_at: string;
-  category_id?: number;
-  content_html?: string;
-  thumbnail_url?: string | null;
-  external_url?: string | null; // This will be used for video links
-  content?: string;
-  post_tags?: { post_id: string; tag_id: number }[];
-  categories: {
-    name: string;
-  } | null;
-};
+import { useYojna } from '@/context/YojnaContext';
 
 export default function HaryanaYojnaSection() {
-  // --- Hooks moved inside the component ---
-  const [allPosts, setAllPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { yojnaPosts, setYojnaPosts, isLoading, setIsLoading } = useYojna();
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setIsLoading(true);
-        const posts = await api.get('/categories/slug/yojna/posts'); // Ensure your API returns an array
-        setAllPosts(Array.isArray(posts.posts) ? posts.posts.slice(0, 12) : []);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch posts:", err);
-        setError("Failed to load articles.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // Only fetch if posts haven't been loaded yet
+    if (yojnaPosts.length === 0) {
+      const fetchPosts = async () => {
+        try {
+          setIsLoading(true);
+          const response = await api.get('/categories/slug/yojna/posts?limit=12');
+          const postsArray = Array.isArray(response.posts) ? response.posts : [];
+          setYojnaPosts(postsArray);
+        } catch (err) {
+          console.error("Failed to fetch posts:", err);
+          setYojnaPosts([]);
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    fetchPosts();
-  }, []);
-
-  const yojnaVideos = useMemo(() => {
-    return allPosts.filter(post => post.categories?.name.toLowerCase() === 'yojna');
-  }, [allPosts]);
+      fetchPosts();
+    }
+  }, [yojnaPosts.length, setYojnaPosts, setIsLoading]);
 
   if (isLoading) {
     return (
       <section className="bg-white p-4">
         <div className="text-center text-gray-500">Loading Yojna...</div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="bg-white p-4">
-        <div className="text-center text-red-500">{error}</div>
       </section>
     );
   }
@@ -75,8 +46,8 @@ export default function HaryanaYojnaSection() {
         </h2>
 
         <div className="grid grid-cols-1 gap-8">
-          {yojnaVideos.length > 0 ? (
-            yojnaVideos.map((post) => {
+          {yojnaPosts.length > 0 ? (
+            yojnaPosts.map((post) => {
               const thumbnailUrl = post.thumbnail_url;
 
               return (
@@ -107,10 +78,16 @@ export default function HaryanaYojnaSection() {
                       </Link>
                     
                     <div className="flex items-center gap-2">
-                      <button className="p-2.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black transition-colors">
+                      <button 
+                        className="p-2.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black transition-colors"
+                        aria-label="Bookmark post"
+                      >
                         <Bookmark className="w-3 h-3" />
                       </button>
-                      <button className="p-2.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black transition-colors">
+                      <button 
+                        className="p-2.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-black transition-colors"
+                        aria-label="Share post"
+                      >
                         <Send className="w-3 h-3" />
                       </button>
                     </div>

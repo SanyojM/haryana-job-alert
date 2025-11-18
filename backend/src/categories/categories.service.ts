@@ -65,17 +65,26 @@ export class CategoriesService {
   }
 
   // NEW: Get category with its posts
-  async findBySlugWithPosts(slug: string) {
+  async findBySlugWithPosts(slug: string, limit?: number) {
     const category = await this.findBySlug(slug);
     
     const posts = await this.prisma.posts.findMany({
       where: { category_id: category.id },
-      include: {
-        categories: true,
-        post_templates: true,
-        post_tags: { include: { tags: true } },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        category_id: true,
+        created_at: true,
+        thumbnail_url: true,
+        categories: {
+          select: {
+            name: true,
+          },
+        },
       },
       orderBy: { created_at: 'desc' },
+      take: limit,
     });
 
     return {

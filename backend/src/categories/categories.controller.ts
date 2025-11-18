@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -42,8 +43,12 @@ export class CategoriesController {
 
   // NEW: Get category with all its posts by slug
   @Get('slug/:slug/posts')
-  findBySlugWithPosts(@Param('slug') slug: string) {
-    return this.categoriesService.findBySlugWithPosts(slug);
+  findBySlugWithPosts(
+    @Param('slug') slug: string,
+    @Query('limit') limit?: string,
+  ) {
+    const take = limit ? parseInt(limit, 10) : undefined;
+    return this.categoriesService.findBySlugWithPosts(slug, take);
   }
 
   // Generic :id route comes AFTER specific routes
