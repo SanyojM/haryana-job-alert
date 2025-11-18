@@ -188,8 +188,11 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
                 <Select 
                   label="Category" 
                   placeholder="Choose a category..."
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
+                  selectedKeys={categoryId ? [categoryId] : []}
+                  onSelectionChange={(keys) => {
+                    const selected = Array.from(keys)[0];
+                    setCategoryId(selected ? String(selected) : undefined);
+                  }}
                   required
                 >
                   {categories.map(category => (
