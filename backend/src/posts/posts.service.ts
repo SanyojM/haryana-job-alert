@@ -169,6 +169,35 @@ export class PostsService {
     });
   }
 
+  /**
+   * Return summarized posts (only select fields) for each category.
+   * Useful for homepage cards where full HTML content is not needed.
+   */
+  async findSummaryByCategories(limit = 25) {
+    const categories = await this.prisma.categories.findMany({ orderBy: { name: 'asc' } });
+
+    const result: Array<{ id: number; name: string; posts: Array<any> }> = [];
+
+    for (const cat of categories) {
+      const posts = await this.prisma.posts.findMany({
+        where: { category_id: cat.id },
+        orderBy: { created_at: 'desc' },
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          category_id: true,
+          created_at: true,
+        },
+      });
+
+      result.push({ id: Number(cat.id), name: cat.name, posts });
+    }
+
+    return result;
+  }
+
   async remove(id: number) {
     await this.findOne(id);
     return this.prisma.$transaction(async (tsx) => {

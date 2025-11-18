@@ -50,6 +50,14 @@ export class PostsController {
 
   // Latest posts by category (case-insensitive name match) with optional limit
   // IMPORTANT: Must come BEFORE @Get(':id') to avoid route conflicts
+  @Get('summary')
+  findSummaryByCategories(
+    @Query('limit') limit?: string,
+  ) {
+    const take = Number.isFinite(Number(limit)) ? Number(limit) : 25;
+    return this.postsService.findSummaryByCategories(take);
+  }
+
   @Get('latest')
   findLatestByCategory(
     @Query('category') category: string,
