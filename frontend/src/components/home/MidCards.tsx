@@ -1,32 +1,44 @@
 import { CheckCircle2, ArrowRight, ArrowUpRight } from 'lucide-react';
 import AdBanner from '../shared/AdBanner';
-import { Post } from '@/pages/admin/posts'; // Import the Post type
 import Link from 'next/link';
-import { Category } from '@/pages/admin/getting-started/categories';
-import { useEffect, useState } from 'react';
-import { api } from '@/lib/api';
+
+// Simplified post type for summary data
+interface PostSummary {
+  id: number;
+  title: string;
+  slug: string;
+  category_id: number;
+  created_at: string;
+}
+
+// Category with posts
+interface CategoryWithPosts {
+  id: number;
+  name: string;
+  description?: string;
+  posts: PostSummary[];
+}
 
 // Define the props for the main section component
 interface MidCardSectionProps {
-  categories: Category[];
+  categoriesWithPosts: CategoryWithPosts[];
 }
 
 // Define the props for a single card
 interface MidCardProps {
   title: string;
   description: string;
-  posts: Post[];
+  posts: PostSummary[];
   index: number;
   categorySlug: string;
-  loading: boolean;
 }
 
 // Reusable component for a single card
-const MidCard = ({ title, description, posts, index, categorySlug, loading }: MidCardProps) => {
+const MidCard = ({ title, description, posts, index, categorySlug }: MidCardProps) => {
 
   const maxPosts = 25;
   const displayedPosts = posts.slice(0, maxPosts);
-  const hasMorePosts = posts.length > maxPosts;
+  const hasMorePosts = posts.length === maxPosts;
 
   return (
     <div className="flex flex-col h-full">
@@ -50,13 +62,7 @@ const MidCard = ({ title, description, posts, index, categorySlug, loading }: Mi
             {description}
         </div>
         <div className="bg-white shadow-lg py-6 px-2 sm:px-4 rounded-b-2xl flex-grow">
-            {loading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-              </div>
-            ) : (
-              <>
-                <ul className="space-y-4">
+            <ul className="space-y-4">
                 {displayedPosts.map(post => (
                     <li key={post.id}>
                         <Link href={`/posts/${post.slug}`} legacyBehavior>
@@ -83,52 +89,16 @@ const MidCard = ({ title, description, posts, index, categorySlug, loading }: Mi
                     </Link>
                 </div>
             )}
-              </>
-            )}
         </div>
     </div>
   );
 };
 
 
-export default function MidCardSection({ categories }: MidCardSectionProps) {
-  const [categoryPosts, setCategoryPosts] = useState<Record<string, Post[]>>({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAllPosts = async () => {
-      try {
-        setLoading(true);
-        const postsMap: Record<string, Post[]> = {};
-        
-        await Promise.all(
-          categories.map(async (category) => {
-            try {
-              const posts = await api.get(`/posts/category/${category.id}`);
-              postsMap[category.id] = posts;
-            } catch (error) {
-              console.error(`Failed to fetch posts for category ${category.id}:`, error);
-              postsMap[category.id] = [];
-            }
-          })
-        );
-        
-        setCategoryPosts(postsMap);
-      } catch (error) {
-        console.error('Failed to fetch category posts:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (categories.length > 0) {
-      fetchAllPosts();
-    }
-  }, [categories]);
-
-  const categoryOrder = ['Latest Jobs', 'Yojna', 'Results', 'Admit cards', 'Documents', 'Answer Keys'];
+export default function MidCardSection({ categoriesWithPosts }: MidCardSectionProps) {
+  const categoryOrder = ['Latest Jobs', 'Yojna', 'Results', 'Admit Cards', 'Documents', 'Answer Keys'];
   
-  const sortedCategories = [...categories].sort((a, b) => {
+  const sortedCategories = [...categoriesWithPosts].sort((a, b) => {
     const indexA = categoryOrder.indexOf(a.name);
     const indexB = categoryOrder.indexOf(b.name);
     
@@ -150,8 +120,7 @@ export default function MidCardSection({ categories }: MidCardSectionProps) {
               description={category.description || `Latest updates on ${category.name}`}
               index={index}
               categorySlug={category.name.toLowerCase().replace(/\s+/g, '-')}
-              posts={categoryPosts[category.id] || []}
-              loading={loading}
+              posts={category.posts}
             />
           ))}
         </div>

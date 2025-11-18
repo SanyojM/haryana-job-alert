@@ -39,28 +39,42 @@ interface PublicCourse extends Omit<Course, 'tags' | 'authors'> {
     offerEndsSoon: boolean;
 }
 
+interface CategoryWithPosts {
+  id: number;
+  name: string;
+  posts: Array<{
+    id: number;
+    title: string;
+    slug: string;
+    category_id: number;
+    created_at: string;
+  }>;
+}
+
 interface HomePageProps {
   posts: Post[];
   categories: Category[];
+  categoriesWithPosts: CategoryWithPosts[];
   series: MockSeries[];
   courses: PublicCourse[];
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const [categories, posts] = await Promise.all([
+    const [categories, posts, categoriesWithPosts] = await Promise.all([
       api.get('/categories'),
       api.get(`/posts/latest?category=${encodeURIComponent('Latest Jobs')}&limit=8`),
+      api.get('/posts/summary?limit=25'),
     ]);
 
-    return { props: { categories, posts, series: [], courses: [] } };
+    return { props: { categories, posts, categoriesWithPosts, series: [], courses: [] } };
   } catch (error) {
     console.error("Failed to fetch data for homepage:", error);
-    return { props: { categories: [], posts: [], series: [], courses: [] } };
+    return { props: { categories: [], posts: [], categoriesWithPosts: [], series: [], courses: [] } };
   }
 };
 
-const HomePage: NextPage<HomePageProps> = ({ categories, posts, series, courses }) => {
+const HomePage: NextPage<HomePageProps> = ({ categories, posts, categoriesWithPosts, series, courses }) => {
   return (
     <div className="bg-white overflow-x-hidden">
       <Head>
@@ -75,7 +89,7 @@ const HomePage: NextPage<HomePageProps> = ({ categories, posts, series, courses 
             <PostsSection posts={posts} />
             {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
             <MidCards 
-              categories={categories}
+              categoriesWithPosts={categoriesWithPosts}
             />
             <AboutSection />
             <FaqSection />

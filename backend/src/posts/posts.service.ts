@@ -176,7 +176,7 @@ export class PostsService {
   async findSummaryByCategories(limit = 25) {
     const categories = await this.prisma.categories.findMany({ orderBy: { name: 'asc' } });
 
-    const result: Array<{ id: number; name: string; posts: Array<any> }> = [];
+    const result: Array<{ id: number; name: string; description: string | null; posts: Array<any> }> = [];
 
     for (const cat of categories) {
       const posts = await this.prisma.posts.findMany({
@@ -192,7 +192,7 @@ export class PostsService {
         },
       });
 
-      result.push({ id: Number(cat.id), name: cat.name, posts });
+      result.push({ id: Number(cat.id), name: cat.name, description: cat.description, posts });
     }
 
     return result;
