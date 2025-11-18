@@ -73,7 +73,7 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
   const handleSubmit = async (e: React.FormEvent) => {
     const authToken = token || undefined;
     e.preventDefault();
-    if (!editorRef.current || !categoryId) {
+    if (!editorRef.current) {
         setError("Category and content are required.");
         return;
     }
@@ -86,7 +86,9 @@ export function CreatePostForm({ initialData, templates, categories, tags }: Cre
     
     formData.append('title', title);
     formData.append('slug', slug || title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''));
-    formData.append('category_id', categoryId);
+    if (categoryId) {
+      formData.append('category_id', categoryId);
+    }
     formData.append('content_html', finalContentHtml);
     
     if (templateId) {
