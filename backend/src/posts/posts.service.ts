@@ -13,6 +13,7 @@ export class PostsService {
     return this.prisma.posts.create({
       data: {
         ...postData,
+        // If postData.category_id is null (from DTO), Prisma sets it to NULL in DB
         content: postData.content_html || '',
         created_by: userId,
         post_tags: tags
@@ -67,27 +68,29 @@ export class PostsService {
     const { tags, ...postData } = updatePostDto;
 
     return this.prisma.$transaction(async (tsx) => {
-      // Delete existing tag associations if tags array is provided (including empty array)
+      // Handle Tags Update
       if (Array.isArray(tags)) {
         await tsx.post_tags.deleteMany({
           where: { post_id: id },
         });
       }
 
-      // Update the post and create new tag associations
+      // Update Post
       return tsx.posts.update({
         where: { id },
         data: {
           ...postData,
-          post_tags: tags && tags.length > 0
-            ? {
-                create: tags.map((tagId) => ({
-                  tags: {
-                    connect: { id: tagId },
-                  },
-                })),
-              }
-            : undefined,
+          // If postData.category_id is null, it sets DB column to NULL (removing category)
+          post_tags:
+            tags && tags.length > 0
+              ? {
+                  create: tags.map((tagId) => ({
+                    tags: {
+                      connect: { id: tagId },
+                    },
+                  })),
+                }
+              : undefined,
         },
         include: {
           categories: true,
@@ -114,8 +117,9 @@ export class PostsService {
     return post;
   }
 
+  // ... (rest of your find functions remain the same) ...
   async findByCategory(categoryId: number) {
-    const posts = await this.prisma.posts.findMany({
+    return this.prisma.posts.findMany({
       where: { category_id: categoryId },
       include: {
         categories: true,
@@ -124,12 +128,10 @@ export class PostsService {
       },
       orderBy: { created_at: 'desc' },
     });
-
-    return posts;
   }
 
   async findByTagName(tagName: string) {
-    const posts = await this.prisma.posts.findMany({
+    return this.prisma.posts.findMany({
       where: {
         post_tags: {
           some: {
@@ -146,12 +148,10 @@ export class PostsService {
       },
       orderBy: { created_at: 'desc' },
     });
-
-    return posts;
   }
 
   async findLatestByCategory(categoryName: string, limit = 8) {
-    const posts = await this.prisma.posts.findMany({
+    return this.prisma.posts.findMany({
       where: {
         categories: {
           is: {
@@ -167,17 +167,13 @@ export class PostsService {
       orderBy: { created_at: 'desc' },
       take: limit,
     });
-
-    return posts;
   }
 
   async remove(id: number) {
     await this.findOne(id);
     return this.prisma.$transaction(async (tsx) => {
       await tsx.post_tags.deleteMany({ where: { post_id: id } });
-
-      const deletedPost = await tsx.posts.delete({ where: { id } });
-      return deletedPost;
-    })
+      return tsx.posts.delete({ where: { id } });
+    });
   }
 }

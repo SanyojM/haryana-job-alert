@@ -18,10 +18,17 @@ export class CreatePostDto {
   @IsNotEmpty()
   slug: string;
 
-  @Transform(({ value }) => parseInt(value)) // Add this
+  @Transform(({ value }) => {
+    // If value is empty string, string "null", or undefined, return null
+    if (value === '' || value === 'null' || value === undefined || value === null) {
+      return null;
+    }
+    // Otherwise parse it as a number
+    return parseInt(value);
+  }) // Add this
   @IsInt()
   @IsOptional()
-  category_id: number;
+  category_id: number | null;
   
   @Transform(({ value }) => parseInt(value)) // Add this
   @IsInt()
