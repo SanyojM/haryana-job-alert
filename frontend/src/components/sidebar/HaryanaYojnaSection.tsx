@@ -22,7 +22,7 @@ export default function HaryanaYojnaSection({ posts }: HaryanaYojnaSectionProps)
     <section className="bg-white">
       <div className="">
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">
-          Haryana Yojna
+          Yojna
         </h2>
 
         <div className="grid grid-cols-1 gap-8">
