@@ -140,7 +140,7 @@ export default function Header() {
             // className="relative bg-center bg-cover h-27 sm:h-35 w-full bg-gradient-to-br from-[#0C342B] to-[#1D6F50]"
             style={{ backgroundImage: "url('/header.jpg')" }}
             // @ts-ignore
-            fetchpriority="high"
+            fetchPriority="high"
           >
             <ul className="circles">
               <li></li>
