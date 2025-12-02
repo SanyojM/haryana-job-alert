@@ -8,6 +8,7 @@ import { ReactNode, useEffect, useState } from 'react'; // Import useEffect
 import { HashLoader } from 'react-spinners'; // Loading spinner
 import Router from 'next/router';
 import FloatingSocials from '@/components/shared/FloatingSocials';
+import PopupModal from '@/components/shared/PopupModal';
 import { HeroUIProvider } from '@heroui/react';
 import { Poppins } from 'next/font/google'
 
@@ -92,6 +93,12 @@ export default function App({ Component, pageProps }: AppProps) {
       ) : (
         <main className={poppins.className}>
         {/* <FloatingSocials /> */}
+        <PopupModal 
+          imageSrc="/popup.png"  // Replace with your actual image path
+          imageAlt="Promotional Banner"
+          delay={5000}
+          // linkUrl="https://example.com"  // Optional: Add link if you want the image to be clickable
+        />
         <Component {...pageProps} />
         </main>
       )}
