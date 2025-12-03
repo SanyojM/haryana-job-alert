@@ -168,7 +168,9 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                     <div className="absolute left-45 bottom-63 !font-semibold text-xl playfair text-[#237a57]">
                         Search <br /> karo...
                     </div>
-                    <img src="/poweredBy.jpg" alt="" className="absolute bottom-5 h-12 right-0" />
+                    <a href="https://softricity.in" target="_blank" rel="noopener noreferrer">
+                      <img src="/poweredBy.jpg" alt="" className="absolute bottom-5 h-12 right-0" />
+                    </a>
                     <h1 className="text-[40px] text-nowrap playfair !font-semibold text-center text-white z-10">
                     Haryana <span className="text-[#f7f900] text-nowrap">job alert</span>
                     </h1>
@@ -260,7 +262,9 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
             <div className="absolute left-35 bottom-48 !font-semibold text-xl playfair text-[#237a57]">
                 Search <br /> karo...
             </div>
-            <img src="/poweredBy.jpg" alt="" className="absolute bottom-0 h-12 right-0" />
+            <a href="https://softricity.in" target="_blank" rel="noopener noreferrer">
+              <img src="/poweredBy.jpg" alt="" className="absolute bottom-0 h-12 right-0" />
+            </a>
             <h1 className="text-3xl playfair text-center text-white !font-semibold z-10">
                 Haryana <span className="text-[#f7f900]">job alert</span>
             </h1>
