@@ -7,7 +7,7 @@ module.exports = {
   priority: 0.7,
   exclude: ['/admin/*'],
   additionalPaths: async (config) => {
-    const res = await fetch('https://haryana-job-alerts-backend.softricity.in/posts');
+    const res = await fetch('https://backend.theharyanajobalert.com/posts');
     const posts = await res.json();
 
     return posts.map((post) => ({

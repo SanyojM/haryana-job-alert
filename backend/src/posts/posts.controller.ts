@@ -48,6 +48,17 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
+  // Search posts by query string
+  // IMPORTANT: Must come BEFORE @Get(':id') to avoid route conflicts
+  @Get('search')
+  search(
+    @Query('q') query: string,
+    @Query('limit') limit?: string,
+  ) {
+    const take = Number.isFinite(Number(limit)) ? Number(limit) : 50;
+    return this.postsService.search(query, take);
+  }
+
   // Latest posts by category (case-insensitive name match) with optional limit
   // IMPORTANT: Must come BEFORE @Get(':id') to avoid route conflicts
   @Get('summary')

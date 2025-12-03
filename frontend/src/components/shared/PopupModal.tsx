@@ -3,8 +3,10 @@ import { useRouter } from 'next/router';
 import {
   Dialog,
   DialogContent,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import Image from 'next/image';
+import { X } from 'lucide-react';
 
 interface PopupModalProps {
   // Image source for the popup
@@ -56,8 +58,10 @@ const PopupModal = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent 
         className="sm:max-w-md md:max-w-lg p-0 overflow-hidden bg-transparent border-none"
-        showCloseButton={true}
       >
+        <DialogTrigger className='flex justify-end border-0 outline-none'>
+          <X className='w-5 h-5 text-black bg-white rounded-lg' />
+        </DialogTrigger>
         <div 
           className={`relative w-full ${linkUrl ? 'cursor-pointer' : ''}`}
           onClick={linkUrl ? handleImageClick : undefined}

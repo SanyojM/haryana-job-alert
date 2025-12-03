@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Search, X, Check, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -32,73 +32,78 @@ interface SearchDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+// Custom debounce hook
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showMore, setShowMore] = useState(false);
   const itemsPerPage = 7;
   const maxVisiblePages = 4;
 
-  // Fetch all posts when dialog opens
+  // Debounce search query with 500ms delay
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  // Reset state when dialog closes
   useEffect(() => {
-    if (open) {
-      fetchPosts();
-    } else {
-      // Reset when dialog closes
+    if (!open) {
       setSearchQuery("");
-      setFilteredPosts([]);
+      setPosts([]);
       setCurrentPage(1);
       setShowMore(false);
     }
   }, [open]);
 
-  // Filter posts based on search query
+  // Fetch posts based on debounced search query
   useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilteredPosts([]);
+    if (debouncedSearchQuery.trim() === "") {
+      setPosts([]);
       setCurrentPage(1);
       return;
     }
 
-    const query = searchQuery.toLowerCase();
-    const filtered = posts.filter((post) => {
-      return (
-        post.title.toLowerCase().includes(query) ||
-        post.description?.toLowerCase().includes(query) ||
-        post.categories?.name.toLowerCase().includes(query) ||
-        post.post_tags.some((tag) =>
-          tag.tags.name.toLowerCase().includes(query)
-        )
-      );
-    });
-    setFilteredPosts(filtered);
-    setCurrentPage(1);
-  }, [searchQuery, posts]);
+    const fetchPosts = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.get(`/posts/search?q=${encodeURIComponent(debouncedSearchQuery)}`);
+        setPosts(response);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        setPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const fetchPosts = async () => {
-    try {
-      setIsLoading(true);
-      const response = await api.get("/posts");
-      setPosts(response);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    fetchPosts();
+  }, [debouncedSearchQuery]);
 
   const handlePostClick = () => {
     onOpenChange(false);
   };
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
+  const totalPages = Math.ceil(posts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = showMore ? filteredPosts.length : startIndex + itemsPerPage;
-  const currentPosts = filteredPosts.slice(startIndex, endIndex);
+  const endIndex = showMore ? posts.length : startIndex + itemsPerPage;
+  const currentPosts = posts.slice(startIndex, endIndex);
 
   const getVisiblePages = () => {
     if (totalPages <= maxVisiblePages) {
@@ -153,7 +158,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
               <div className="flex items-center justify-center py-20">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
               </div>
-            ) : filteredPosts.length === 0 ? (
+            ) : posts.length === 0 ? (
                 searchQuery.trim() === "" ? (
                     <>
                 <div className="flex flex-col col-span-2 items-center relative h-full lg:hidden">

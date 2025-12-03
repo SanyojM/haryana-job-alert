@@ -150,6 +150,63 @@ export class PostsService {
     });
   }
 
+  /**
+   * Search posts by query string.
+   * Searches in title, description, category name, and tag names.
+   */
+  async search(query: string, limit = 50) {
+    if (!query || query.trim() === '') {
+      return [];
+    }
+
+    return this.prisma.posts.findMany({
+      where: {
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+          {
+            categories: {
+              name: { contains: query, mode: 'insensitive' },
+            },
+          },
+          {
+            post_tags: {
+              some: {
+                tags: {
+                  name: { contains: query, mode: 'insensitive' },
+                },
+              },
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        thumbnail_url: true,
+        created_at: true,
+        categories: {
+          select: {
+            name: true,
+          },
+        },
+        post_tags: {
+          select: {
+            tags: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { created_at: 'desc' },
+      take: limit,
+    });
+  }
+
   async findLatestByCategory(categoryName: string, limit = 8) {
     return this.prisma.posts.findMany({
       where: {
