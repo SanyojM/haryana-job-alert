@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'haryana-job-alerts-supabase.softricity.in',
+        hostname: 'supabase.theharyanajobalert.com',
       }
     ],
   },
