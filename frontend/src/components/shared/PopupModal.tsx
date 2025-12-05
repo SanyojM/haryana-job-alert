@@ -20,7 +20,7 @@ interface PopupModalProps {
 }
 
 const PopupModal = ({
-  imageSrc = '/popup-image.jpg', // Default image path - replace with your actual image
+  imageSrc, // Default image path - replace with your actual image
   imageAlt = 'Promotional Banner',
   delay = 5000,
   linkUrl,
@@ -67,7 +67,7 @@ const PopupModal = ({
           onClick={linkUrl ? handleImageClick : undefined}
         >
           <Image
-            src={imageSrc}
+            src={imageSrc ?? "/popup.png"}
             alt={imageAlt}
             width={600}
             height={400}
