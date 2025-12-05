@@ -66,13 +66,12 @@ const PopupModal = ({
           className={`relative w-full ${linkUrl ? 'cursor-pointer' : ''}`}
           onClick={linkUrl ? handleImageClick : undefined}
         >
-          <Image
+          <img
             src={imageSrc ?? "/popup.png"}
             alt={imageAlt}
             width={600}
             height={400}
             className="w-full h-auto object-contain rounded-lg"
-            priority
           />
         </div>
       </DialogContent>
