@@ -115,7 +115,7 @@ export default function MidCardSection({ categoriesWithPosts }: MidCardSectionPr
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8">
           {sortedCategories.map((category, index) => (
-            <>
+            <div key={category.id}>
              <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
        
                     <ins className="adsbygoogle"
@@ -131,13 +131,12 @@ export default function MidCardSection({ categoriesWithPosts }: MidCardSectionPr
         </Script>
            
             <MidCard 
-              key={category.id}
               title={category.name}
               description={category.description || `Latest updates on ${category.name}`}
               index={index}
               categorySlug={category.name.toLowerCase().replace(/\s+/g, '-')}
               posts={category.posts}
-            /> </>
+            /> </div>
           ))}
         </div>
       </div>
