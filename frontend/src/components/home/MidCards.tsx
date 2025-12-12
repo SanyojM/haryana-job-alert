@@ -64,8 +64,7 @@ const MidCard = ({ title, description, posts, index, categorySlug }: MidCardProp
         </div>
         <div className="bg-white shadow-lg py-6 px-2 sm:px-4 rounded-b-2xl flex-grow">
             <ul className="space-y-4">
-                {displayedPosts.map((post, index) => (
-                  index % 5 === 0 ?
+                {displayedPosts.map(post => (
                     <li key={post.id}>
                         <Link href={`/posts/${post.slug}`} legacyBehavior>
                             <a className="flex items-start gap-2 text-gray-700 hover:text-indigo-600 group text-xs md:text-sm">
@@ -74,30 +73,6 @@ const MidCard = ({ title, description, posts, index, categorySlug }: MidCardProp
                             </a>
                         </Link>
                     </li>
-                  :
-                    <>
-                    <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
-       
-                    <ins className="adsbygoogle"
-                    style={{display: "block"}}
-                    data-ad-format="fluid"
-                    data-ad-layout-key="-hj+4+18-27-l"
-                    data-ad-client="ca-pub-8101539968683225"
-                    data-ad-slot="2207247899"></ins>
-                   <Script>
-          {
-            `(adsbygoogle = window.adsbygoogle || []).push({});`
-          }
-        </Script>
-                     <li key={post.id}>
-                        <Link href={`/posts/${post.slug}`} legacyBehavior>
-                            <a className="flex items-start gap-2 text-gray-700 hover:text-indigo-600 group text-xs md:text-sm">
-                                <img src="/tick.jpg" alt="tick" className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                                <span className="flex-grow text-blue-500 hover:underline">{post.title} <ArrowUpRight className='w-4 h-4 inline' /></span>
-                            </a>
-                        </Link>
-                    </li>
-                    </>
                 ))}
 
                 {posts.length === 0 && (
@@ -140,6 +115,21 @@ export default function MidCardSection({ categoriesWithPosts }: MidCardSectionPr
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8">
           {sortedCategories.map((category, index) => (
+            <>
+             <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
+       
+                    <ins className="adsbygoogle"
+                    style={{display: "block"}}
+                    data-ad-format="fluid"
+                    data-ad-layout-key="-hj+4+18-27-l"
+                    data-ad-client="ca-pub-8101539968683225"
+                    data-ad-slot="2207247899"></ins>
+                   <Script>
+          {
+            `(adsbygoogle = window.adsbygoogle || []).push({});`
+          }
+        </Script>
+           
             <MidCard 
               key={category.id}
               title={category.name}
@@ -147,7 +137,7 @@ export default function MidCardSection({ categoriesWithPosts }: MidCardSectionPr
               index={index}
               categorySlug={category.name.toLowerCase().replace(/\s+/g, '-')}
               posts={category.posts}
-            />
+            /> </>
           ))}
         </div>
       </div>
