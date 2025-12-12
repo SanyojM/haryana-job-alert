@@ -30,7 +30,7 @@ async bulkCreateFromCsv(csvContent: string, testId: number) {
         }
 
         // Build options object from separate columns (option_a, option_b, etc.)
-        const optionsObject: Record<string, string> = {};
+        let optionsObject: Record<string, string> = {};
         
         // Support both formats: legacy (options as JSON string) and new (separate columns)
         if (row.options) {
