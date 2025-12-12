@@ -16,6 +16,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import BannerHeader from "@/components/shared/BannerHeader";
+import Script from "next/script";
 
 interface PostPageProps {
   post: Post;
@@ -88,10 +89,36 @@ const PostPage: NextPage<PostPageProps> = ({ post, yojnaPosts }) => {
             <div className="lg:col-span-3">
                 <article className="text-sm md:text-base h-max-content">
                   {/* <h1 className="text-2xl md:text-3xl font-bold mb-4">{post.title}</h1> */}
+                   <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
+       
+                    <ins className="adsbygoogle"
+                    style={{display: "block"}}
+                    data-ad-format="fluid"
+                    data-ad-layout-key="-hj+4+18-27-l"
+                    data-ad-client="ca-pub-8101539968683225"
+                    data-ad-slot="2207247899"></ins>
+                   <Script>
+          {
+            `(adsbygoogle = window.adsbygoogle || []).push({});`
+          }
+        </Script>
                   <div 
                     className="prose max-w-none overflow-x-auto p-0 rendering-area" 
                     dangerouslySetInnerHTML={{ __html: post.content_html || '' }}
                   />
+                  <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
+       
+                    <ins className="adsbygoogle"
+                    style={{display: "block"}}
+                    data-ad-format="fluid"
+                    data-ad-layout-key="-hj+4+18-27-l"
+                    data-ad-client="ca-pub-8101539968683225"
+                    data-ad-slot="2207247899"></ins>
+                   <Script>
+          {
+            `(adsbygoogle = window.adsbygoogle || []).push({});`
+          }
+        </Script>
                 </article>
             </div>
             <aside>

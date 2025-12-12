@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import BannerHeader from "@/components/shared/BannerHeader";
 import { useSearchParams } from "next/navigation";
+import Script from "next/dist/client/script";
 
 interface Category {
   id: number;
@@ -267,6 +268,23 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, yojnaPosts
               <div className="space-y-4">
                 {processedPosts.map((post, index) => {
                   return (
+                    <>
+                    {index % 5 === 0 && 
+                     <><Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
+       
+                    <ins className="adsbygoogle"
+                    style={{display: "block"}}
+                    data-ad-format="fluid"
+                    data-ad-layout-key="-hj+4+18-27-l"
+                    data-ad-client="ca-pub-8101539968683225"
+                    data-ad-slot="2207247899"></ins>
+                   <Script>
+          {
+            `(adsbygoogle = window.adsbygoogle || []).push({});`
+          }
+        </Script>
+                     </>
+                    }
                     <Link href={`/posts/${post.slug}`} key={post.id} className="block bg-white group transition-all duration-200 rounded-lg shadow-xl border-gray-200 overflow-hidden relative">
                       <div className="flex flex-row justify-between items-end md:items-center gap-4 px-4 py-2 w-full h-full">
                         <div className="flex-grow">
@@ -332,6 +350,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, yojnaPosts
                         </div>
                       </div>
                     </Link>
+                    </>
                   );
                 })}
               </div>
