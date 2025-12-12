@@ -3,7 +3,7 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { Pencil, Trash2, Upload, PlusCircle } from 'lucide-react';
+import { Pencil, Trash2, Upload, PlusCircle, Download } from 'lucide-react';
 
 // --- HeroUI Imports ---
 import { Button } from "@heroui/button";
@@ -136,6 +136,24 @@ const SingleTestPage: NextPage<SingleTestPageProps> = ({ initialTest }) => {
     }
   };
 
+  const downloadSampleCsv = () => {
+    const sampleData = [
+      ['question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_answer'],
+      ['What is 2 + 2?', '3', '4', '5', '6', 'b'],
+      ['What is the capital of France?', 'Berlin', 'Paris', 'Madrid', 'Rome', 'b'],
+      ['Which is a programming language?', 'Python', 'Snake', 'Cobra', 'Viper', 'a']
+    ];
+    
+    const csvContent = sampleData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample_questions.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div className='p-4'>
       <div className="flex items-center justify-between mb-2">
@@ -209,9 +227,24 @@ const SingleTestPage: NextPage<SingleTestPageProps> = ({ initialTest }) => {
                     onChange={(e) => setCsvFile(e.target.files ? e.target.files[0] : null)}
                     required 
                 />
-                <p className="text-xs text-gray-500">
-                    Must have headers: question_text, options, correct_answer. The 'options' column must be a valid JSON string.
-                </p>
+                <div className="space-y-2">
+                  <p className="text-xs text-gray-500">
+                      <strong>Required columns:</strong> question_text, option_a, option_b, option_c, option_d, correct_answer
+                  </p>
+                  <p className="text-xs text-gray-500">
+                      <strong>Correct answer:</strong> Use the letter (a, b, c, d) that matches the correct option
+                  </p>
+                  <Button 
+                    type="button" 
+                    variant="flat" 
+                    size="sm" 
+                    onPress={downloadSampleCsv}
+                    className="mt-2"
+                  >
+                    <Download className="mr-2 h-3 w-3" />
+                    Download Sample CSV
+                  </Button>
+                </div>
             </div>
             <ModalFooter>
               <Button type="button" variant="bordered" onPress={() => setIsCsvDialogOpen(false)}>Cancel</Button>

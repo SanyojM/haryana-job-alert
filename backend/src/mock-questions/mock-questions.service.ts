@@ -25,15 +25,33 @@ async bulkCreateFromCsv(csvContent: string, testId: number) {
     }
 
     const questionsToCreate: Prisma.mock_questionsCreateManyInput[] = parsed.data.map((row: any) => {
-        if (!row.question_text || !row.correct_answer || !row.options) {
-            throw new BadRequestException('CSV is missing required columns: question_text, correct_answer, options');
+        if (!row.question_text || !row.correct_answer) {
+            throw new BadRequestException('CSV is missing required columns: question_text, correct_answer');
         }
 
-        let optionsObject;
-        try {
-            optionsObject = JSON.parse(row.options);
-        } catch (e) {
-            throw new BadRequestException(`Invalid JSON in options column for question: "${row.question_text}"`);
+        // Build options object from separate columns (option_a, option_b, etc.)
+        const optionsObject: Record<string, string> = {};
+        
+        // Support both formats: legacy (options as JSON string) and new (separate columns)
+        if (row.options) {
+            // Legacy format: options as JSON string
+            try {
+                optionsObject = JSON.parse(row.options);
+            } catch (e) {
+                throw new BadRequestException(`Invalid JSON in options column for question: "${row.question_text}"`);
+            }
+        } else {
+            // New format: separate columns for each option
+            ['a', 'b', 'c', 'd', 'e', 'f'].forEach(key => {
+                const columnName = `option_${key}`;
+                if (row[columnName] && row[columnName].trim()) {
+                    optionsObject[key] = row[columnName].trim();
+                }
+            });
+            
+            if (Object.keys(optionsObject).length === 0) {
+                throw new BadRequestException(`No options found for question: "${row.question_text}". Please provide option_a, option_b, etc.`);
+            }
         }
 
         return {

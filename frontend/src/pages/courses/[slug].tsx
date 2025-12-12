@@ -166,7 +166,7 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
     // --- MODIFICATION START: Enrollment/Purchase Handler ---
     const handleEnrollOrPurchase = async () => {
         setIsProcessingEnrollment(true);
-        setError(null); // Assuming you add an error state if needed
+        setError(null);
 
         if (!user) {
             setIsProcessingEnrollment(false);
@@ -178,80 +178,29 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
 
         try {
             if (course.pricing_model === 'free') {
-                // Call free enrollment endpoint (needs backend implementation)
+                // Call free enrollment endpoint
                 await api.post(`/courses/${course.id}/enroll`, {}, authToken);
-                alert("Successfully enrolled!"); // Placeholder
-                setIsEnrolled(true); // Update UI
-                // Optionally reload or redirect to a 'learning' page
+                alert("Successfully enrolled!");
+                setIsEnrolled(true);
                 router.push(`/learn/courses/${course.slug}`);
 
             } else { // Paid course
-                // Check if course has external link
+                // Redirect to external link
                 if (course.external_link) {
-                    // Redirect to external link
                     window.open(course.external_link, '_blank');
-                    setIsProcessingEnrollment(false);
-                    return;
+                } else {
+                    setError("Course purchase link is not available.");
                 }
-                
-                // If no external link, use Razorpay payment flow
-                // 1. Create Order
-                const orderPayload = { course_id: parseInt(course.id) }; // Ensure ID is number if needed
-                const order = await api.post('/payments/create-order', orderPayload, authToken);
-
-                 // 2. Open Razorpay Checkout
-                const options = {
-                    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-                    amount: order.amount, // Amount from backend (in paise)
-                    currency: "INR",
-                    name: "Haryana Job Alert",
-                    description: `Course Purchase: ${order.course_title || course.title}`, // Get title from order or course
-                    order_id: order.order_id, // From backend
-                    handler: function (response: any) {
-                        // This function runs on successful payment
-                        console.log("Razorpay Response:", response);
-                        alert("Payment successful! You are now enrolled.");
-                        setIsEnrolled(true); // Update UI
-                        // You might want to verify payment on backend here before confirming enrollment fully
-                        // Optionally reload or redirect
-                        // router.push(`/learn/courses/${course.slug}`);
-                    },
-                    prefill: {
-                        name: user.full_name,
-                        email: user.email,
-                        // contact: user.phone // If you have phone number
-                    },
-                    theme: {
-                        color: "#3399cc" // Your brand color
-                    }
-                };
-
-                 // Check if Razorpay is loaded (it's loaded via script in _document.tsx)
-                 if (!(window as any).Razorpay) {
-                    throw new Error("Razorpay SDK not loaded");
-                 }
-
-                const rzp = new (window as any).Razorpay(options);
-
-                 // Handle payment failure
-                 rzp.on('payment.failed', function (response: any){
-                        console.error("Razorpay Payment Failed:", response.error);
-                        alert(`Payment failed: ${response.error.description || 'Please try again.'}`);
-                        // setError(`Payment failed: ${response.error.description}`);
-                 });
-
-                rzp.open(); // Open the checkout modal
-
+                setIsProcessingEnrollment(false);
             }
         } catch (err: unknown) {
-             console.error("Enrollment/Purchase Error:", err);
+             console.error("Enrollment Error:", err);
              const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred.";
              alert(`Error: ${errorMessage}`);
-             // setError(errorMessage);
         } finally {
             setIsProcessingEnrollment(false);
         }
-    }; // Add error state if needed
+    };
      // --- MODIFICATION END ---
 
 
@@ -293,9 +242,11 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                         
                         <div className=" space-y-3 text-gray-600">
                             <h4 className="font-bold text-gray-800">This course gives you:</h4>
-                            <div className="flex items-center gap-3 text-sm">
-                                <MonitorPlay size={16} className="text-indigo-500" /> Course Duration: {formatDuration(null, course.total_duration_hhmm)}
-                            </div>
+                            {course.total_duration_hhmm && course.total_duration_hhmm !== 'N/A' && (
+                                <div className="flex items-center gap-3 text-sm">
+                                    <MonitorPlay size={16} className="text-indigo-500" /> Course Duration: {formatDuration(null, course.total_duration_hhmm)}
+                                </div>
+                            )}
                                 <div className="flex items-center gap-3 text-sm">
                                     <FileText size={16} className="text-indigo-500" /> Articles attached
                                 </div>

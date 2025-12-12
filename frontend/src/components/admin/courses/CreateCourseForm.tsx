@@ -273,10 +273,13 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                                 />
                                 {status === 'draft' && <p className="text-xs text-gray-500">Required for publishing</p>}
                             </div>
-                             <div className="space-y-2">
-                                <Input id="intro-video-url" label='Intro Video URL (YouTube)' value={introVideoUrl ?? ''} onChange={(e) => setIntroVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
-                            </div>
-                            <div className="space-y-2">
+                            {pricingModel === 'free' && (
+                                <div className="space-y-2">
+                                    <Input id="intro-video-url" label='Intro Video URL (YouTube)' value={introVideoUrl ?? ''} onChange={(e) => setIntroVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                                </div>
+                            )}
+                            {pricingModel === 'free' && (
+                                <div className="space-y-2">
                                 <Input
                                     id="total-duration"
                                     value={totalDuration ?? ''}
@@ -285,7 +288,8 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                                     placeholder="HH:MM (e.g., 02:30)"
                                  />
                                  {status === 'draft' && <p className="text-xs text-gray-500">Required for publishing</p>}
-                            </div>
+                                </div>
+                            )}
                         </CardBody>
                     </Card>
 
@@ -405,11 +409,12 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                         </CardBody>
                     </Card>
 
-                    <Card>
-                        <CardHeader>
-                            <h2 className="text-lg font-semibold">Tags</h2>
-                        </CardHeader>
-                        <CardBody className="space-y-2 max-h-48 overflow-y-auto">
+                    {pricingModel === 'free' && (
+                        <Card>
+                            <CardHeader>
+                                <h2 className="text-lg font-semibold">Tags</h2>
+                            </CardHeader>
+                            <CardBody className="space-y-2 max-h-48 overflow-y-auto">
                             {tags.map(tag => {
                                 const tagIdStr = tag.id.toString();
                                 const isSelected = selectedTags.has(tagIdStr);
@@ -424,10 +429,12 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                                 );
                             })}
                             {tags.length === 0 && <p className="text-sm text-gray-500 text-center">No tags created yet.</p>}
-                        </CardBody>
-                    </Card>
+                            </CardBody>
+                        </Card>
+                    )}
 
-                     <Card>
+                     {pricingModel === 'free' && (
+                         <Card>
                         <CardHeader>
                             <h2 className="text-lg font-semibold">Authors <span className="text-red-500">*</span></h2>
                         </CardHeader>
@@ -450,7 +457,8 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                                 <p className="text-sm text-gray-500 text-center">No admin users found.</p>
                              )}
                          </CardBody>
-                    </Card>
+                        </Card>
+                     )}
                 </div>
             </div>
         </form>

@@ -93,12 +93,12 @@ export default function App({ Component, pageProps }: AppProps) {
       ) : (
         <main className={poppins.className}>
         {/* <FloatingSocials /> */}
-        <PopupModal 
+        {/* <PopupModal 
           imageSrc="/popup.png"  // Replace with your actual image path
           imageAlt="Promotional Banner"
           delay={5000}
           linkUrl="https://web.valuepluscampus.in/new-courses/75-haryana-cet-mains-2026-master-batch-haryana-special"  // Optional: Add link if you want the image to be clickable
-        />
+        /> */}
         <Component {...pageProps} />
         </main>
       )}

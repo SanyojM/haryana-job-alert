@@ -118,9 +118,11 @@ export default function CourseEnrollmentCard({
 
           <div className="mt-6 space-y-3 text-gray-600">
             <h4 className="font-bold text-gray-800">This course gives you:</h4>
-            <div className="flex items-center gap-3 text-sm">
-              <MonitorPlay size={16} className="text-indigo-500" /> Course Duration: {courseDuration}
-            </div>
+            {courseDuration && courseDuration !== 'N/A' && (
+              <div className="flex items-center gap-3 text-sm">
+                <MonitorPlay size={16} className="text-indigo-500" /> Course Duration: {courseDuration}
+              </div>
+            )}
               <div className="flex items-center gap-3 text-sm">
                 <FileText size={16} className="text-indigo-500" /> Articles attached: {articlesAttached}
               </div>

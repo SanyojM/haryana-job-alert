@@ -51,6 +51,17 @@ export default function CourseContentAccordion({ content }: CourseContentAccordi
     setAreAllExpanded(!areAllExpanded);
   };
 
+  // If no sections and no lectures, show only total length
+  if (content.totalSections === 0 && content.totalLectures === 0) {
+    return (
+      <section className="bg-white mt-12">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Course Total Length: {content.totalLength}
+        </h2>
+      </section>
+    );
+  }
+
   return (
     <section className="bg-white mt-12">
       <div className="flex justify-between items-center mb-6">

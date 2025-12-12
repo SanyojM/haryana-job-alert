@@ -47,11 +47,11 @@ const navItems: NavItem[] = [
     href: '/dashboard/my-files',
     icon: Download,
   },
-  // {
-  //   title: 'Courses',
-  //   href: '/dashboard/my-courses',
-  //   icon: BookOpen,
-  // },
+  {
+    title: 'Courses',
+    href: '/dashboard/my-courses',
+    icon: BookOpen,
+  },
   {
     title: 'Payment History',
     href: '/dashboard/payments',
