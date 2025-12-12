@@ -189,7 +189,7 @@ export default function PrivacyPolicyPage() {
                             <ul className="list-disc list-inside md:text-lg text-sm text-gray-600 leading-relaxed space-y-1 pl-4">
                                 <li><strong className="font-medium text-gray-700">By Email:</strong> test@softricity.in</li>
                                 <li><strong className="font-medium text-gray-700">By Mail:</strong> Israna, Panipat, Haryana</li>
-                                <li><strong className="font-medium text-gray-700">Website:</strong> [Your Website URL]</li>
+                                <li><strong className="font-medium text-gray-700">Website:</strong> theharyanajobalert.com</li>
                             </ul>
                         </div>
 
