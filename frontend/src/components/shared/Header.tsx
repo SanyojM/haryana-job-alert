@@ -40,6 +40,8 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "Latest Jobs", href: "/category/latest-jobs" },
   { name: "Yojna", href: "/category/yojna" },
+  { name: "Mock Tests", href: "/mock-tests" },
+  { name: "Courses", href: "/courses" },
   { name: "Offline Forms", href: "/offline-forms" },
   { name: "Results", href: "/category/results" },
   { name: "Admit Cards", href: "/category/admit-cards" },

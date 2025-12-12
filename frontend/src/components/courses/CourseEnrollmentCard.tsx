@@ -16,6 +16,7 @@ type CourseEnrollmentCardProps = {
   pricingModel: string;
   price: number | null;
   regularPrice: number | null;
+  externalLink: string | null;
   onEnrollOrPurchase: () => void;
   isLoading: boolean;
   error?: string | null;
@@ -35,6 +36,7 @@ export default function CourseEnrollmentCard({
   pricingModel,
   price,
   regularPrice,
+  externalLink,
   onEnrollOrPurchase,
   isLoading,
   error,
@@ -70,6 +72,8 @@ export default function CourseEnrollmentCard({
           ? 'Processing...'
           : pricingModel === 'free'
           ? 'Enroll Now'
+          : externalLink
+          ? 'Buy Now'
           : 'Purchase Now'}
       </Button>
     );

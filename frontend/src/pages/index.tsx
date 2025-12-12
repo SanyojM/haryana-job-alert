@@ -63,16 +63,18 @@ interface HomePageProps {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const [categories, posts, categoriesWithPosts, yojnaData] = await Promise.all([
+    const [categories, posts, categoriesWithPosts, yojnaData, seriesData, coursesData] = await Promise.all([
       api.get('/categories'),
       api.get(`/posts/latest?category=${encodeURIComponent('Latest Jobs')}&limit=8`),
       api.get('/posts/summary?limit=25'),
       api.get('/categories/slug/yojna/posts?limit=12'),
+      api.get('/mock-series'),
+      api.get('/courses'),
     ]);
 
     const yojnaPosts = yojnaData?.posts || [];
 
-    return { props: { categories, posts, categoriesWithPosts, yojnaPosts, series: [], courses: [] } };
+    return { props: { categories, posts, categoriesWithPosts, yojnaPosts, series: seriesData, courses: coursesData } };
   } catch (error) {
     console.error("Failed to fetch data for homepage:", error);
     return { props: { categories: [], posts: [], categoriesWithPosts: [], yojnaPosts: [], series: [], courses: [] } };
@@ -96,6 +98,9 @@ const HomePage: NextPage<HomePageProps> = ({ categories, posts, categoriesWithPo
             <MidCards 
               categoriesWithPosts={categoriesWithPosts}
             />
+            <MockTestSection series={series} />
+            {/* <CurrentAffairsSection /> */}
+            <CourseSection courses={courses} />
             <AboutSection />
             <FaqSection />
             </div>

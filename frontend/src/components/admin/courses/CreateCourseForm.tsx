@@ -23,6 +23,7 @@ export type Course = {
     pricing_model: 'free' | 'paid';
     regular_price?: number | null;
     sale_price?: number | null;
+    external_link?: string | null; // External link for paid courses
     category_id: string; 
     status?: 'draft' | 'published';
     total_duration_hhmm?: string | null;
@@ -54,6 +55,7 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
     const [pricingModel, setPricingModel] = useState<'free' | 'paid'>(initialData?.pricing_model ?? 'free');
     const [regularPrice, setRegularPrice] = useState<string>(initialData?.regular_price?.toString() ?? "");
     const [salePrice, setSalePrice] = useState<string>(initialData?.sale_price?.toString() ?? "");
+    const [externalLink, setExternalLink] = useState<string>(initialData?.external_link ?? "");
     const [categoryId, setCategoryId] = useState<string | undefined>(initialData?.category_id?.toString());
     const [selectedTags, setSelectedTags] = useState<Set<string>>(
         new Set(initialData?.tags?.map(t => {
@@ -82,6 +84,7 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
             setPricingModel(initialData.pricing_model ?? 'free');
             setRegularPrice(initialData.regular_price?.toString() ?? "");
             setSalePrice(initialData.sale_price?.toString() ?? "");
+            setExternalLink(initialData.external_link ?? "");
             setCategoryId(initialData.category_id?.toString());
             
             // Parse tags with better logging
@@ -210,6 +213,7 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
         if (pricingModel === 'paid') {
             formData.append('regular_price', regularPrice || '0'); 
             if (salePrice) formData.append('sale_price', salePrice);
+            if (externalLink) formData.append('external_link', externalLink);
         }
         formData.append('category_id', categoryId); 
         if (selectedTags.size > 0) {
@@ -314,6 +318,16 @@ export function CreateCourseForm({ initialData, categories, tags }: CreateCourse
                                     </div>
                                      <div className="space-y-2 col-span-3">
                                         <Input id="sale-price" label='Sale Price (₹, Optional)' type="number" value={salePrice} onChange={(e) => setSalePrice(e.target.value)} min="0" step="any" />
+                                    </div>
+                                    <div className="space-y-2 col-span-6">
+                                        <Input
+                                            id="external-link"
+                                            label='External Course Link (Optional)'
+                                            value={externalLink}
+                                            onChange={(e) => setExternalLink(e.target.value)}
+                                            placeholder="https://example.com/course"
+                                        />
+                                        <p className="text-xs text-gray-500">If provided, Buy Now will redirect to this link</p>
                                     </div>
                                 </div>
                             )}

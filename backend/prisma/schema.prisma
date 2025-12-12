@@ -61,6 +61,7 @@ model courses {
   pricing_model      CoursePricingModel @default(free)
   regular_price      Decimal?           @db.Decimal(10, 2)
   sale_price         Decimal?           @db.Decimal(10, 2)
+  external_link      String?            // External course link for paid courses
   category_id        BigInt?            
   total_duration_sec Int?               
   status             CourseStatus       @default(draft)

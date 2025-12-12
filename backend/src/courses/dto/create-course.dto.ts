@@ -58,6 +58,10 @@ export class CreateCourseDto {
   @IsOptional()
   sale_price?: number; // Should add custom validation: sale_price < regular_price in service
 
+  @IsUrl()
+  @IsOptional()
+  external_link?: string; // External link for paid courses
+
   @Transform(({ value }) => parseInt(value))
   @IsInt()
   category_id: number; // ID for course_categories

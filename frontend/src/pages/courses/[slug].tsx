@@ -32,6 +32,7 @@ export interface FullCourseDetails {
     pricing_model: 'free' | 'paid';
     regular_price: number | null;
     sale_price: number | null;
+    external_link: string | null; // External link for paid courses
     status: 'draft' | 'published';
     created_at: string;
     updated_at: string;
@@ -185,6 +186,15 @@ const CoursePage: NextPage<CoursePageProps> = ({ course }) => {
                 router.push(`/learn/courses/${course.slug}`);
 
             } else { // Paid course
+                // Check if course has external link
+                if (course.external_link) {
+                    // Redirect to external link
+                    window.open(course.external_link, '_blank');
+                    setIsProcessingEnrollment(false);
+                    return;
+                }
+                
+                // If no external link, use Razorpay payment flow
                 // 1. Create Order
                 const orderPayload = { course_id: parseInt(course.id) }; // Ensure ID is number if needed
                 const order = await api.post('/payments/create-order', orderPayload, authToken);

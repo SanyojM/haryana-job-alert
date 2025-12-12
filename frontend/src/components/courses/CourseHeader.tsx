@@ -147,6 +147,7 @@ export default function CourseHeader({
           pricingModel={course.pricing_model}
           price={course.sale_price ?? course.regular_price}
           regularPrice={course.regular_price}
+          externalLink={course.external_link}
           onEnrollOrPurchase={onEnrollOrPurchase}
           // Pass the correct loading states
           isLoading={isProcessingEnrollment || isAuthLoading} 
