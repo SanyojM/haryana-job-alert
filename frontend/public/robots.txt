@@ -2,6 +2,9 @@
 User-agent: *
 Allow: /
 
+# Block admin pages
+Disallow: /admin/
+
 # Host
 Host: https://theharyanajobalert.com
 
