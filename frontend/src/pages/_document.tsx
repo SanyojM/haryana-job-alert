@@ -19,8 +19,6 @@ export default function Document() {
           gtag('config', 'G-Y96FVJBE7W');
           `}
         </Script>
-        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225"
-     crossOrigin="anonymous"></Script>
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
 !function(f,b,e,v,n,t,s)
