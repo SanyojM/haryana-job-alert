@@ -11,6 +11,7 @@ import FloatingSocials from '@/components/shared/FloatingSocials';
 import PopupModal from '@/components/shared/PopupModal';
 import { HeroUIProvider } from '@heroui/react';
 import { Poppins } from 'next/font/google'
+import Script from 'next/script';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -61,6 +62,20 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, []);
 
+  const blockedRoutes = [
+    "/admin",
+    "/auth",
+    "/dashboard",
+    "/login",
+    "/signup",
+    "/profile",
+    "/settings",
+  ];
+
+  const shouldBlockAds = blockedRoutes.some((route) =>
+    router.pathname.startsWith(route)
+  );
+
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       (window as any).gtag('config', 'G-Y96FVJBE7W', {
@@ -92,6 +107,15 @@ export default function App({ Component, pageProps }: AppProps) {
       </HeroUIProvider>
       ) : (
         <main className={poppins.className}>
+                {!shouldBlockAds && (
+        <Script
+          id="adsense-script"
+          strategy="afterInteractive"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225"
+          crossOrigin="anonymous"
+        />
+      )}
         {/* <FloatingSocials /> */}
         {/* <PopupModal 
           imageSrc="/popup.png"  // Replace with your actual image path
@@ -105,3 +129,4 @@ export default function App({ Component, pageProps }: AppProps) {
     </AuthProvider>
   );
 }
+
