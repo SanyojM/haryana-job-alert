@@ -89,7 +89,7 @@ const PostPage: NextPage<PostPageProps> = ({ post, yojnaPosts }) => {
             <div className="lg:col-span-3">
                 <article className="text-sm md:text-base h-max-content">
                   {/* <h1 className="text-2xl md:text-3xl font-bold mb-4">{post.title}</h1> */}
-                   <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
+                   {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
        
                     <ins className="adsbygoogle"
                     style={{display: "block"}}
@@ -101,12 +101,12 @@ const PostPage: NextPage<PostPageProps> = ({ post, yojnaPosts }) => {
           {
             `(adsbygoogle = window.adsbygoogle || []).push({});`
           }
-        </Script>
+        </Script> */}
                   <div 
                     className="prose max-w-none overflow-x-auto p-0 rendering-area" 
                     dangerouslySetInnerHTML={{ __html: post.content_html || '' }}
                   />
-                  <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
+                  {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
        
                     <ins className="adsbygoogle"
                     style={{display: "block"}}
@@ -118,7 +118,7 @@ const PostPage: NextPage<PostPageProps> = ({ post, yojnaPosts }) => {
           {
             `(adsbygoogle = window.adsbygoogle || []).push({});`
           }
-        </Script>
+        </Script> */}
                 </article>
             </div>
             <aside>

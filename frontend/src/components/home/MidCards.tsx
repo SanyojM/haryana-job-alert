@@ -115,21 +115,7 @@ export default function MidCardSection({ categoriesWithPosts }: MidCardSectionPr
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8">
           {sortedCategories.map((category, index) => (
-            <div key={category.id}>
-             <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
-       
-                    <ins className="adsbygoogle"
-                    style={{display: "block"}}
-                    data-ad-format="fluid"
-                    data-ad-layout-key="-hj+4+18-27-l"
-                    data-ad-client="ca-pub-8101539968683225"
-                    data-ad-slot="2207247899"></ins>
-                   <Script>
-          {
-            `(adsbygoogle = window.adsbygoogle || []).push({});`
-          }
-        </Script>
-           
+            <div key={category.id}>           
             <MidCard 
               title={category.name}
               description={category.description || `Latest updates on ${category.name}`}
