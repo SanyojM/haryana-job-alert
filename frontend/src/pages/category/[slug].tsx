@@ -270,19 +270,20 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, yojnaPosts
                   return (
                     <>
                     {index % 5 === 0 && 
-        //              <><Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
+                     <>
+                     {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
        
-        //             <ins className="adsbygoogle"
-        //             style={{display: "block"}}
-        //             data-ad-format="fluid"
-        //             data-ad-layout-key="-hj+4+18-27-l"
-        //             data-ad-client="ca-pub-8101539968683225"
-        //             data-ad-slot="2207247899"></ins>
-        //            <Script>
-        //   {
-        //     `(adsbygoogle = window.adsbygoogle || []).push({});`
-        //   }
-        // </Script>
+                    <ins className="adsbygoogle"
+                    style={{display: "block"}}
+                    data-ad-format="fluid"
+                    data-ad-layout-key="-hj+4+18-27-l"
+                    data-ad-client="ca-pub-8101539968683225"
+                    data-ad-slot="2207247899"></ins>
+                   <Script>
+          {
+            `(adsbygoogle = window.adsbygoogle || []).push({});`
+          }
+        </Script> */}
                      </>
                     }
                     <Link href={`/posts/${post.slug}`} key={post.id} className="block bg-white group transition-all duration-200 rounded-lg shadow-xl border-gray-200 overflow-hidden relative">
