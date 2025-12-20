@@ -87,6 +87,7 @@ const PostPage: NextPage<PostPageProps> = ({ post, yojnaPosts }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             <div className="lg:col-span-3">
+               <img src="/notes-offer.png" alt="" className="w-full my-3" />
                 <article className="text-sm md:text-base h-max-content">
                   {/* <h1 className="text-2xl md:text-3xl font-bold mb-4">{post.title}</h1> */}
                    {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
