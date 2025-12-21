@@ -26,6 +26,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import BannerHeader from "@/components/shared/BannerHeader";
 import { useSearchParams } from "next/navigation";
 import Script from "next/dist/client/script";
+import GoogleAd from "@/components/shared/GoogleAds";
 
 interface Category {
   id: number;
@@ -269,21 +270,14 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, posts, yojnaPosts
                 {processedPosts.map((post, index) => {
                   return (
                     <>
-                    {index % 5 === 0 && 
+                    {index % 12 === 0 && 
                      <>
-                     {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225" crossOrigin="anonymous"></Script>
-       
-                    <ins className="adsbygoogle"
-                    style={{display: "block"}}
-                    data-ad-format="fluid"
-                    data-ad-layout-key="-hj+4+18-27-l"
-                    data-ad-client="ca-pub-8101539968683225"
-                    data-ad-slot="2207247899"></ins>
-                   <Script>
-          {
-            `(adsbygoogle = window.adsbygoogle || []).push({});`
-          }
-        </Script> */}
+                      <div className="sm:block lg:hidden">
+                        <GoogleAd slot="4546556493" />
+                      </div>
+                      <div className="hidden sm:hidden lg:block">
+                        <GoogleAd slot="2064519922" />
+                      </div>
                      </>
                     }
                     <Link href={`/posts/${post.slug}`} key={post.id} className="block bg-white group transition-all duration-200 rounded-lg shadow-xl border-gray-200 overflow-hidden relative">

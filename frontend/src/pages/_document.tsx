@@ -37,7 +37,11 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=2105995533470879&ev=PageView&noscript=1"
 /></noscript>
 
-
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8101539968683225"
+          crossOrigin="anonymous"
+        />  
 
       </Head>
       <body>

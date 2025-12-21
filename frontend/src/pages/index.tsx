@@ -25,6 +25,7 @@ import BannerHeader from "@/components/shared/BannerHeader";
 import { useEffect, useState } from "react";
 import type { Course } from "@/components/admin/courses/CreateCourseForm";
 import type { CourseCategory } from "@/pages/admin/course-categories";
+import GoogleAd from "@/components/shared/GoogleAds";
 
 interface PublicCourse extends Omit<Course, 'tags' | 'authors'> {
     slug: string;
@@ -94,13 +95,31 @@ const HomePage: NextPage<HomePageProps> = ({ categories, posts, categoriesWithPo
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-6">
             <div className="lg:col-span-3 flex flex-col gap-6">
             <PostsSection posts={posts} />
+            <div className="sm:block lg:hidden">
+              <GoogleAd slot="4546556493" />
+            </div>
+            <div className="hidden sm:hidden lg:block">
+              <GoogleAd slot="2064519922" />
+            </div>
             {/* <AdBanner text="Google Ads Section" className="h-88" /> */}
             <MidCards 
               categoriesWithPosts={categoriesWithPosts}
             />
+            <div className="sm:block lg:hidden">
+              <GoogleAd slot="4546556493" />
+            </div>
+            <div className="hidden sm:hidden lg:block">
+              <GoogleAd slot="2064519922" />
+            </div>
             <MockTestSection series={series} />
             {/* <CurrentAffairsSection /> */}
             <CourseSection courses={courses} />
+            <div className="sm:block lg:hidden">
+              <GoogleAd slot="4546556493" />
+            </div>
+            <div className="hidden sm:hidden lg:block">
+              <GoogleAd slot="2064519922" />
+            </div>
             <AboutSection />
             <FaqSection />
             </div>
